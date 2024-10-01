@@ -1,5 +1,6 @@
 export const ImagesAssets = {
-    Logo: require('../DTri/logodog.png'),  
-    Finger: require('../DTri/finger.png'),      
-    CarOrder: require('../DTri/carorder.png'),                                                                         
+    Logo: require('../DTri/png/logodog.png'),  
+    Finger: require('../DTri/png/finger.png'),   
+    Bn1: require('../DTri/png/bn1.png'),     
+    Itembox: require('../DTri/png/dog.png'),                                                          
 };

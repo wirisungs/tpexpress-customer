@@ -7,11 +7,11 @@ import Account from "../../screens/Home/Account";
 import Createstep1 from "../../screens/Order/CreateStep1";
 
 // Icon
-import HomeIC from "../../assets/Icons/Home";
-import OrderIC from "../../assets/Icons/Box";
-import OfferIC from "../../assets/Icons/voucher";
-import SupportIC from "../../assets/Icons/support";
-import CreateIC from "../../assets/Icons/plus";
+import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";
+import OrderIC from "../../svg/DucTri/Icons/NavIcon/Box";
+import NofiIC from "../../svg/DucTri/Icons/NavIcon/Nofi";
+import AccIC from "../../svg/DucTri/Icons/NavIcon/Account";
+import CreateIC from "../../svg/DucTri/Icons/NavIcon/plus";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -71,7 +71,7 @@ const RouteManager = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainerplus}>
-              <CreateIC fill={focused ? "#EB455F" : "#ffffff"} />
+              <CreateIC  />
             </View>
           ),
           headerShown: false,
@@ -84,7 +84,7 @@ const RouteManager = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
-              <OfferIC fill={focused ? "#EB455F" : "#1c1c1c"} />
+              <NofiIC fill={focused ? "#EB455F" : "#1c1c1c"} />
               <Text style={[styles.iconText, { color: focused ? "#EB455F" : "#1c1c1c" }]}>
                 Thông báo
               </Text>
@@ -100,7 +100,7 @@ const RouteManager = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
-              <SupportIC fill={focused ? "#EB455F" : "#1c1c1c"} />
+              <AccIC fill={focused ? "#EB455F" : "#1c1c1c"} />
               <Text style={[styles.iconText, { color: focused ? "#EB455F" : "#1c1c1c" }]}>
                 Tài khoản
               </Text>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "column",
     alignItems: "center",
-    gap: 6, // Tailwind's gap [6px] can be replaced with margin
+    gap: 6, 
   },
   iconContainerplus:{
     backgroundColor: '#2FA087',
