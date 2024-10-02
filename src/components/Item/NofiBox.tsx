@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     boxall: {
         flexDirection: 'row',
-        marginBottom: 8
+        paddingBottom: 12
     },
     viewbox: {
         paddingVertical: 12,

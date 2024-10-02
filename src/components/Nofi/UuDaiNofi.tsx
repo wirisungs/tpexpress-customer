@@ -6,8 +6,11 @@ export default function UDNofi() {
 
   return (
     <View style={styles.container}>
-       <NofiIC/>
-       <Text style={styles.text}>Bạn chưa có thông báo</Text>
+      <View style={styles.nofinone}>
+         <NofiIC/>
+          <Text style={styles.text}>Bạn chưa có thông báo</Text>
+      </View>
+       
     </View>
   );
 }
@@ -16,13 +19,18 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: "#ffffff",
       flex: 1, 
-      justifyContent: 'center',
+      // justifyContent: 'center',
       alignItems: 'center',
+    },
+    nofinone:{
+      alignItems: 'center',
+      marginTop: 160
     },
     text:{
       fontSize: 18,
       fontWeight:'medium',
-      color:'#767676'
+      color:'#767676',
+      padding: 8
     }
   });
   
