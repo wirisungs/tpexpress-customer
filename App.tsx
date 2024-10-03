@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import "./src/styles/global.css";
@@ -19,18 +18,10 @@ export type RootStackParamList = {
   RegisterPage: undefined;
   VerifyPage: { phoneNumber: string };
 };
-=======
-// App.tsx
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
-import { NavigationContainer } from "@react-navigation/native";
-import RouteManager from './src/components/Navbar/RouteManager';
->>>>>>> origin/DTri
 
 export default function App() {
   return (
     <NavigationContainer>
-<<<<<<< HEAD
       <Stack.Navigator
         initialRouteName="CreateOrder"
         screenOptions={{ headerShown: false }}
@@ -40,9 +31,6 @@ export default function App() {
         <Stack.Screen name="VerifyPage" component={VerifyScreen} />
         <Stack.Screen name="CreateOrder" component={CreateOrder} />
       </Stack.Navigator>
-=======
-      <RouteManager />
->>>>>>> origin/DTri
     </NavigationContainer>
   );
 }
