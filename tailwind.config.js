@@ -18,6 +18,10 @@ module.exports = {
         // Text
         "grayText-767676": "#767676",
         "primaryText-EB455F": "#EB455F",
+        "blueText-495DC1": "#495DC1",
+
+        // Background
+        "grayBG-FCFCFC": "#FCFCFC",
       },
       height: {
         header115: "115px",

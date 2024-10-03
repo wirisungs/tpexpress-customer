@@ -14,15 +14,17 @@ const BasicHeader = ({ haveBackIcon, title }: BasicHeaderProps) => {
     navigation.goBack();
   };
   return (
-    <View className="w-full">
+    <View style={styles.shadow}>
       <View className="flex relative p-6 h-header115 justify-end items-center">
         <View className="absolute left-6 bottom-6">
           <TouchableOpacity onPress={() => handleBack()}>
-            {haveBackIcon ? <BackIC /> : ""}
+            {haveBackIcon ? <BackIC fill="#EB455F" /> : ""}
           </TouchableOpacity>
         </View>
         {title !== null ? (
-          <Text className="text-2xl font-bold">{title}</Text>
+          <Text className="text-2xl font-bold text-primaryText-EB455F">
+            {title}
+          </Text>
         ) : (
           ""
         )}
@@ -31,6 +33,16 @@ const BasicHeader = ({ haveBackIcon, title }: BasicHeaderProps) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  shadow: {
+    width: "100%",
+    backgroundColor: "#FCFCFC",
+    shadowColor: "#1C1C1C",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 5,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+});
 
 export default BasicHeader;

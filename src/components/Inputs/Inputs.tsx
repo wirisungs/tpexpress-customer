@@ -1,20 +1,28 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
 import EyesIC from "../../svg/EyesIC";
 
 type type = "numeric" | "default" | "email-address" | "visible-password";
 
+// Props input thường
 interface InputProps {
   inputType: type;
   placeholder: string;
   value?: string;
   onChangeText?: (text: string) => void;
 }
+
+// Props cho OTP
 interface OTPInputProps {
   length: number;
   value: Array<string>;
   disable: boolean;
   onChangeText(value: Array<string>): void;
+}
+
+// Props cho Icon
+interface InputIconProps extends InputProps {
+  icon: ReactNode;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -52,11 +60,12 @@ const OTPInput: React.FC<OTPInputProps> = ({
   );
 };
 
-const InputWithIcon: React.FC<InputProps> = ({
+const InputWithIcon: React.FC<InputIconProps> = ({
   inputType,
   placeholder,
   value,
   onChangeText,
+  icon,
 }) => {
   const [isHidden, setIsHidden] = useState(true);
 
@@ -79,7 +88,18 @@ const InputWithIcon: React.FC<InputProps> = ({
           </TouchableOpacity>
         </View>
       ) : (
-        ""
+        <View className="flex flex-row items-center w-full justify-between">
+          <TextInput
+            className="w-[90%]"
+            placeholder={placeholder}
+            secureTextEntry={isHidden}
+            value={value}
+            onChangeText={onChangeText}
+          />
+          <TouchableOpacity className="icon" onPress={() => handleToggle()}>
+            {icon}
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );

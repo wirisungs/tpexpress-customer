@@ -9,6 +9,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "./src/screens/login";
 import RegisterScreen from "./src/screens/register";
 import VerifyScreen from "./src/screens/verify";
+import CreateOrder from "./src/screens/createOrder";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,12 +23,13 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="LoginPage"
+        initialRouteName="CreateOrder"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="LoginPage" component={LoginScreen} />
         <Stack.Screen name="RegisterPage" component={RegisterScreen} />
         <Stack.Screen name="VerifyPage" component={VerifyScreen} />
+        <Stack.Screen name="CreateOrder" component={CreateOrder} />
       </Stack.Navigator>
     </NavigationContainer>
   );

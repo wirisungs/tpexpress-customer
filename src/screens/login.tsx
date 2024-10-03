@@ -10,8 +10,15 @@ import IconAndText from "../components/Items/IconAndText";
 import PasswordIC from "../svg/PasswordIC";
 import FingerPrintIC from "../svg/FingerPrintIC";
 import OTPIC from "../svg/OtpIC";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../../App";
 
 const Login = () => {
+  // Khai báo navigation
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [warning, setWarning] = useState<string>("");
   const [withPassword, setWithPassword] = useState(false);
   const handleLogin = () => {
     withPassword ? handleCheckPassword() : handleOTP();
@@ -27,7 +34,11 @@ const Login = () => {
   };
 
   const handleOTP = () => {
-    Alert.alert("OTP");
+    if (!phoneNumber) {
+      setWarning("Hãy nhập số điện thoại");
+    } else {
+      navigation.navigate("VerifyPage", { phoneNumber });
+    }
   };
   const handleCheckPassword = () => {
     Alert.alert("checking pass");
@@ -39,7 +50,24 @@ const Login = () => {
 
       {/* Form */}
       <View className="form flex flex-col gap-3 w-full">
-        <Input inputType="numeric" placeholder="Số điện thoại" />
+        <View className="flex flex-col gap-1">
+          <Input
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+            inputType="numeric"
+            placeholder="Số điện thoại"
+          />
+          {/* Hiển thị cảnh báo */}
+          {warning ? (
+            <View>
+              <Text className="text-red-500">* {warning} !</Text>
+            </View>
+          ) : (
+            ""
+          )}
+        </View>
+
+        {/* Phương thức đăng nhập với mật khẩu */}
         {withPassword ? (
           <InputWithIcon inputType="visible-password" placeholder="Mật khẩu" />
         ) : (
