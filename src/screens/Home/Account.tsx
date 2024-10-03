@@ -1,17 +1,24 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { ImagesAssets } from "../../assets/DTri/ImageAssets";
-import AccIC from "../../svg/DucTri/Icons/AccIcon/User"
-import ProIC from "../../svg/DucTri/Icons/AccIcon/Product"
-import WalletIC from "../../svg/DucTri/Icons/AccIcon/Wallet"
-import CalIC from "../../svg/DucTri/Icons/AccIcon/calcu"
-import LocaIC from "../../svg/DucTri/Icons/AccIcon/Loca"
-import PromoIC from "../../svg/DucTri/Icons/AccIcon/Promo"
-import QuesIC from "../../svg/DucTri/Icons/AccIcon/Ques"
-import DkIC from "../../svg/DucTri/Icons/AccIcon/Dieukhoan"
-import AboutIC from "../../svg/DucTri/Icons/AccIcon/About"
-import HdsdIC from "../../svg/DucTri/Icons/AccIcon/Hssd"
-import SetIC from "../../svg/DucTri/Icons/AccIcon/Setting"
+import AccIC from "../../svg/DucTri/Icons/AccIcon/User";
+import ProIC from "../../svg/DucTri/Icons/AccIcon/Product";
+import WalletIC from "../../svg/DucTri/Icons/AccIcon/Wallet";
+import CalIC from "../../svg/DucTri/Icons/AccIcon/Calcu";
+import LocaIC from "../../svg/DucTri/Icons/AccIcon/Loca";
+import PromoIC from "../../svg/DucTri/Icons/AccIcon/Promo";
+import QuesIC from "../../svg/DucTri/Icons/AccIcon/Ques";
+import DkIC from "../../svg/DucTri/Icons/AccIcon/Dieukhoan";
+import AboutIC from "../../svg/DucTri/Icons/AccIcon/About";
+import HdsdIC from "../../svg/DucTri/Icons/AccIcon/Hssd";
+import SetIC from "../../svg/DucTri/Icons/AccIcon/Setting";
 
 export default function Account() {
   return (
@@ -27,61 +34,61 @@ export default function Account() {
           resizeMode="contain"
         />
       </View>
-      <ScrollView  style={body.body}>
-        <View  style={body.row}>
-           <Text style={body.title}>Tài khoản</Text>
-           <TouchableOpacity style={body.rowdetail}>
-             <AccIC/>
-             <Text style={body.textdetail}>Thông tin cá nhân & Bảo mật</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={body.rowdetail}>
-             <ProIC/>
-             <Text style={body.textdetail}>Đơn hàng của tôi</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={body.rowdetail}>
-             <WalletIC/>
-             <Text style={body.textdetail}>Ví của tôi</Text>
-           </TouchableOpacity>
+      <ScrollView style={body.body}>
+        <View style={body.row}>
+          <Text style={body.title}>Tài khoản</Text>
+          <TouchableOpacity style={body.rowdetail}>
+            <AccIC />
+            <Text style={body.textdetail}>Thông tin cá nhân & Bảo mật</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={body.rowdetail}>
+            <ProIC />
+            <Text style={body.textdetail}>Đơn hàng của tôi</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={body.rowdetail}>
+            <WalletIC />
+            <Text style={body.textdetail}>Ví của tôi</Text>
+          </TouchableOpacity>
         </View>
 
-        <View  style={body.row}>
-           <Text style={body.title}>Tiện ích</Text>
-           <TouchableOpacity style={body.rowdetail}>
-             <CalIC/>
-             <Text style={body.textdetail}>Tra tính cước phí</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={body.rowdetail}>
-             <LocaIC/>
-             <Text style={body.textdetail}>Tra cứu bưu cục</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={body.rowdetail}>
-             <PromoIC/>
-             <Text style={body.textdetail}>Ưu đãi</Text>
-           </TouchableOpacity>
+        <View style={body.row}>
+          <Text style={body.title}>Tiện ích</Text>
+          <TouchableOpacity style={body.rowdetail}>
+            <CalIC />
+            <Text style={body.textdetail}>Tra tính cước phí</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={body.rowdetail}>
+            <LocaIC />
+            <Text style={body.textdetail}>Tra cứu bưu cục</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={body.rowdetail}>
+            <PromoIC />
+            <Text style={body.textdetail}>Ưu đãi</Text>
+          </TouchableOpacity>
         </View>
 
-        <View  style={body.row}>
-           <Text style={body.title}>Về chúng tôi</Text>
-           <TouchableOpacity style={body.rowdetail}>
-             <QuesIC/>
-             <Text style={body.textdetail}>Trợ giúp</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={body.rowdetail}>
-             <DkIC/>
-             <Text style={body.textdetail}>Điều khoản</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={body.rowdetail}>
-             <AboutIC/>
-             <Text style={body.textdetail}>Giới thiệu</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={body.rowdetail}>
-             <HdsdIC/>
-             <Text style={body.textdetail}>Hướng dẫn sử dụng</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={body.rowdetail}>
-             <SetIC/>
-             <Text style={body.textdetail}>Cài đặt</Text>
-           </TouchableOpacity>
+        <View style={body.row}>
+          <Text style={body.title}>Về chúng tôi</Text>
+          <TouchableOpacity style={body.rowdetail}>
+            <QuesIC />
+            <Text style={body.textdetail}>Trợ giúp</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={body.rowdetail}>
+            <DkIC />
+            <Text style={body.textdetail}>Điều khoản</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={body.rowdetail}>
+            <AboutIC />
+            <Text style={body.textdetail}>Giới thiệu</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={body.rowdetail}>
+            <HdsdIC />
+            <Text style={body.textdetail}>Hướng dẫn sử dụng</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={body.rowdetail}>
+            <SetIC />
+            <Text style={body.textdetail}>Cài đặt</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -129,29 +136,29 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-  }
+  },
 });
 const body = StyleSheet.create({
-  body:{
+  body: {
     padding: 24,
   },
-  title:{
+  title: {
     fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 12
+    marginBottom: 12,
   },
-  row:{
-    marginBottom: 24
+  row: {
+    marginBottom: 24,
   },
-  rowdetail:{
-    flexDirection:'row',
-    alignItems:'center',
-    marginVertical: 8
+  rowdetail: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 8,
   },
-  textdetail:{
-    color:'#767676',
+  textdetail: {
+    color: "#767676",
     paddingHorizontal: 8,
     fontSize: 16,
-    fontWeight:'regular'
-  }
+    fontWeight: "regular",
+  },
 });

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import "./src/styles/global.css";
@@ -11,6 +10,7 @@ import LoginScreen from "./src/screens/login";
 import RegisterScreen from "./src/screens/register";
 import VerifyScreen from "./src/screens/verify";
 import CreateOrder from "./src/screens/createOrder";
+import RouteManager from "./src/components/Navbar/RouteManager";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,30 +19,20 @@ export type RootStackParamList = {
   RegisterPage: undefined;
   VerifyPage: { phoneNumber: string };
 };
-=======
-// App.tsx
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
-import { NavigationContainer } from "@react-navigation/native";
-import RouteManager from './src/components/Navbar/RouteManager';
->>>>>>> origin/DTri
 
 export default function App() {
   return (
     <NavigationContainer>
-<<<<<<< HEAD
       <Stack.Navigator
-        initialRouteName="CreateOrder"
+        initialRouteName="HomePage"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="LoginPage" component={LoginScreen} />
         <Stack.Screen name="RegisterPage" component={RegisterScreen} />
         <Stack.Screen name="VerifyPage" component={VerifyScreen} />
         <Stack.Screen name="CreateOrder" component={CreateOrder} />
+        <Stack.Screen name="HomePage" component={RouteManager} />
       </Stack.Navigator>
-=======
-      <RouteManager />
->>>>>>> origin/DTri
     </NavigationContainer>
   );
 }

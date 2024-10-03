@@ -14,7 +14,6 @@ import AccIC from "../../svg/DucTri/Icons/NavIcon/Account";
 import CreateIC from "../../svg/DucTri/Icons/NavIcon/plus";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
 
 const homeName = "Trang chủ";
 const orderName = "Đơn hàng";
@@ -23,7 +22,6 @@ const supportName = "Tài khoản";
 const createOrderName = "Lên đơn";
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 
 const RouteManager = () => {
   return (
@@ -40,7 +38,12 @@ const RouteManager = () => {
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
               <HomeIC fill={focused ? "#EB455F" : "#1c1c1c"} />
-              <Text style={[styles.iconText, { color: focused ? "#EB455F" : "#1c1c1c" }]}>
+              <Text
+                style={[
+                  styles.iconText,
+                  { color: focused ? "#EB455F" : "#1c1c1c" },
+                ]}
+              >
                 Trang chủ
               </Text>
             </View>
@@ -56,7 +59,12 @@ const RouteManager = () => {
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
               <OrderIC fill={focused ? "#EB455F" : "#1c1c1c"} />
-              <Text style={[styles.iconText, { color: focused ? "#EB455F" : "#1c1c1c" }]}>
+              <Text
+                style={[
+                  styles.iconText,
+                  { color: focused ? "#EB455F" : "#1c1c1c" },
+                ]}
+              >
                 Đơn hàng
               </Text>
             </View>
@@ -71,7 +79,7 @@ const RouteManager = () => {
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainerplus}>
-              <CreateIC  />
+              <CreateIC />
             </View>
           ),
           headerShown: false,
@@ -85,7 +93,12 @@ const RouteManager = () => {
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
               <NofiIC fill={focused ? "#EB455F" : "#1c1c1c"} />
-              <Text style={[styles.iconText, { color: focused ? "#EB455F" : "#1c1c1c" }]}>
+              <Text
+                style={[
+                  styles.iconText,
+                  { color: focused ? "#EB455F" : "#1c1c1c" },
+                ]}
+              >
                 Thông báo
               </Text>
             </View>
@@ -93,7 +106,7 @@ const RouteManager = () => {
           headerShown: false,
         }}
       />
-      
+
       <Tab.Screen
         name={supportName}
         component={Account}
@@ -101,7 +114,12 @@ const RouteManager = () => {
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
               <AccIC fill={focused ? "#EB455F" : "#1c1c1c"} />
-              <Text style={[styles.iconText, { color: focused ? "#EB455F" : "#1c1c1c" }]}>
+              <Text
+                style={[
+                  styles.iconText,
+                  { color: focused ? "#EB455F" : "#1c1c1c" },
+                ]}
+              >
                 Tài khoản
               </Text>
             </View>
@@ -123,17 +141,17 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "column",
     alignItems: "center",
-    gap: 6, 
+    gap: 6,
   },
-  iconContainerplus:{
-    backgroundColor: '#2FA087',
+  iconContainerplus: {
+    backgroundColor: "#2FA087",
     borderRadius: 46,
     padding: 24,
-    position: 'absolute',
-    top: -30, 
-    zIndex: 1, 
+    position: "absolute",
+    top: -30,
+    zIndex: 1,
     borderWidth: 10,
-    borderColor:'#ffffff'
+    borderColor: "#ffffff",
   },
   iconText: {
     fontSize: 10,
