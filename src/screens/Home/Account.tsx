@@ -4,7 +4,7 @@ import { ImagesAssets } from "../../assets/DTri/ImageAssets";
 import AccIC from "../../svg/DucTri/Icons/AccIcon/User"
 import ProIC from "../../svg/DucTri/Icons/AccIcon/Product"
 import WalletIC from "../../svg/DucTri/Icons/AccIcon/Wallet"
-import CalIC from "../../svg/DucTri/Icons/AccIcon/calcu"
+import CalIC from "../../svg/DucTri/Icons/AccIcon/Calcu"
 import LocaIC from "../../svg/DucTri/Icons/AccIcon/Loca"
 import PromoIC from "../../svg/DucTri/Icons/AccIcon/Promo"
 import QuesIC from "../../svg/DucTri/Icons/AccIcon/Ques"
