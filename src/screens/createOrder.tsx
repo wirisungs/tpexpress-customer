@@ -81,7 +81,7 @@ const CreateOrder = () => {
         </View>
         {/* Qua bước tiếp theo */}
         <ButtonFill onPress={() => Alert.alert("Next Step")}>
-          <Text className="text-white text-xl font-bold">Tiếp tục</Text>
+          <Text className="text-white text-xl font-bold">Tiếp tụccc</Text>
         </ButtonFill>
       </View>
     </ScrollView>
