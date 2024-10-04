@@ -1,6 +1,6 @@
 import React, { Children, ReactNode, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import TickIC from "../../svg/TickIC";
+import TickIC from "../../svg/MTri/TickIC";
 interface CheckboxTextProps {
   children: ReactNode;
   setCOD: any;

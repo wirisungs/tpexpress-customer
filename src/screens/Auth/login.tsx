@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Alert, Image, StyleSheet, Text, View } from "react-native";
-import HeroSection from "../components/sections/HeroSection";
-import Input, { InputWithIcon } from "../components/Inputs/Inputs";
-import ButtonFill, { ButtonLine } from "../components/Buttons/Buttons";
-import TextAndFunction from "../components/Items/TextAndFunction";
-import IconAndText from "../components/Items/IconAndText";
+import HeroSection from "../../components/sections/HeroSection";
+import Input, { InputWithIcon } from "../../components/Inputs/Inputs";
+import ButtonFill, { ButtonLine } from "../../components/Buttons/Buttons";
+import TextAndFunction from "../../components/Items/TextAndFunction";
+import IconAndText from "../../components/Items/IconAndText";
 
 // Import Icons
-import PasswordIC from "../svg/PasswordIC";
-import FingerPrintIC from "../svg/FingerPrintIC";
-import OTPIC from "../svg/OtpIC";
+import PasswordIC from "../../svg/MTri/PasswordIC";
+import FingerPrintIC from "../../svg/MTri/FingerPrintIC";
+import OTPIC from "../../svg/MTri/OtpIC";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from "../../../App";
 
 const Login = () => {
   // Khai báo navigation

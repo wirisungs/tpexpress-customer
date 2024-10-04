@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
-import EyesIC from "../../svg/EyesIC";
+import EyesIC from "../../svg/MTri/EyesIC";
 
 type type = "numeric" | "default" | "email-address" | "visible-password";
 

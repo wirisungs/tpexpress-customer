@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
-import BasicHeader from "../components/Layouts/Headers";
-import Input, { InputWithIcon } from "../components/Inputs/Inputs";
-import Marker from "../svg/Marker";
-import CheckboxText from "../components/Inputs/CheckboxText";
-import ButtonFill from "../components/Buttons/Buttons";
+import BasicHeader from "../../components/Layouts/Headers";
+import Input, { InputWithIcon } from "../../components/Inputs/Inputs";
+import Marker from "../../svg/MTri/Marker";
+import CheckboxText from "../../components/Inputs/CheckboxText";
+import ButtonFill from "../../components/Buttons/Buttons";
 
 const CreateOrder = () => {
   const [codInput, setCODInput] = useState<boolean>(false);

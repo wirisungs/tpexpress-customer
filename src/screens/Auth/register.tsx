@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, Alert } from "react-native";
-import HeroSection from "../components/sections/HeroSection";
-import Input from "../components/Inputs/Inputs";
-import ButtonFill from "../components/Buttons/Buttons";
-import CheckboxText from "../components/Inputs/CheckboxText";
+import HeroSection from "../../components/sections/HeroSection";
+import Input from "../../components/Inputs/Inputs";
+import ButtonFill from "../../components/Buttons/Buttons";
+import CheckboxText from "../../components/Inputs/CheckboxText";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../../App";
+import { RootStackParamList } from "../../../App";
 
 const Register = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
