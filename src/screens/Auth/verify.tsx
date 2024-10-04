@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import BasicHeader from "../components/Layouts/Headers";
-import SendOTPIC from "../svg/SendOTPIC";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { RootStackParamList } from "../../App";
-import { OTPInput } from "../components/Inputs/Inputs";
-import ButtonFill from "../components/Buttons/Buttons";
+import BasicHeader, { TransHeader } from "../../components/Layouts/Headers";
+import SendOTPIC from "../../svg/MTri/SendOTPIC";
+import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { RootStackParamList } from "../../../App";
+import { OTPInput } from "../../components/Inputs/Inputs";
+import ButtonFill from "../../components/Buttons/Buttons";
 
 const Verify = () => {
   const Route = useRoute<RouteProp<RootStackParamList, "VerifyPage">>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { phoneNumber } = Route.params;
   const [timeLeft, setTimeLeft] = useState(60);
 
@@ -29,7 +30,7 @@ const Verify = () => {
 
   return (
     <View className="w-full">
-      <BasicHeader haveBackIcon={true} />
+      <TransHeader haveBackIcon={true} />
       <View className="body flex flex-col gap-6 items-center justify-center">
         <SendOTPIC />
         <View className="title flex flex-col gap-2 items-center">
@@ -62,7 +63,7 @@ const Verify = () => {
         </View>
         <View className="inputBox w-full px-6 flex items-center flex-col gap-3">
           <OTPInput length={6} />
-          <ButtonFill onPress={() => Alert.alert("To Home")}>
+          <ButtonFill onPress={() => navigation.navigate('HomePage')}>
             <Text className="text-white font-bold text-xl">Xác thực</Text>
           </ButtonFill>
         </View>

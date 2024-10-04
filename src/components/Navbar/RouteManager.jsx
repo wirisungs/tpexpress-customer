@@ -4,7 +4,7 @@ import Home from "../../screens/Home/Home";
 import Order from "../../screens/Home/Order";
 import Nofication from "../../screens/Home/Nofication";
 import Account from "../../screens/Home/Account";
-import Createstep1 from "../../screens/Order/CreateStep1";
+import Createstep1 from "../../screens/Order/createOrder";
 
 // Icon
 import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";

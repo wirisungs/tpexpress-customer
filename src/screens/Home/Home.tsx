@@ -91,7 +91,7 @@ const Home: React.FC<HomeProps> = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fcfcfc",
     flex: 1,
   },
   topliner: {

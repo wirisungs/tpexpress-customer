@@ -3,11 +3,11 @@ import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg"
 const SvgComponent = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
-    width={24}
-    height={24}
+    width={36}
+    height={36}
     fill="none"
     {...props}
-    viewBox="0 0 32 32"
+    viewBox="0 0 36 36"
   >
     <Path
       fill="url(#a)"
