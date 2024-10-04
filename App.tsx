@@ -11,6 +11,7 @@ import RegisterScreen from "./src/screens/Auth/register";
 import VerifyScreen from "./src/screens/Auth/verify";
 import CreateOrder from "./src/screens/Order/createOrder";
 import RouteManager from "./src/components/Navbar/RouteManager";
+import Main from "./src/screens/Wallet/Main";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ export default function App() {
         <Stack.Screen name="VerifyPage" component={VerifyScreen} />
         <Stack.Screen name="CreateOrder" component={CreateOrder} />
         <Stack.Screen name="HomePage" component={RouteManager} />
+        <Stack.Screen name="MainWallet" component={Main} />
       </Stack.Navigator>
     </NavigationContainer>
   );

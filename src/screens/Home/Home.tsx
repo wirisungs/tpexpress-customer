@@ -14,7 +14,7 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = () => {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <LinearGradient colors={["#F9801D", "#F44336"]} style={styles.topliner}>
           <View style={styles.top}>
               <Text style={styles.title}>Theo dõi đơn hàng của bạn</Text>
@@ -26,12 +26,12 @@ const Home: React.FC<HomeProps> = () => {
                    placeholderTextColor="#B6B6B6"
                 />
               </View>
-   
+              <Image source={ImagesAssets.Xeday} style={styles.imageXe} resizeMode="contain" />
           </View>
         
       </LinearGradient>
 
-      <ScrollView style={styles.body}>
+      <View style={styles.body}>
             <Text style={styles.chucnang}>Chức năng</Text>
             <View style={styles.item}>
               <View style={styles.item1}>
@@ -84,8 +84,8 @@ const Home: React.FC<HomeProps> = () => {
                  
               </View>
             </View>
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -200,7 +200,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  
+  imageXe:{
+    zIndex: -1
+  }
 });
 
 
