@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
-import BasicHeader, { TransHeader } from "../../components/Layouts/Headers";
+import { StyleSheet, Text, View } from "react-native";
+import { TransHeader } from "../../components/Layouts/Headers";
 import SendOTPIC from "../../svg/MTri/SendOTPIC";
 import {
   NavigationProp,
   RouteProp,
+  useIsFocused,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
@@ -36,6 +37,10 @@ const Verify = () => {
   const handleOTPComplete = (otp: string) => {
     if (otp.length == 6) {
       navigation.navigate("HomePage");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "HomePage" }],
+      });
     }
   };
   return (
@@ -73,7 +78,7 @@ const Verify = () => {
         </View>
         <View className="inputBox w-full px-6 flex items-center flex-col gap-3">
           <OTPInput length={6} onComplete={handleOTPComplete} />
-          <ButtonFill onPress={() => navigation.navigate("HomePage")}>
+          <ButtonFill onPress={() => handleOTPComplete}>
             <Text className="text-white font-bold text-xl">Xác thực</Text>
           </ButtonFill>
         </View>

@@ -29,6 +29,8 @@ const CreateOrder = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const isFocused = useIsFocused();
 
+  // Khai báo cho checkBox
+  const [isChecked, setIsChecked] = useState(false);
   // Value của input
   // Thông tin người nhận
   const [formValues, setFormValues] = useState<formValuesType>({
@@ -212,7 +214,11 @@ const CreateOrder = () => {
         </View>
         {/* Checkbox */}
         <View className="cod-input flex flex-col gap-2">
-          <CheckboxText setCOD={setCODInput}>
+          <CheckboxText
+            isChecked={isChecked}
+            onCheckChange={setIsChecked}
+            setCOD={setCODInput}
+          >
             <Text>Thu hộ COD</Text>
           </CheckboxText>
           {codInput && <Input inputType="numeric" placeholder="Phí thu hộ" />}

@@ -3,12 +3,18 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import TickIC from "../../svg/MTri/TickIC";
 interface CheckboxTextProps {
   children: ReactNode;
-  setCOD: any;
+  isChecked?: boolean;
+  onCheckChange: (checked: boolean) => void;
+  setCOD?: any;
 }
-const CheckboxText = ({ children, setCOD }: CheckboxTextProps) => {
-  const [isChecked, setIsChecked] = useState(false);
+const CheckboxText = ({
+  children,
+  isChecked,
+  onCheckChange,
+  setCOD,
+}: CheckboxTextProps) => {
   const handleCheckbox = (setCOD: any) => {
-    setIsChecked(!isChecked);
+    onCheckChange(!isChecked);
     if (setCOD) {
       if (!isChecked) {
         setCOD(true);

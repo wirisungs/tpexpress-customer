@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import HeroSection from "../../components/sections/HeroSection";
 import Input, {
@@ -13,10 +13,23 @@ import IconAndText from "../../components/Items/IconAndText";
 import PasswordIC from "../../svg/MTri/PasswordIC";
 import FingerPrintIC from "../../svg/MTri/FingerPrintIC";
 import OTPIC from "../../svg/MTri/OtpIC";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
+import FingerscanSetup from "./fingerscanSetup";
 
 const Login = () => {
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (!isFocused) {
+      setPhoneNumber("");
+      setWarning("");
+      setWithPassword(false);
+    }
+  }, [isFocused]);
   // Khai báo navigation
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -25,10 +38,6 @@ const Login = () => {
   const [withPassword, setWithPassword] = useState(false);
   const handleLogin = () => {
     withPassword ? handleCheckPassword() : handleOTP();
-  };
-
-  const handleFingerPrint = () => {
-    Alert.alert("Finger");
   };
 
   // Hàm kích hoạt ĐN Password
@@ -46,7 +55,10 @@ const Login = () => {
     }
   };
   const handleCheckPassword = () => {
-    navigation.navigate("HomePage");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "HomePage" }],
+    });
   };
   return (
     <View className="w-full h-full flex flex-col items-center justify-center px-6 gap-6">
@@ -88,11 +100,7 @@ const Login = () => {
               <Text className="text-white font-bold text-lg">Đăng nhập</Text>
             </ButtonFill>
           </View>
-          <View className="fingerPrint">
-            <ButtonLine onPress={() => handleFingerPrint()}>
-              <FingerPrintIC />
-            </ButtonLine>
-          </View>
+          <FingerscanSetup />
         </View>
       </View>
 

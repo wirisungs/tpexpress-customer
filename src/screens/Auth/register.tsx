@@ -1,22 +1,79 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Alert,
+  StyleProp,
+  TextStyle,
+} from "react-native";
 import HeroSection from "../../components/sections/HeroSection";
-import Input from "../../components/Inputs/Inputs";
+import Input, {
+  InputWithIcon,
+  PhoneInput,
+} from "../../components/Inputs/Inputs";
 import ButtonFill from "../../components/Buttons/Buttons";
 import CheckboxText from "../../components/Inputs/CheckboxText";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 
 const Register = () => {
+  // Khai báo
+  const [fullName, setFullName] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const handleRegister = () => {
-    const countPhoneNumber: number = phoneNumber.length;
-    if (countPhoneNumber === 10) {
-      navigation.navigate("VerifyPage", { phoneNumber });
-    } else {
-      Alert.alert("Số điện thoại phải đủ 10 số");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const [checkFullName, setCheckFullName] = useState<boolean>(false);
+  const [checkPhoneNumber, setCheckPhoneNumber] = useState<boolean>(false);
+  const [checkEmail, setCheckEmail] = useState<boolean>(false);
+  const [checkPassword, setCheckPassword] = useState<boolean>(false);
+
+  // Khai báo checked
+  const [isChecked, setIsChecked] = useState(false);
+
+  // Khai báo isFocuse
+  const isFocus = useIsFocused();
+  useEffect(() => {
+    if (!isFocus) {
+      setFullName("");
+      setPhoneNumber("");
+      setEmail("");
+      setPassword("");
+      setIsChecked(false);
     }
+  });
+
+  // Kiểm tra input
+  useEffect(() => {
+    if (fullName !== "") setCheckFullName(false);
+    if (phoneNumber !== "") setCheckPhoneNumber(false);
+    if (email !== "") setCheckEmail(false);
+    if (password !== "") setCheckPassword(false);
+  });
+
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const errorStyle: StyleProp<TextStyle> = {
+    borderColor: "#EB455F",
+  };
+
+  // Hàm register
+  const handleRegister = () => {
+    const field = [fullName, phoneNumber, email, password];
+    if (fullName === "") setCheckFullName(true);
+    if (phoneNumber === "") setCheckPhoneNumber(true);
+    if (email === "") setCheckEmail(true);
+    if (password === "") setCheckPassword(true);
+
+    const isFieldNull = field.some((field) => field === "");
+    !isFieldNull &&
+      isChecked &&
+      navigation.navigate("VerifyPage", { phoneNumber });
   };
 
   return (
@@ -26,20 +83,40 @@ const Register = () => {
 
       {/* Form */}
       <View className="form flex flex-col gap-3 w-full">
-        <Input inputType="default" placeholder="Họ và tên" />
         <Input
+          value={fullName}
+          onChangeText={setFullName}
+          style={checkFullName && errorStyle}
+          inputType="default"
+          placeholder="Họ và tên"
+        />
+        <PhoneInput
           value={phoneNumber}
           onChangeText={setPhoneNumber}
+          style={checkPhoneNumber && errorStyle}
           inputType="numeric"
           placeholder="Số điện thoại"
         />
-        <Input inputType="email-address" placeholder="Email" />
-        <Input inputType="visible-password" placeholder="Mật khẩu" />
+        <Input
+          value={email}
+          onChangeText={setEmail}
+          style={checkEmail && errorStyle}
+          inputType="email-address"
+          placeholder="Email"
+        />
+        <InputWithIcon
+          isPassword={true}
+          value={password}
+          onChangeText={setPassword}
+          style={checkPassword && errorStyle}
+          inputType="default"
+          placeholder="Mật khẩu"
+        />
       </View>
 
       <View className="button flex flex-col gap-3">
         <View className="checkBox w-full">
-          <CheckboxText>
+          <CheckboxText isChecked={isChecked} onCheckChange={setIsChecked}>
             <Text className="text-wrap text-sm flex flex-shrink-1 ">
               Đồng ý với{" "}
               <Text
