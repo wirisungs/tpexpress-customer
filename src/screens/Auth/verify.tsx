@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import BasicHeader, { TransHeader } from "../../components/Layouts/Headers";
 import SendOTPIC from "../../svg/MTri/SendOTPIC";
-import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 import { OTPInput } from "../../components/Inputs/Inputs";
 import ButtonFill from "../../components/Buttons/Buttons";
@@ -28,6 +33,11 @@ const Verify = () => {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
+  const handleOTPComplete = (otp: string) => {
+    if (otp.length == 6) {
+      navigation.navigate("HomePage");
+    }
+  };
   return (
     <View className="w-full">
       <TransHeader haveBackIcon={true} />
@@ -62,8 +72,8 @@ const Verify = () => {
           </View>
         </View>
         <View className="inputBox w-full px-6 flex items-center flex-col gap-3">
-          <OTPInput length={6} />
-          <ButtonFill onPress={() => navigation.navigate('HomePage')}>
+          <OTPInput length={6} onComplete={handleOTPComplete} />
+          <ButtonFill onPress={() => navigation.navigate("HomePage")}>
             <Text className="text-white font-bold text-xl">Xác thực</Text>
           </ButtonFill>
         </View>

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import HeroSection from "../../components/sections/HeroSection";
-import Input, { InputWithIcon } from "../../components/Inputs/Inputs";
+import Input, {
+  InputWithIcon,
+  PhoneInput,
+} from "../../components/Inputs/Inputs";
 import ButtonFill, { ButtonLine } from "../../components/Buttons/Buttons";
 import TextAndFunction from "../../components/Items/TextAndFunction";
 import IconAndText from "../../components/Items/IconAndText";
@@ -36,12 +39,14 @@ const Login = () => {
   const handleOTP = () => {
     if (!phoneNumber) {
       setWarning("Hãy nhập số điện thoại");
-    } else {
+    } else if (phoneNumber.length == 10) {
       navigation.navigate("VerifyPage", { phoneNumber });
+    } else {
+      setWarning("Số điện thoại phải đủ 10 số");
     }
   };
   const handleCheckPassword = () => {
-    Alert.alert("checking pass");
+    navigation.navigate("HomePage");
   };
   return (
     <View className="w-full h-full flex flex-col items-center justify-center px-6 gap-6">
@@ -51,7 +56,7 @@ const Login = () => {
       {/* Form */}
       <View className="form flex flex-col gap-3 w-full">
         <View className="flex flex-col gap-1">
-          <Input
+          <PhoneInput
             value={phoneNumber}
             onChangeText={setPhoneNumber}
             inputType="numeric"
@@ -69,7 +74,11 @@ const Login = () => {
 
         {/* Phương thức đăng nhập với mật khẩu */}
         {withPassword ? (
-          <InputWithIcon inputType="visible-password" placeholder="Mật khẩu" />
+          <InputWithIcon
+            isPassword={true}
+            inputType="default"
+            placeholder="Mật khẩu"
+          />
         ) : (
           ""
         )}

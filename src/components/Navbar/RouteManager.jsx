@@ -4,7 +4,7 @@ import Home from "../../screens/Home/Home";
 import Order from "../../screens/Home/Order";
 import Nofication from "../../screens/Home/Nofication";
 import Account from "../../screens/Home/Account";
-import Createstep1 from "../../screens/Order/createOrder";
+import Createstep1 from "../../screens/Order/CreateOrderInfo.tsx";
 
 // Icon
 import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";
@@ -14,6 +14,7 @@ import AccIC from "../../svg/DucTri/Icons/NavIcon/Account";
 import CreateIC from "../../svg/DucTri/Icons/NavIcon/plus";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import CreateOrder from "../../screens/Order/CreateOrderInfo.tsx";
 
 const homeName = "Trang chủ";
 const orderName = "Đơn hàng";
@@ -75,13 +76,14 @@ const RouteManager = () => {
 
       <Tab.Screen
         name={createOrderName}
-        component={Createstep1}
+        component={CreateOrder}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainerplus}>
               <CreateIC />
             </View>
           ),
+          tabBarStyle: { display: "none" },
           headerShown: false,
         }}
       />

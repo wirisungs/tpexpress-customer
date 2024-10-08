@@ -1,7 +1,13 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity,TextInput } from "react-native";
-import Bell from "../../assets/Icons/Item/BellIC";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 // import SearchBar from "../Home/SearchBar";
 import { useNavigation } from "@react-navigation/native";
 
@@ -11,7 +17,11 @@ interface HeaderProps {
   setActiveSender: (value: boolean) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ screenName, activeSender, setActiveSender }) => {
+const Header: React.FC<HeaderProps> = ({
+  screenName,
+  activeSender,
+  setActiveSender,
+}) => {
   const navigation = useNavigation();
 
   const setActiveSenderTrue = () => {
@@ -22,29 +32,30 @@ const Header: React.FC<HeaderProps> = ({ screenName, activeSender, setActiveSend
     setActiveSender(false);
   };
 
-
   return (
     <View style={styles.container}>
-      <View style={styles.header}>     
-          <Text style={styles.title}>{screenName}</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>{screenName}</Text>
       </View>
       <View style={styles.viewsearch}>
-                <TextInput
-                   style={styles.searchInput}
-                   placeholder="Nhập mã đơn vận chuyển"
-                   placeholderTextColor="#B6B6B6"
-                />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Nhập mã đơn vận chuyển"
+          placeholderTextColor="#B6B6B6"
+        />
       </View>
       <View style={styles.tabContainer}>
         <TouchableOpacity
           onPress={setActiveSenderTrue}
           activeOpacity={1}
-          style={[
-            styles.tab,
-            activeSender && styles.activeTab,
-          ]}
+          style={[styles.tab, activeSender && styles.activeTab]}
         >
-          <Text style={[styles.tabText, activeSender ? styles.activeText : styles.inactiveText]}>
+          <Text
+            style={[
+              styles.tabText,
+              activeSender ? styles.activeText : styles.inactiveText,
+            ]}
+          >
             Đơn gửi
           </Text>
         </TouchableOpacity>
@@ -52,12 +63,14 @@ const Header: React.FC<HeaderProps> = ({ screenName, activeSender, setActiveSend
         <TouchableOpacity
           onPress={setActiveSenderFalse}
           activeOpacity={1}
-          style={[
-            styles.tab,
-            !activeSender && styles.activeTab,
-          ]}
+          style={[styles.tab, !activeSender && styles.activeTab]}
         >
-          <Text style={[styles.tabText, !activeSender ? styles.activeText : styles.inactiveText]}>
+          <Text
+            style={[
+              styles.tabText,
+              !activeSender ? styles.activeText : styles.inactiveText,
+            ]}
+          >
             Đơn nhận
           </Text>
         </TouchableOpacity>
@@ -128,18 +141,18 @@ const styles = StyleSheet.create({
   inactiveText: {
     color: "#808080",
   },
-  searchInput:{
-    backgroundColor:'#eeeeee',
+  searchInput: {
+    backgroundColor: "#eeeeee",
     padding: 28,
     borderRadius: 12,
     fontSize: 16,
- },
- viewsearch:{
-   flex:1,
-   width:'100%',
-   marginTop: 24,
-   marginBottom: 64
- },
+  },
+  viewsearch: {
+    flex: 1,
+    width: "100%",
+    marginTop: 24,
+    marginBottom: 64,
+  },
 });
 
 export default Header;

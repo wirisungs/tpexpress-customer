@@ -1,8 +1,16 @@
-import React, { ReactNode, useState } from "react";
-import { StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
+import React, { ReactNode, useRef, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  StyleProp,
+  TextStyle,
+} from "react-native";
 import EyesIC from "../../svg/MTri/EyesIC";
 
-type type = "numeric" | "default" | "email-address" | "visible-password";
+type type = "numeric" | "default" | "email-address";
 
 // Props input thường
 interface InputProps {
@@ -10,62 +18,143 @@ interface InputProps {
   placeholder: string;
   value?: string;
   onChangeText?: (text: string) => void;
+  isBackground?: boolean;
+  style?: StyleProp<TextStyle>;
 }
 
 // Props cho OTP
 interface OTPInputProps {
   length: number;
-  value: Array<string>;
-  disable: boolean;
-  onChangeText(value: Array<string>): void;
+  onComplete: (otp: string) => void;
 }
 
 // Props cho Icon
 interface InputIconProps extends InputProps {
-  icon: ReactNode;
+  icon?: ReactNode;
+  isPassword?: boolean;
 }
 
+// Input thông thường
 const Input: React.FC<InputProps> = ({
   inputType,
   placeholder,
   value,
   onChangeText,
+  isBackground = false,
+  style,
 }) => {
   return (
-    <TextInput
-      className="w-full h-12 px-3 py-3 border-solid border-[1px] border-border rounded-xl"
-      keyboardType={inputType}
-      placeholder={placeholder}
-      value={value}
-      onChangeText={onChangeText}
-    />
+    <>
+      {!isBackground ? (
+        <TextInput
+          className="w-full h-12 px-3 py-3 border-solid border-[1px] border-border rounded-xl"
+          keyboardType={inputType}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onChangeText}
+          style={style}
+        />
+      ) : (
+        <TextInput
+          className="w-full h-12 px-3 py-3 rounded-xl bg-whiteBG-EEEEEE"
+          keyboardType={inputType}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onChangeText}
+          style={style}
+        />
+      )}
+    </>
   );
 };
 
-const OTPInput: React.FC<OTPInputProps> = ({
-  length,
+// Input số điện thoại
+const PhoneInput: React.FC<InputProps> = ({
+  inputType,
+  placeholder,
   value,
-  disable,
   onChangeText,
+  isBackground = false,
+  style,
 }) => {
+  return (
+    <>
+      {!isBackground ? (
+        <TextInput
+          className="w-full h-12 px-3 py-3 border-solid border-[1px] border-border rounded-xl"
+          style={style}
+          keyboardType={inputType}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onChangeText}
+          maxLength={10}
+        />
+      ) : (
+        <TextInput
+          className="w-full h-12 px-3 py-3 rounded-xl bg-whiteBG-EEEEEE"
+          style={style}
+          keyboardType={inputType}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onChangeText}
+          maxLength={10}
+        />
+      )}
+    </>
+  );
+};
+
+// Input OTP
+const OTPInput: React.FC<OTPInputProps> = ({ length, onComplete }) => {
+  const [otp, setOTP] = useState<string[]>(Array(length).fill(""));
+  const inputsRefs = useRef<Array<TextInput | null>>([]);
+  const handleOnChange = (text: string, index: number): void => {
+    if (text.length > 1) return;
+
+    const newOTP = [...otp];
+    newOTP[index] = text;
+    setOTP(newOTP);
+    if (text && index < length - 1) {
+      inputsRefs.current[index + 1]?.focus();
+    }
+
+    // Gọi callback khi hoàn tất nhập OTP
+    if (newOTP.join("").length === length) {
+      onComplete(newOTP.join(""));
+    }
+  };
+  const handleKeyPress = (e: any, index: number) => {
+    // Xóa nội dung và chuyển con trỏ tới input trước đó nếu bấm phím Backspace
+    if (e.nativeEvent.key === "Backspace" && !otp[index] && index > 0) {
+      inputsRefs.current[index - 1]?.focus();
+    }
+  };
   return (
     <View className="flex flex-row gap-2">
       {[...new Array(length)].map((item, index) => (
         <TextInput
           key={index}
-          className="w-[45px] h-[45px] bg-transparent border-solid border-[1px] border-border rounded-xl"
+          ref={(input) => (inputsRefs.current[index] = input)}
+          keyboardType="number-pad"
+          maxLength={1}
+          value={otp[index]}
+          onChangeText={(text) => handleOnChange(text, index)}
+          onKeyPress={(e) => handleKeyPress(e, index)}
+          className="text-center w-[45px] h-[45px] bg-transparent border-solid border-[1px] border-border rounded-xl"
         />
       ))}
     </View>
   );
 };
 
+// Input chứa icon
 const InputWithIcon: React.FC<InputIconProps> = ({
-  inputType,
   placeholder,
   value,
   onChangeText,
   icon,
+  isPassword = false,
+  style,
 }) => {
   const [isHidden, setIsHidden] = useState(true);
 
@@ -73,8 +162,11 @@ const InputWithIcon: React.FC<InputIconProps> = ({
     setIsHidden(!isHidden);
   };
   return (
-    <View className="flex flex-row w-full h-12 px-3 py-3 border-solid border-[1px] border-border rounded-xl">
-      {inputType === "visible-password" ? (
+    <View
+      className="flex flex-row w-full h-12 px-3 py-3 border-solid border-[1px] border-border rounded-xl"
+      style={style}
+    >
+      {isPassword ? (
         <View className="flex flex-row items-center w-full justify-between">
           <TextInput
             className="w-[90%]"
@@ -92,11 +184,13 @@ const InputWithIcon: React.FC<InputIconProps> = ({
           <TextInput
             className="w-[90%]"
             placeholder={placeholder}
-            secureTextEntry={isHidden}
             value={value}
             onChangeText={onChangeText}
           />
-          <TouchableOpacity className="icon" onPress={() => handleToggle()}>
+          <TouchableOpacity
+            className="icon"
+            onPress={() => Alert.alert("Choose")}
+          >
             {icon}
           </TouchableOpacity>
         </View>
@@ -105,7 +199,5 @@ const InputWithIcon: React.FC<InputIconProps> = ({
   );
 };
 
-const styles = StyleSheet.create({});
-
 export default Input;
-export { InputWithIcon, OTPInput };
+export { InputWithIcon, OTPInput, PhoneInput };

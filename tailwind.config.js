@@ -22,6 +22,7 @@ module.exports = {
 
         // Background
         "grayBG-FCFCFC": "#FCFCFC",
+        "whiteBG-EEEEEE": "#EEEEEE",
       },
       height: {
         header115: "115px",

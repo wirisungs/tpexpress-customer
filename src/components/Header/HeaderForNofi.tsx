@@ -1,7 +1,13 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity,TextInput } from "react-native";
-import Bell from "../../assets/Icons/Item/BellIC";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 // import SearchBar from "../Home/SearchBar";
 import { useNavigation } from "@react-navigation/native";
 
@@ -21,19 +27,20 @@ const Header: React.FC<HeaderProps> = ({ activeSender, setActiveSender }) => {
     setActiveSender(false);
   };
 
-
   return (
     <View style={styles.container}>
       <View style={styles.tabContainer}>
         <TouchableOpacity
           onPress={setActiveSenderTrue}
           activeOpacity={1}
-          style={[
-            styles.tab,
-            activeSender && styles.activeTab,
-          ]}
+          style={[styles.tab, activeSender && styles.activeTab]}
         >
-          <Text style={[styles.tabText, activeSender ? styles.activeText : styles.inactiveText]}>
+          <Text
+            style={[
+              styles.tabText,
+              activeSender ? styles.activeText : styles.inactiveText,
+            ]}
+          >
             Quan trọng
           </Text>
         </TouchableOpacity>
@@ -41,12 +48,14 @@ const Header: React.FC<HeaderProps> = ({ activeSender, setActiveSender }) => {
         <TouchableOpacity
           onPress={setActiveSenderFalse}
           activeOpacity={1}
-          style={[
-            styles.tab,
-            !activeSender && styles.activeTab,
-          ]}
+          style={[styles.tab, !activeSender && styles.activeTab]}
         >
-          <Text style={[styles.tabText, !activeSender ? styles.activeText : styles.inactiveText]}>
+          <Text
+            style={[
+              styles.tabText,
+              !activeSender ? styles.activeText : styles.inactiveText,
+            ]}
+          >
             Ưu đãi
           </Text>
         </TouchableOpacity>
