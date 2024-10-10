@@ -23,10 +23,9 @@ const OrderItem: React.FC<OrderItemProps> = ({ phone }) => {
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   
   useEffect(() => {
-    console.log('Phone:', phone); // Log phone for debugging
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://blueduck.ddns.net:4001/api/order?email=${phone}`);
+        const response = await fetch(`http://172.20.10.2:3000/api/order`);
         const messagesData: Promotion[] = await response.json();
         setPromotions(messagesData);
       } catch (error) {
@@ -46,7 +45,6 @@ const OrderItem: React.FC<OrderItemProps> = ({ phone }) => {
       {promotions.map((item, index) => (
         <TouchableOpacity
           activeOpacity={1}
-          // onPress={() => navigation.navigate("OrderDetail", { order: item })}
           key={index}
         >
           <View style={[styles.container, styles.shadow]}>
@@ -56,15 +54,26 @@ const OrderItem: React.FC<OrderItemProps> = ({ phone }) => {
             </View>
 
             <View style={styles.line} />
-
-            {/* Info */}
+ 
             <View style={styles.headerContainer}>
-              <Text style={styles.info}>Tên hàng: {item.Detail}</Text>
-              <Text style={styles.info}>Người nhận: {item.ReceiverName}</Text>
-              <Text style={styles.info}>Số điện thoại: {item.SDT}</Text>
-              <Text style={styles.info}>Địa chỉ: {item.Address}</Text>
-              <Text style={styles.info}>Note: {item.Note}</Text>
+              <View>
+
+              </View>
+              
+              <Text style={styles.info}>Tên hàng:</Text>
+              <Text style={styles.info1}>{item.Detail}</Text>
+              <Text style={styles.info}>Người nhận:</Text>
+              <Text style={styles.info1}>{item.ReceiverName}</Text>
+              <Text style={styles.info}>Số điện thoại:</Text>
+              <Text style={styles.info1}>{item.SDT}</Text>
+              <Text style={styles.info}>Địa chỉ:</Text>
+              <Text style={styles.info1}>{item.Address}</Text>
+              <Text style={styles.info}>Note:</Text>
+              <Text style={styles.info1}>{item.Note}</Text>
             </View>
+          
+            
+            
 
             <View style={styles.line} />
 
@@ -108,7 +117,11 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 18,
-    color: "#808080",
+    color: "#1c1c1c",
+  },
+  info1:{
+    color:'#767676',
+    fontSize: 18
   },
   line: {
     width: '100%',
@@ -132,3 +145,5 @@ const styles = StyleSheet.create({
 });
 
 export default OrderItem;
+
+

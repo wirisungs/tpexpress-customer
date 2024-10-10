@@ -94,6 +94,7 @@ const InputWithIcon: React.FC<InputIconProps> = ({
             placeholder={placeholder}
             secureTextEntry={isHidden}
             value={value}
+            keyboardType={inputType}  //Trí thêm vào
             onChangeText={onChangeText}
           />
           <TouchableOpacity className="icon" onPress={() => handleToggle()}>

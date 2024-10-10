@@ -7,6 +7,7 @@ import PromotionIC from '../../svg/DucTri/Icons/HomeIcon/Promotion'
 import QuesIC from '../../svg/DucTri/Icons/HomeIcon/Ques'
 import Banner from '../../svg/DucTri/Icons/HomeIcon/Banner1'
 import { ImagesAssets } from "../../assets/DTri/ImageAssets";
+import Input from "../../components/Inputs/Inputs";
 
 interface HomeProps {
   
@@ -20,10 +21,14 @@ const Home: React.FC<HomeProps> = () => {
               <Text style={styles.title}>Theo dõi đơn hàng của bạn</Text>
               <Text style={styles.title1}>Hãy chắc chắn rằng Mã đơn hàng của bạn chính xác</Text>
               <View style={styles.viewsearch}>
-                <TextInput
+                {/* <TextInput
                    style={styles.searchInput}
                    placeholder="Nhập mã đơn vận chuyển"
                    placeholderTextColor="#B6B6B6"
+                /> */}
+                <Input
+                  placeholder="Nhập mã đơn vận chuyển"
+                  inputType="default"
                 />
               </View>
               <Image source={ImagesAssets.Xeday} style={styles.imageXe} resizeMode="contain" />
@@ -156,16 +161,17 @@ const styles = StyleSheet.create({
   banner:{
     marginVertical: 12
   },
-  searchInput:{
-     backgroundColor:'#eeeeee',
-     padding: 28,
-     borderRadius: 12,
-     fontSize: 16,
-    //  color: '#B6B6B6'
-  },
+  // searchInput:{
+  //    backgroundColor:'#eeeeee',
+  //    padding: 28,
+  //    borderRadius: 12,
+  //    fontSize: 16,
+  //   //  color: '#B6B6B6'
+  // },
   viewsearch:{
     flex:1,
-    width:'100%'
+    width:'100%',
+    
   },
   row:{
     flexDirection: 'row',

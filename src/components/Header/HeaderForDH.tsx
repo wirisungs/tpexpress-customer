@@ -1,7 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity,TextInput } from "react-native";
-import Bell from "../../assets/Icons/Item/BellIC";
 // import SearchBar from "../Home/SearchBar";
 import { useNavigation } from "@react-navigation/native";
 
@@ -74,9 +73,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   header: {
-    marginTop: 42,
+    marginTop: 56,
     alignItems: "center",
-    marginBottom: 8,
+    //marginBottom: 8,
   },
   titleContainer: {
     flex: 1,
@@ -115,7 +114,7 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
-    borderBottomColor: "#03A63C",
+    borderBottomColor: "#EB455F",
   },
   tabText: {
     fontSize: 18,

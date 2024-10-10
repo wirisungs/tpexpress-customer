@@ -8,22 +8,27 @@ import EyeIC from "../../svg/DucTri/Icons/Wallet/Eye";
 import RutIC from "../../svg/DucTri/Icons/Wallet/Rut"
 import NapIC from "../../svg/DucTri/Icons/Wallet/Nap"
 import QuetIC from "../../svg/DucTri/Icons/Wallet/Quet"
+import Bank1IC from "../../svg/DucTri/Icons/Wallet/IconBank1"
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../../../App";
 
 interface RouteParams {}
 
 const Main: React.FC<RouteParams> = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+   
   return (
     <LinearGradient colors={["#FF6079", "#EB455F"]} style={styles.container}>
       <View style={styles.top}>
-        <View style={styles.TopIC}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.TopIC}>
           <BackIC />
-        </View>
+        </TouchableOpacity>
         <View style={styles.rightIconsTop}>
           <View style={styles.TopIC2}>
             <NofiIC />
           </View>
           <View style={styles.TopIC2}>
-            <DetailIC />
+            <DetailIC/>
           </View>
         </View>
       </View>
@@ -38,15 +43,15 @@ const Main: React.FC<RouteParams> = () => {
       </View>
 
         <View style={styles.navWallet}>
-          <TouchableOpacity style={styles.nav1}>
+          <TouchableOpacity onPress={() => navigation.navigate('Ruttien')} style={styles.nav1}>
             <RutIC/>
             <Text style={styles.textnav1}>Rút tiền</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.nav1}>
+          <TouchableOpacity onPress={() => navigation.navigate('Naptien')} style={styles.nav1}>
             <NapIC/>
             <Text style={styles.textnav1}>Nạp tiền</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.nav1}>
+          <TouchableOpacity onPress={() => navigation.navigate('ScanQR')} style={styles.nav1}>
             <QuetIC/>
             <Text style={styles.textnav1}>Quét mã</Text>
           </TouchableOpacity>
@@ -55,6 +60,13 @@ const Main: React.FC<RouteParams> = () => {
 
       <ScrollView style={bodys.body}>
         <Text style={bodys.title}>Tài khoản liên kết</Text>
+        <View style={bodys.bankrow}>
+          <Bank1IC/>
+          <View style={bodys.titlebank}>
+            <Text style={bodys.title1} numberOfLines={1} ellipsizeMode="tail">Liên kết tài khoản ngân hàng/ví điện tử</Text>
+            <Text style={bodys.title2} numberOfLines={1} ellipsizeMode="tail">Bạn mua cơm chưa? Mua cho tôi với</Text>
+          </View>
+        </View>
       </ScrollView>
 
     </LinearGradient>
@@ -161,10 +173,30 @@ const bodys = StyleSheet.create({
     backgroundColor: '#fcfcfc',
     flex: 1,
     borderRadius: 12, 
+    padding: 24
   },
   title:{
     fontSize: 20,
-    fontWeight:'bold'
+    fontWeight:'bold',
+    marginTop: 48
+  },
+  title1:{
+    fontSize: 16,
+    fontWeight:'bold',
+    maxWidth: 294
+  },
+  title2:{
+    fontSize: 12,
+    fontWeight:'regular',
+    color:'#767676',
+    maxWidth: 294
+  },
+  bankrow:{
+    flexDirection:'row',
+    marginVertical: 16 
+  },
+  titlebank:{
+    marginLeft: 12,
   }
 });
 

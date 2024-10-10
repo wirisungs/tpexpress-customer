@@ -5,6 +5,7 @@ import Order from "../../screens/Home/Order";
 import Nofication from "../../screens/Home/Nofication";
 import Account from "../../screens/Home/Account";
 import Createstep1 from "../../screens/Order/createOrder";
+import TestPush from "../../screens/Home/test";
 
 // Icon
 import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";

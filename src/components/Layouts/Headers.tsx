@@ -40,22 +40,22 @@ const TransHeader = ({ haveBackIcon, title }: BasicHeaderProps) => {
     navigation.goBack();
   };
   return (
-    <View>
-      <View className="flex relative p-6 h-header115 justify-end items-center">
-        <View className="absolute left-6 bottom-6">
-          <TouchableOpacity onPress={() => handleBack()}>
-            {haveBackIcon ? <BackIC fill="#EB455F" /> : ""}
-          </TouchableOpacity>
-        </View>
-        {title !== null ? (
-          <Text className="text-2xl font-bold text-primaryText-EB455F">
-            {title}
-          </Text>
-        ) : (
-          ""
-        )}
+    <View className="bg-transparent">
+    <View className="flex relative p-6 h-header115 bg-transparent justify-end items-center">
+      <View className="absolute left-6 bottom-6">
+        <TouchableOpacity onPress={() => handleBack()}>
+          {haveBackIcon ? <BackIC fill="#EB455F" /> : ""}
+        </TouchableOpacity>
       </View>
+      {title !== null ? (
+        <Text className="text-2xl font-bold text-primaryText-EB455F">
+          {title}
+        </Text>
+      ) : (
+        ""
+      )}
     </View>
+  </View>
   );
 };
 
@@ -65,10 +65,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FCFCFC",
     shadowColor: "#1C1C1C",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 5,
+    shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
   },
+
 });
 
 export default BasicHeader;

@@ -1,7 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import "./src/styles/global.css";
-import Login from "./src/screens/Auth/login";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -12,6 +11,10 @@ import VerifyScreen from "./src/screens/Auth/verify";
 import CreateOrder from "./src/screens/Order/createOrder";
 import RouteManager from "./src/components/Navbar/RouteManager";
 import Main from "./src/screens/Wallet/Main";
+import ScanQR from "./src/screens/Wallet/ScanQR";
+import Naptien from "./src/screens/Wallet/Naptien";
+import Ruttien from "./src/screens/Wallet/Ruttien";
+// import TestPush from "./src/screens/Home/test";
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +38,9 @@ export default function App() {
         <Stack.Screen name="CreateOrder" component={CreateOrder} />
         <Stack.Screen name="HomePage" component={RouteManager} />
         <Stack.Screen name="MainWallet" component={Main} />
+        <Stack.Screen name="ScanQR" component={ScanQR} />
+        <Stack.Screen name="Naptien" component={Naptien} />
+        {/* <Stack.Screen name="TestPush" component={TestPush} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
