@@ -40,7 +40,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SuccessStep"
+        initialRouteName="LoginPage"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="LoginPage" component={LoginScreen} />
@@ -53,7 +53,7 @@ export default function App() {
         <Stack.Screen name="MainWallet" component={Main} />
         <Stack.Screen name="ScanQR" component={ScanQR} />
         <Stack.Screen name="Naptien" component={Naptien} />
-        {/* <Stack.Screen name="TestPush" component={TestPush} /> */}
+        <Stack.Screen name="Ruttien" component={Ruttien} />
       </Stack.Navigator>
     </NavigationContainer>
   );

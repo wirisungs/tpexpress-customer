@@ -185,7 +185,7 @@ const InputWithIcon: React.FC<InputIconProps> = ({
             className="w-[90%]"
             placeholder={placeholder}
             value={value}
-            keyboardType={inputType}  //Trí thêm vào
+            // keyboardType={inputType}  //Trí thêm vào
             onChangeText={onChangeText}
           />
           <TouchableOpacity

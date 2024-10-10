@@ -11,7 +11,6 @@ const ReceiverOrder: React.FC<ReceiverOrderProps> = ({ phone }) => {
     <View style={styles.container}>
       <View>
         <OrderItem phone={phone} />
-        <Text>Hello</Text>
       </View>
     </View>
   );

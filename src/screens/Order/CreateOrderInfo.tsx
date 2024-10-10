@@ -141,7 +141,7 @@ const CreateOrder = () => {
 
           <View className="inputContainer flex flex-col gap-2">
             <PhoneInput
-              inputType="default"
+              inputType="numeric"
               placeholder="Số điện thoại"
               value={formValues.phoneNumber}
               onChangeText={(data) =>

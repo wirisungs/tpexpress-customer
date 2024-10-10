@@ -25,7 +25,7 @@ const OrderItem: React.FC<OrderItemProps> = ({ phone }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://172.20.10.2:3000/api/order`);
+        const response = await fetch(`http://tpexpress.ddns.net:3000/api/order`);
         const messagesData: Promotion[] = await response.json();
         setPromotions(messagesData);
       } catch (error) {
@@ -56,20 +56,27 @@ const OrderItem: React.FC<OrderItemProps> = ({ phone }) => {
             <View style={styles.line} />
  
             <View style={styles.headerContainer}>
-              <View>
-
+              <View style={styles.roworder}>
+                  <Text style={styles.info}>Tên hàng:</Text>
+                  <Text style={styles.info1}>{item.Detail}</Text>
+              </View>
+              <View style={styles.roworder}>
+                 <Text style={styles.info}>Người nhận:</Text>
+                 <Text style={styles.info1}>{item.ReceiverName}</Text>
+              </View>
+              <View style={styles.roworder}>
+                 <Text style={styles.info}>Số điện thoại:</Text>
+                 <Text style={styles.info1}>{item.SDT}</Text>
+              </View>
+              <View style={styles.roworder}>
+                 <Text style={styles.info}>Địa chỉ:</Text>
+                 <Text style={styles.info1}>{item.Address}</Text>
+              </View>
+              <View style={styles.roworder}>
+                 <Text style={styles.info}>Note:</Text>
+                 <Text style={styles.info1}>{item.Note}</Text>
               </View>
               
-              <Text style={styles.info}>Tên hàng:</Text>
-              <Text style={styles.info1}>{item.Detail}</Text>
-              <Text style={styles.info}>Người nhận:</Text>
-              <Text style={styles.info1}>{item.ReceiverName}</Text>
-              <Text style={styles.info}>Số điện thoại:</Text>
-              <Text style={styles.info1}>{item.SDT}</Text>
-              <Text style={styles.info}>Địa chỉ:</Text>
-              <Text style={styles.info1}>{item.Address}</Text>
-              <Text style={styles.info}>Note:</Text>
-              <Text style={styles.info1}>{item.Note}</Text>
             </View>
           
             
@@ -79,7 +86,7 @@ const OrderItem: React.FC<OrderItemProps> = ({ phone }) => {
 
             <View style={styles.totalContainer}>
               <Text style={styles.head2}>Tổng:</Text>
-              <Text style={styles.head2}>{formatPrice(item.Price)} vnđ</Text>
+              <Text style={styles.head2}>{formatPrice(item.Price)} đ</Text>
             </View>
           </View>
         </TouchableOpacity>
@@ -118,6 +125,7 @@ const styles = StyleSheet.create({
   info: {
     fontSize: 18,
     color: "#1c1c1c",
+    marginRight: 8
   },
   info1:{
     color:'#767676',
@@ -131,6 +139,7 @@ const styles = StyleSheet.create({
   },
   totalContainer: {
     flexDirection: 'row',
+    justifyContent:'space-between'
   },
   shadow: {
     shadowColor: "#000",
@@ -142,6 +151,10 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     elevation: 1,
   },
+  roworder:{
+    flexDirection:'row',
+    paddingVertical: 4
+  }
 });
 
 export default OrderItem;
