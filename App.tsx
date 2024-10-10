@@ -10,6 +10,7 @@ import VerifyScreen from "./src/screens/Auth/verify";
 import CreateOrder from "./src/screens/Order/CreateOrderInfo";
 import RouteManager from "./src/components/Navbar/RouteManager";
 import ServiceStep from "./src/screens/Order/ServiceStep";
+import SuccessStep from "./src/screens/Order/SuccessStep";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,7 +35,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="LoginPage"
+        initialRouteName="SuccessStep"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="LoginPage" component={LoginScreen} />
@@ -42,6 +43,7 @@ export default function App() {
         <Stack.Screen name="VerifyPage" component={VerifyScreen} />
         <Stack.Screen name="CreateOrder" component={CreateOrder} />
         <Stack.Screen name="ServiceOrder" component={ServiceStep} />
+        <Stack.Screen name="SuccessStep" component={SuccessStep} />
         <Stack.Screen name="HomePage" component={RouteManager} />
       </Stack.Navigator>
     </NavigationContainer>

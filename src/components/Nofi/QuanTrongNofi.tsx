@@ -1,23 +1,26 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import { ImagesAssets } from "../../assets/DTri/ImageAssets";
-import Nofibox from "../Item/NofiBox";
+import Nofibox from "../Items/NofiBox";
 
 export default function QTNofi() {
-
   return (
     <View style={styles.container}>
-      <Nofibox/>
+      <Nofibox />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      backgroundColor: "#ffffff",
-      flex: 1, 
-    },
-  });
-  
-  
-  
+  container: {
+    backgroundColor: "#ffffff",
+    flex: 1,
+  },
+});

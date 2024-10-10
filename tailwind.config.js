@@ -19,6 +19,7 @@ module.exports = {
         "grayText-767676": "#767676",
         "primaryText-EB455F": "#EB455F",
         "blueText-495DC1": "#495DC1",
+        "success-5DC061": "#5DC061",
 
         // Background
         "grayBG-FCFCFC": "#FCFCFC",
