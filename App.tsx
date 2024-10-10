@@ -11,6 +11,11 @@ import CreateOrder from "./src/screens/Order/CreateOrderInfo";
 import RouteManager from "./src/components/Navbar/RouteManager";
 import ServiceStep from "./src/screens/Order/ServiceStep";
 import SuccessStep from "./src/screens/Order/SuccessStep";
+import Main from "./src/screens/Wallet/Main";
+import ScanQR from "./src/screens/Wallet/ScanQR";
+import Naptien from "./src/screens/Wallet/Naptien";
+import Ruttien from "./src/screens/Wallet/Ruttien";
+// import TestPush from "./src/screens/Home/test";
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +50,10 @@ export default function App() {
         <Stack.Screen name="ServiceOrder" component={ServiceStep} />
         <Stack.Screen name="SuccessStep" component={SuccessStep} />
         <Stack.Screen name="HomePage" component={RouteManager} />
+        <Stack.Screen name="MainWallet" component={Main} />
+        <Stack.Screen name="ScanQR" component={ScanQR} />
+        <Stack.Screen name="Naptien" component={Naptien} />
+        {/* <Stack.Screen name="TestPush" component={TestPush} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

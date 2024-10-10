@@ -7,6 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { RootStackParamList } from "../../../App";
 import { ImagesAssets } from "../../assets/DTri/ImageAssets";
 import AccIC from "../../svg/DucTri/Icons/AccIcon/User";
 import ProIC from "../../svg/DucTri/Icons/AccIcon/Product";
@@ -21,6 +23,7 @@ import HdsdIC from "../../svg/DucTri/Icons/AccIcon/Hssd";
 import SetIC from "../../svg/DucTri/Icons/AccIcon/Setting";
 
 export default function Account() {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <View style={styles.container}>
       <View style={styles.top}>
@@ -45,7 +48,7 @@ export default function Account() {
             <ProIC />
             <Text style={body.textdetail}>Đơn hàng của tôi</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={body.rowdetail}>
+          <TouchableOpacity style={body.rowdetail} onPress={() => navigation.navigate('MainWallet')}>
             <WalletIC />
             <Text style={body.textdetail}>Ví của tôi</Text>
           </TouchableOpacity>
