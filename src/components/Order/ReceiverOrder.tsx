@@ -1,17 +1,15 @@
 import React from "react";
-import { StyleSheet, View,Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import OrderItem from "./OrderItem";
 
 interface ReceiverOrderProps {
-  phone?: string;
+  status?: string[]; // Cho phép nhận một mảng status
 }
 
-const ReceiverOrder: React.FC<ReceiverOrderProps> = ({ phone }) => {
+const ReceiverOrder: React.FC<ReceiverOrderProps> = ({ status }) => {
   return (
     <View style={styles.container}>
-      <View>
-        <OrderItem phone={phone} />
-      </View>
+      <OrderItem status={status} phone="0123456789" />
     </View>
   );
 };
@@ -19,8 +17,8 @@ const ReceiverOrder: React.FC<ReceiverOrderProps> = ({ phone }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 10, // Adjust padding as needed
-    gap: 16, // Custom gap between elements
+    paddingVertical: 10,
+    gap: 16,
   },
 });
 

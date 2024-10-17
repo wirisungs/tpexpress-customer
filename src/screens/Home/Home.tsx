@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View,Image,TextInput, ScrollView } from "react-native";
+import { StyleSheet, Text, View,Image,TextInput, ScrollView, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CaculatorIC from '../../svg/DucTri/Icons/HomeIcon/Caculator'
 import LocationIC from '../../svg/DucTri/Icons/HomeIcon/Locaion'
@@ -7,7 +7,8 @@ import PromotionIC from '../../svg/DucTri/Icons/HomeIcon/Promotion'
 import QuesIC from '../../svg/DucTri/Icons/HomeIcon/Ques'
 import Banner from '../../svg/DucTri/Icons/HomeIcon/Banner1'
 import { ImagesAssets } from "../../assets/DTri/ImageAssets";
-import Input from "../../components/Inputs/Inputs";
+import { InputWithIcon } from "../../components/Inputs/Inputs";
+import SearchIC from '../../svg/DucTri/Icons/HomeIcon/Search'
 
 interface HomeProps {
   
@@ -20,15 +21,13 @@ const Home: React.FC<HomeProps> = () => {
           <View style={styles.top}>
               <Text style={styles.title}>Theo dõi đơn hàng của bạn</Text>
               <Text style={styles.title1}>Hãy chắc chắn rằng Mã đơn hàng của bạn chính xác</Text>
+              
               <View style={styles.viewsearch}>
-                {/* <TextInput
-                   style={styles.searchInput}
-                   placeholder="Nhập mã đơn vận chuyển"
-                   placeholderTextColor="#B6B6B6"
-                /> */}
-                <Input
+                <InputWithIcon
                   placeholder="Nhập mã đơn vận chuyển"
                   inputType="default"
+                  icon = {<SearchIC/>}
+                  onIconPress={() => Alert.alert("Icon được nhấn!")}
                 />
               </View>
               <Image source={ImagesAssets.Xeday} style={styles.imageXe} resizeMode="contain" />
@@ -161,17 +160,8 @@ const styles = StyleSheet.create({
   banner:{
     marginVertical: 12
   },
-  // searchInput:{
-  //    backgroundColor:'#eeeeee',
-  //    padding: 28,
-  //    borderRadius: 12,
-  //    fontSize: 16,
-  //   //  color: '#B6B6B6'
-  // },
   viewsearch:{
-    flex:1,
-    width:'100%',
-    
+    flex:1, 
   },
   row:{
     flexDirection: 'row',

@@ -1,3 +1,4 @@
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 // Screen
 import Home from "../../screens/Home/Home";
@@ -13,7 +14,7 @@ import AccIC from "../../svg/DucTri/Icons/NavIcon/Account";
 import CreateIC from "../../svg/DucTri/Icons/NavIcon/plus";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import CreateOrder from "../../screens/Order/CreateOrderInfo.tsx";
+import CreateOrder from "../../screens/Order/CreateOrderInfo";
 
 const homeName = "Trang chủ";
 const orderName = "Đơn hàng";
@@ -23,7 +24,7 @@ const createOrderName = "Lên đơn";
 
 const Tab = createBottomTabNavigator();
 
-const RouteManager = () => {
+const RouteManager: React.FC = () => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -77,7 +78,7 @@ const RouteManager = () => {
         name={createOrderName}
         component={CreateOrder}
         options={{
-          tabBarIcon: ({ focused }) => (
+          tabBarIcon: () => (
             <View style={styles.iconContainerplus}>
               <CreateIC />
             </View>

@@ -40,11 +40,11 @@ export default function Account() {
       <ScrollView style={body.body}>
         <View style={body.row}>
           <Text style={body.title}>Tài khoản</Text>
-          <TouchableOpacity style={body.rowdetail}>
+          <TouchableOpacity style={body.rowdetail} onPress={() => navigation.navigate('User_Info')}>
             <AccIC />
             <Text style={body.textdetail}>Thông tin cá nhân & Bảo mật</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={body.rowdetail}>
+          <TouchableOpacity style={body.rowdetail} onPress={() => navigation.navigate('MyOrder')}>
             <ProIC />
             <Text style={body.textdetail}>Đơn hàng của tôi</Text>
           </TouchableOpacity>

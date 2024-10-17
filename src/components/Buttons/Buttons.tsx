@@ -21,11 +21,14 @@ const ButtonFill = ({ children, onPress }: ButtonProps) => {
 
 const ButtonLine = ({ children, onPress }: ButtonProps) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View className="flex items-center justify-center w-12 h-12 bg-transparent border-solid border-[1px] border-primary rounded-xl">
-        {children}
-      </View>
+    <View className="flex w-full">
+     <TouchableOpacity onPress={onPress}>
+     {/* Trí sửa lại để nút tràn 100% */}
+        <View className="flex w-full justify-center items-center h-12 bg-transparent border-solid border-[1px] border-primary rounded-xl"> 
+          {children}
+        </View>
     </TouchableOpacity>
+    </View>
   );
 };
 

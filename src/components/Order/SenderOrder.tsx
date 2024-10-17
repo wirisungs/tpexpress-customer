@@ -3,14 +3,14 @@ import { StyleSheet, View } from "react-native";
 import OrderItem from "./OrderItem";
 
 interface SenderOrderProps {
-  phone?: string;
+  status?: string;
 }
 
-const SenderOrder: React.FC<SenderOrderProps> = ({ phone }) => {
+const SenderOrder: React.FC<SenderOrderProps> = ({  status = 'Chờ vận chuyển' }) => {
   return (
     <View style={styles.container}>
       <View>
-        <OrderItem phone={phone} />
+        <OrderItem status={status} phone="0123456789" />
       </View>
     </View>
   );

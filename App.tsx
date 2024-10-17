@@ -15,7 +15,9 @@ import Main from "./src/screens/Wallet/Main";
 import ScanQR from "./src/screens/Wallet/ScanQR";
 import Naptien from "./src/screens/Wallet/Naptien";
 import Ruttien from "./src/screens/Wallet/Ruttien";
-// import TestPush from "./src/screens/Home/test";
+import MyOrder from "./src/screens/Order/MyOrder";
+import User_Info from "./src/screens/Account/User_Info";
+import OrderDetail from "./src/screens/Order/OrderDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +56,9 @@ export default function App() {
         <Stack.Screen name="ScanQR" component={ScanQR} />
         <Stack.Screen name="Naptien" component={Naptien} />
         <Stack.Screen name="Ruttien" component={Ruttien} />
+        <Stack.Screen name="MyOrder" component={MyOrder} />
+        <Stack.Screen name="User_Info" component={User_Info} />
+        <Stack.Screen name="OrderDetail" component={OrderDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );
