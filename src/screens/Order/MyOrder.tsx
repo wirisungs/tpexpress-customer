@@ -10,7 +10,7 @@ interface RouteParams {
 }
 
 const MyOrder: React.FC<RouteParams> = () => {
-  const [currentPage, setCurrentPage] = useState<string>("Chờ vận chuyển"); 
+  const [currentPage, setCurrentPage] = useState<string>("ST001"); 
 
   return (
     <View style={styles.container}>

@@ -15,8 +15,8 @@ const Info_Order: React.FC<SenderOrderProps> = () => {
     <Text style={info.title}>Thông tin giao nhận</Text>
       <View  style={info.v1}>
          <Text style={info.nhan}>Người nhận</Text>
-         <Text style={info.namesdt}>{item.ReceiverName} - {item.ReceiverSDT}</Text>
-         <Text style={info.address}>{item.ReceiverAddress}</Text>
+         <Text style={info.namesdt}>{item.Receiver_Name} - {item.Receiver_Phone}</Text>
+         <Text style={info.address}>{item.Receiver_Address}</Text>
       </View>
       <View  style={info.v1}>
          <Text style={info.gui}>Người gửi</Text>

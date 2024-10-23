@@ -1,15 +1,21 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { ButtonLine } from "../Buttons/Buttons";
+import { useRoute } from "@react-navigation/native";
 
 interface SenderOrderProps {
   // ... (optional props for Bill component)
 }
 
 const Bill: React.FC<SenderOrderProps> = () => {
-
+  const route = useRoute();
+  const { item } = route.params as { item: any }; 
     const handleClick = () => {
         console.log('Button clicked');
+    };
+
+    const formatCurrency = (amount: { toString: () => string; }) => {
+      return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
     };
 
   return (
@@ -30,7 +36,7 @@ const Bill: React.FC<SenderOrderProps> = () => {
       <View style={bill.row3}>
          <View style={bill.priceview}>
             <Text style={bill.pricepro}>Phí thu hộ (COD):</Text>
-            <Text style={bill.pricepro}>1.789.000đ</Text>
+            <Text style={bill.pricepro}>{formatCurrency(item.Order_COD)}</Text>
          </View>
          <View style={bill.priceview}>
             <Text style={bill.pricepro}>Phí vận:</Text>
@@ -38,7 +44,7 @@ const Bill: React.FC<SenderOrderProps> = () => {
          </View>
          <View style={bill.priceview}>
             <Text style={bill.pricepro}>Tổng:</Text>
-            <Text style={bill.pricepro}>1.989.000đ</Text>
+            <Text style={bill.pricepro}>{formatCurrency(item.Order_TotalPrice)}đ</Text>
          </View>
        </View>
        <View style={bill.btncancel}>

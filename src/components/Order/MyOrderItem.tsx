@@ -10,14 +10,20 @@ interface OrderItemProps {
 }
 
 interface Promotion {
-  Code: string;
-  Status: string;
-  Detail: string;
-  ReceiverName: string;
-  SDT: string;
-  Address: string;
-  Note: string;
-  Price: number;
+  Order_ID: string,
+  Receiver_Phone: number,
+  Receiver_Name: string,
+  Receiver_Address: string,
+  Order_Note: string,
+  Order_COD: number,
+  Order_TotalPrice: number,
+  Order_Type: string,
+  Order_Status: string,
+  Services_ID: string,
+  Voucher_ID: string,
+  Payment_ID: string,
+  Cus_ID: string,
+  Driver_ID: string,
 }
 
 const MyOrderItem: React.FC<OrderItemProps> = ({ phone,currentPage }) => {
@@ -54,15 +60,15 @@ const MyOrderItem: React.FC<OrderItemProps> = ({ phone,currentPage }) => {
             onPress={() => navigation.navigate('OrderDetail', { item})} 
             >
             <View style={styles.headerContainer}>
-              <Text style={styles.head1}>{item.Code}</Text>
+              <Text style={styles.head1}>{item.Order_ID}</Text>
               <TouchableOpacity>
                 <Text style={styles.detail}>Chi tiết</Text>
               </TouchableOpacity>
             </View>
-              <Text style={styles.info1}>{item.Detail}</Text>
+              <Text style={styles.info1}>{item.Order_Note}</Text>
             <View style={styles.totalContainer}>
               <Text style={styles.head2}>Tổng:</Text>
-              <Text style={styles.money}>{formatPrice(item.Price)} đ</Text>
+              <Text style={styles.money}>{formatPrice(item.Order_TotalPrice)} đ</Text>
             </View>
           </TouchableOpacity>
         </TouchableOpacity>

@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, View, Text } from "react-native";
+import { ScrollView, StyleSheet, View, Text, Alert } from "react-native";
 import BasicHeader from "../../components/Layouts/Headers";
 import InfoBox, { ChooseInfoBox } from "../../components/Box/InfoBox";
 import MoreIC from "../../svg/MTri/MoreIC";
@@ -16,7 +16,17 @@ import { RootStackParamList } from "../../../App";
 const ServiceStep = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const Route = useRoute<RouteProp<RootStackParamList, "ServiceOrder">>();
-  const { senderAddress, receiverAddress, packageName, weight } = Route.params;
+  const { 
+    senderAddress = null, 
+    receiverAddress = null, 
+    packageName = null, 
+    weight = null,
+    phone = null,
+    name = null, 
+    note = null, 
+    COD = null, 
+  } = Route.params || {};
+  const newOrderID = generateOrderID();
 
   const handleOnClick = () => {
     navigation.dispatch(
@@ -26,6 +36,63 @@ const ServiceStep = () => {
       })
     );
   };
+
+  const handleSubmit = async () => {
+
+    try {
+      const response = await fetch('http://tpexpress.ddns.net:3000/api/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          Order_ID: newOrderID,
+          Cus_ID:'KH35540913',
+          Sender_Address: senderAddress,
+          Receiver_Phone: phone, 
+          Receiver_Name: name,
+          Receiver_Address: receiverAddress,
+          Order_Type:'Nội thành',
+          Order_Fragile: false,
+          Order_Note: note,
+          Order_COD: COD,
+          Services_ID:'S001',
+          Order_TotalPrice: 27781,
+          Payment_ID:'P001',
+          Status_ID:'ST001',
+          Driver_ID:'',
+          Order_Date:'',
+          Delivery_Fee: 23000,
+          Proof_Success:'',
+          Order_Reason:''
+        }), 
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Alert.alert('Thành công', 'Dữ liệu đã được thêm thành công!');
+        navigation.navigate('SuccessStep')
+      } else {
+        Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi gửi dữ liệu.');
+      }
+    } catch (error) {
+      console.error('Lỗi khi gửi dữ liệu:', error);
+      Alert.alert('Lỗi', 'Có lỗi xảy ra khi gửi dữ liệu.');
+    }
+  };
+
+  function generateOrderID(length = 10) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let orderID = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      orderID += chars[randomIndex];
+    }
+    return orderID;
+  };
+
+
   return (
     <ScrollView
       className="flex flex-col h-full bg-grayBG-FCFCFC"
@@ -42,8 +109,8 @@ const ServiceStep = () => {
           <View className="route-info flex flex-col gap-3">
             <Text>Lộ trình</Text>
             <View className="input flex flex-col gap-2">
-              <InfoBox value={receiverAddress} />
               <InfoBox value={senderAddress} />
+              <InfoBox value={receiverAddress} />
             </View>
           </View>
 
@@ -94,7 +161,7 @@ const ServiceStep = () => {
 
         {/* Thanh toán */}
         <View className="bottom-0">
-          <ButtonFill onPress={() => handleOnClick()}>
+          <ButtonFill onPress={handleSubmit}>
             <Text className="text-white text-xl font-bold">Thanh toán</Text>
           </ButtonFill>
         </View>
@@ -102,6 +169,7 @@ const ServiceStep = () => {
     </ScrollView>
   );
 };
+
 
 const styles = StyleSheet.create({
   shadow: {

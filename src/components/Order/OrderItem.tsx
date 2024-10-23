@@ -16,14 +16,30 @@ interface OrderItemProps {
 }
 
 interface Promotion {
-  Code: string;
-  Status: string;
-  Detail: string;
-  ReceiverName: string;
-  SDT: string;
-  Address: string;
-  Note: string;
-  Price: number;
+  Order_ID: string,
+  Cus_ID: string,
+  Sender_Address: string,
+  Receiver_Phone: number,
+  Receiver_Name: string,
+  Receiver_Address: string,
+  Order_Type: string,
+  Order_Fragile: boolean,
+  Order_Note: string,
+  Order_COD: number,
+  Services_ID: string,
+  Order_TotalPrice: number,
+  Payment_ID: string,
+  Status_ID: string,
+  Driver_ID: string,
+  Order_Date: string,
+  Delivery_Fee: number,
+  Proof_Success: string,
+  Order_Reason: string
+}
+
+interface Status{
+  Status_ID: string,
+  Status_Name: string,
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
@@ -31,6 +47,7 @@ const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [statusCache, setStatusCache] = useState<Map<string, string>>(new Map());
 
   const fetchData = useCallback(async () => {
     try {
@@ -39,8 +56,8 @@ const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
       const allOrders: Promotion[] = await response.json();
 
       const filteredOrders = status
-        ? allOrders.filter((order) => order.Status === status)
-        : allOrders.filter((order) => order.Status !== "Chờ vận chuyển");
+        ? allOrders.filter((order) => order.Status_ID === status)
+        : allOrders.filter((order) => order.Status_ID !== "ST001");
 
       setPromotions(filteredOrders);
     } catch (error) {
@@ -60,57 +77,91 @@ const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
     setRefreshing(false);
   }, [fetchData]);
 
-  const renderItem = ({ item }: { item: Promotion }) => (
-    <TouchableOpacity key={item.Code} activeOpacity={1} style={styles.container}>
-      <View style={styles.shadow}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.head1}>{item.Code}</Text>
-          <Text style={[styles.status, { color: getStatusColor(item.Status) }]}>
-            {item.Status}
-          </Text>
+  const fetchStatusName = useCallback(async (statusId: string): Promise<string> => {
+    if (statusCache.has(statusId)) {
+      return statusCache.get(statusId) || "Unknown"; // Trả về từ cache nếu đã có
+    }
+    try {
+      const response = await fetch(
+        `http://tpexpress.ddns.net:3000/api/status?id=${statusId}`
+      );
+      const statusData: Status = await response.json();
+      const name = statusData.Status_Name || "Unknown";
+      setStatusCache((prev) => new Map(prev).set(statusId, name));
+      return name;
+    } catch (error) {
+      console.error("Error fetching status:", error);
+      return "Unknown";
+    }
+  }, [statusCache]);
+  
+  const RenderOrderItem: React.FC<{ item: Promotion }> = ({ item }) => {
+    const [statusName, setStatusName] = useState<string>("");
+  
+    useEffect(() => {
+      const fetchName = async () => {
+        const name = await fetchStatusName(item.Status_ID);
+        if (name) setStatusName(name);
+      };
+      fetchName();
+    }, [item.Status_ID, fetchStatusName]);
+  
+    return (
+      <TouchableOpacity
+        key={item.Order_ID}
+        activeOpacity={1}
+        style={styles.container}
+      >
+        <View style={styles.shadow}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.head1}>{item.Order_ID}</Text>
+            <Text style={[styles.status, { color: getStatusColor(item.Status_ID) }]}>
+              {statusName}
+            </Text>
+          </View>
+  
+          <View style={styles.line} />
+  
+          <View style={styles.headerContainer}>
+            <View style={styles.roworder}>
+              {/* <Text style={styles.info}>Tên hàng:</Text> */}
+            </View>
+            <View style={styles.roworder}>
+              <Text style={styles.info}>Người nhận:</Text>
+              <Text style={styles.info1}>{item.Receiver_Name}</Text>
+            </View>
+            <View style={styles.roworder}>
+              <Text style={styles.info}>Số điện thoại:</Text>
+              <Text style={styles.info1}>{item.Receiver_Phone}</Text>
+            </View>
+            <View style={styles.roworder}>
+              <Text style={styles.info}>Địa chỉ:</Text>
+              <Text style={styles.info1}>{item.Receiver_Address}</Text>
+            </View>
+            <View style={styles.roworder}>
+              <Text style={styles.info}>Note:</Text>
+              <Text style={styles.info1}>{item.Order_Note}</Text>
+            </View>
+          </View>
+  
+          <View style={styles.line} />
+  
+          <View style={styles.totalContainer}>
+            <Text style={styles.head2}>Tổng:</Text>
+            <Text style={styles.head2}>{formatPrice(item.Order_TotalPrice)} đ</Text>
+          </View>
         </View>
-
-        <View style={styles.line} />
-
-        <View style={styles.headerContainer}>
-          <View style={styles.roworder}>
-            <Text style={styles.info}>Tên hàng:</Text>
-            <Text style={styles.info1}>{item.Detail}</Text>
-          </View>
-          <View style={styles.roworder}>
-            <Text style={styles.info}>Người nhận:</Text>
-            <Text style={styles.info1}>{item.ReceiverName}</Text>
-          </View>
-          <View style={styles.roworder}>
-            <Text style={styles.info}>Số điện thoại:</Text>
-            <Text style={styles.info1}>{item.SDT}</Text>
-          </View>
-          <View style={styles.roworder}>
-            <Text style={styles.info}>Địa chỉ:</Text>
-            <Text style={styles.info1}>{item.Address}</Text>
-          </View>
-          <View style={styles.roworder}>
-            <Text style={styles.info}>Note:</Text>
-            <Text style={styles.info1}>{item.Note}</Text>
-          </View>
-        </View>
-
-        <View style={styles.line} />
-
-        <View style={styles.totalContainer}>
-          <Text style={styles.head2}>Tổng:</Text>
-          <Text style={styles.head2}>{formatPrice(item.Price)} đ</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
+  
 
   const formatPrice = (price: number) =>
     price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
   const getStatusColor = (status: string) => {
-    if (status === "Đã hủy") return "#F44336";
-    if (status === "Đang vận chuyển") return "#F9801D";
+    if (status === "ST004") return "#F44336";
+    if (status === "ST002") return "#F9801D";
     return "#03A63C";
   };
 
@@ -123,11 +174,11 @@ const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
       ) : (
         <FlatList
           data={promotions}
-          keyExtractor={(item) => item.Code}
-          renderItem={renderItem}
+          keyExtractor={(item) => item.Order_ID}
+          renderItem={({ item }) => <RenderOrderItem item={item} />} // Sử dụng component riêng
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         />
       )}
     </View>

@@ -12,10 +12,10 @@ const NavOrder: React.FC<RouteParams> = ({ currentPage, setCurrentPage }) => {
     <View style={styles.bottom}>
       <TouchableOpacity
         style={styles.bottom1}
-        onPress={() => setCurrentPage("Chờ vận chuyển")}
+        onPress={() => setCurrentPage("ST001")}
       >
         <Text
-          style={[styles.text, currentPage === "Chờ vận chuyển" && styles.activeText]}
+          style={[styles.text, currentPage === "ST001" && styles.activeText]}
         >
           Đơn chờ vận chuyển
         </Text>
@@ -23,10 +23,10 @@ const NavOrder: React.FC<RouteParams> = ({ currentPage, setCurrentPage }) => {
 
       <TouchableOpacity
         style={styles.bottom1}
-        onPress={() => setCurrentPage("Đang vận chuyển")}
+        onPress={() => setCurrentPage("ST002")}
       >
         <Text
-          style={[styles.text, currentPage === "Đang vận chuyển" && styles.activeText]}
+          style={[styles.text, currentPage === "ST002" && styles.activeText]}
         >
           Đơn đang vận chuyển
         </Text>
@@ -34,10 +34,10 @@ const NavOrder: React.FC<RouteParams> = ({ currentPage, setCurrentPage }) => {
 
       <TouchableOpacity
         style={styles.bottom1}
-        onPress={() => setCurrentPage("Đã hoàn thành")}
+        onPress={() => setCurrentPage("ST003")}
       >
         <Text
-          style={[styles.text, currentPage === "Đã hoàn thành" && styles.activeText]}
+          style={[styles.text, currentPage === "ST003" && styles.activeText]}
         >
           Đơn đã hoàn thành
         </Text>
@@ -45,10 +45,10 @@ const NavOrder: React.FC<RouteParams> = ({ currentPage, setCurrentPage }) => {
 
       <TouchableOpacity
         style={styles.bottom1}
-        onPress={() => setCurrentPage("Đã hủy")}
+        onPress={() => setCurrentPage("ST004")}
       >
         <Text
-          style={[styles.text, currentPage === "Đã hủy" && styles.activeText]}
+          style={[styles.text, currentPage === "ST004" && styles.activeText]}
         >
           Đơn đã hủy
         </Text>

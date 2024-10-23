@@ -6,7 +6,7 @@ interface SenderOrderProps {
   status?: string;
 }
 
-const SenderOrder: React.FC<SenderOrderProps> = ({  status = 'Chờ vận chuyển' }) => {
+const SenderOrder: React.FC<SenderOrderProps> = ({  status = 'ST001' }) => {
   return (
     <View style={styles.container}>
       <View>

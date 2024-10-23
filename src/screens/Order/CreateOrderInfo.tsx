@@ -1,118 +1,95 @@
-import React, { useEffect, useState } from "react";
-import { ScrollView, StyleProp, Text, TextStyle, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  ScrollView,
+  View,
+  Text,
+  Alert,
+  StyleSheet,
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+} from "react-native";
 import { TransHeader } from "../../components/Layouts/Headers";
-import Input, {
-  InputWithIcon,
-  PhoneInput,
-} from "../../components/Inputs/Inputs";
-import Marker from "../../svg/MTri/Marker";
+import Input, { InputWithIcon, PhoneInput } from "../../components/Inputs/Inputs";
 import CheckboxText from "../../components/Inputs/CheckboxText";
 import ButtonFill from "../../components/Buttons/Buttons";
-import {
-  NavigationProp,
-  useIsFocused,
-  useNavigation,
-} from "@react-navigation/native";
-import { RootStackParamList } from "../../../App";
+import Marker from "../../svg/MTri/Marker";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { Touchable } from "react-native";
+import CancelIC from "../../svg/DucTri/Icons/Order/Cancel"
 
-// Type
-type formValuesType = {
-  senderAddress: string;
-  receiverAddress: string;
-  phoneNumber: string;
-  receiverName: string;
-  packageName: string;
-  weight: string;
+const initialFormValues = {
+  senderAddress: "",
+  phoneNumber: "",
+  receiverName: "",
+  receiverAddress: "",
+  packageName: "",
+  weight: "",
+  priceOfItem: "",
+  ordernote:"",
+  orderCOD:"",
 };
 
 const CreateOrder = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked2, setIsChecked2] = useState(false);
+  const [codInput, setCODInput] = useState(false);
+  const [fragileInput, setFragileInput] = useState(false);
+  const [inputErrors, setInputErrors] = useState({});
+  const [items, setItems] = useState([{ id: Date.now(), name: "Món hàng 1" }]);
+  
+  const navigation = useNavigation();
   const isFocused = useIsFocused();
 
-  // Khai báo cho checkBox
-  const [isChecked, setIsChecked] = useState(false);
-  // Value của input
-  // Thông tin người nhận
-  const [formValues, setFormValues] = useState<formValuesType>({
-    senderAddress: "",
-    receiverAddress: "",
-    phoneNumber: "",
-    receiverName: "",
-    packageName: "",
-    weight: "",
-  });
-
-  // Trạng thái input
-  const [senderAddressCheck, setSenderAddressCheck] = useState<boolean>(false);
-  const [receiverAddressCheck, setReceiverAddressCheck] =
-    useState<boolean>(false);
-  const [phoneNumberCheck, setPhoneNumberCheck] = useState<boolean>(false);
-  const [receiverNameCheck, setReceiverNameCheck] = useState<boolean>(false);
-  const [packageNameCheck, setPackageNameCheck] = useState<boolean>(false);
-  const [weightCheck, setWeightCheck] = useState<boolean>(false);
-
-  // Xử lý khi rời khỏi trang
   useEffect(() => {
-    // Reset các state của form
-    setFormValues({
-      senderAddress: "",
-      receiverAddress: "",
-      phoneNumber: "",
-      receiverName: "",
-      packageName: "",
-      weight: "",
-    });
-    // Reset trạng thái lỗi của các input
-    setSenderAddressCheck(false);
-    setReceiverAddressCheck(false);
-    setPhoneNumberCheck(false);
-    setReceiverNameCheck(false);
-    setPackageNameCheck(false);
-    setWeightCheck(false);
+    if (isFocused) {
+      resetForm();
+    }
   }, [isFocused]);
 
-  useEffect(() => {
-    // Kiểm tra khác null
-    if (formValues.senderAddress !== "") setSenderAddressCheck(false);
-    if (formValues.receiverAddress !== "") setReceiverAddressCheck(false);
-    if (formValues.phoneNumber !== "") setPhoneNumberCheck(false);
-    if (formValues.receiverName !== "") setReceiverNameCheck(false);
-    if (formValues.packageName !== "") setPackageNameCheck(false);
-    if (formValues.weight !== "") setWeightCheck(false);
-  });
-  const handleOnClick = () => {
-    const fields = [
-      formValues.senderAddress,
-      formValues.receiverAddress,
-      formValues.phoneNumber,
-      formValues.receiverName,
-      formValues.packageName,
-      formValues.weight,
-    ];
-    const isNullField = fields.some((field) => field === "");
-    !isNullField && navigation.navigate("ServiceOrder", { ...formValues });
-
-    // Check null
-    if (formValues.senderAddress === "") setSenderAddressCheck(true);
-    if (formValues.receiverAddress === "") setReceiverAddressCheck(true);
-    if (formValues.phoneNumber === "") setPhoneNumberCheck(true);
-    if (formValues.receiverName === "") setReceiverNameCheck(true);
-    if (formValues.packageName === "") setPackageNameCheck(true);
-    if (formValues.weight === "") setWeightCheck(true);
+  const resetForm = () => {
+    setFormValues(initialFormValues);
+    setInputErrors({});
   };
-  const [codInput, setCODInput] = useState<boolean>(false);
 
-  // Khai báo style
-  const errorStyle: StyleProp<TextStyle> = {
-    borderColor: "#EB455F",
+  const handleInputChange = (field: string, value: string) => {
+    setFormValues((prev) => ({ ...prev, [field]: value }));
+    setInputErrors((prev) => ({ ...prev, [field]: false }));
   };
+  
+  
+  const handleSubmit = async () => {
+    navigation.navigate('ServiceOrder', { 
+      senderAddress: formValues.senderAddress, 
+      receiverAddress: formValues.receiverAddress,
+      phone: formValues.phoneNumber,
+      name: formValues.receiverName,
+      note: formValues.ordernote,
+      COD: formValues.orderCOD 
+    } );
+  };
+
+  const addItem = () => {
+    setItems((prevItems) => [
+      ...prevItems,
+      { id: Date.now(), name: `Món hàng ${prevItems.length + 1}` },
+    ]);
+  };
+
+  const handleRemoveItem = (id) => {
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  };
+
+  const errorStyle: StyleProp<TextStyle> = { borderColor: "#EB455F" };
+
   return (
     <ScrollView
       className="flex flex-col bg-grayBG-FCFCFC"
       showsVerticalScrollIndicator={false}
     >
-      {/* Header */}
       <TransHeader haveBackIcon={true} title="Tạo đơn hàng" />
+
       <View className="content flex flex-col gap-6 p-6">
         {/* Thông tin người gửi */}
         <View className="sender-info flex flex-col gap-3">
@@ -120,116 +97,131 @@ const CreateOrder = () => {
             Thông tin người gửi <Text className="text-primary">*</Text>
           </Text>
           <InputWithIcon
-            inputType="default"
-            placeholder="Địa chỉ mặc định"
+            placeholder="Địa chỉ"
             value={formValues.senderAddress}
-            onChangeText={(data) =>
-              setFormValues((prev) => ({ ...prev, senderAddress: data }))
-            }
+            onChangeText={(val) => handleInputChange("senderAddress", val)}
             icon={<Marker />}
-            style={senderAddressCheck && errorStyle}
-          />
+            style={inputErrors.senderAddress && errorStyle} inputType={"default"}          />
           <Text className="text-primaryText-EB455F">
             Lưu ý: Không được để trống bất kì ô nào
           </Text>
         </View>
+
         {/* Thông tin người nhận */}
         <View className="receiver-info flex flex-col gap-3">
           <Text className="text-xl font-bold">
             Thông tin người nhận <Text className="text-primary">*</Text>
           </Text>
-
-          <View className="inputContainer flex flex-col gap-2">
-            <PhoneInput
-              inputType="numeric"
-              placeholder="Số điện thoại"
-              value={formValues.phoneNumber}
-              onChangeText={(data) =>
-                setFormValues((prev) => ({ ...prev, phoneNumber: data }))
-              }
-              style={phoneNumberCheck && errorStyle}
-            />
-            <Input
-              inputType="default"
-              placeholder="Họ tên"
-              value={formValues.receiverName}
-              onChangeText={(data) =>
-                setFormValues((prev) => ({ ...prev, receiverName: data }))
-              }
-              style={receiverNameCheck && errorStyle}
-            />
-            <InputWithIcon
-              inputType="default"
-              placeholder="Nhập địa chỉ"
-              value={formValues.receiverAddress}
-              onChangeText={(data) =>
-                setFormValues((prev) => ({ ...prev, receiverAddress: data }))
-              }
-              icon={<Marker />}
-              style={receiverAddressCheck && errorStyle}
-            />
-          </View>
-          <Text className="text-primaryText-EB455F">
-            Lưu ý: Không được để trống bất kì ô nào
-          </Text>
+          <PhoneInput
+            placeholder="Số điện thoại"
+            value={formValues.phoneNumber}
+            onChangeText={(val) => handleInputChange("phoneNumber", val)}
+            style={inputErrors.phoneNumber && errorStyle} inputType={"numeric"} />
+          <Input
+            placeholder="Họ tên"
+            value={formValues.receiverName}
+            onChangeText={(val) => handleInputChange("receiverName", val)}
+            style={inputErrors.receiverName && errorStyle} inputType={"default"} />
+          <InputWithIcon
+            placeholder="Địa chỉ"
+            value={formValues.receiverAddress}
+            onChangeText={(val) => handleInputChange("receiverAddress", val)}
+            icon={<Marker />}
+            style={inputErrors.receiverAddress && errorStyle} inputType={"default"} />
         </View>
+
         {/* Thông tin đơn hàng */}
-        <View className="receiver-info flex flex-col gap-3">
+        <View className="order-info flex flex-col gap-3">
           <Text className="text-xl font-bold">
             Thông tin đơn hàng <Text className="text-primary">*</Text>
           </Text>
 
-          <View className="inputContainer flex flex-col gap-2">
+          {items.map((item) => (
+            <View key={item.id} className="gap-3" style={styles.itembox}>
+              <Text className="text-l">{item.name}</Text>
+              <TouchableOpacity onPress={() => handleRemoveItem(item.id)}>
+                <CancelIC />
+              </TouchableOpacity>
+            </View>
+          ))}
+
+          <Input
+            placeholder="Tên hàng"
+            value={formValues.packageName}
+            onChangeText={(val) => handleInputChange("packageName", val)} inputType={"default"}          />
+            <View style={styles.row}>
             <Input
-              inputType="default"
-              placeholder="Tên hàng"
-              value={formValues.packageName}
-              onChangeText={(data) =>
-                setFormValues((prev) => ({ ...prev, packageName: data }))
-              }
-              style={packageNameCheck && errorStyle}
-            />
-            <Input
-              inputType="numeric"
               placeholder="Khối lượng"
               value={formValues.weight}
-              onChangeText={(data) =>
-                setFormValues((prev) => ({ ...prev, weight: data }))
-              }
-              style={weightCheck && errorStyle}
-            />
+              onChangeText={(val) => handleInputChange("weight", val)}
+              style={{ flex: 1 }} inputType={"numeric"}            />
+            <Input
+              placeholder="Giá trị món hàng"
+              value={formValues.priceOfItem}
+              onChangeText={(val) => handleInputChange("priceOfItem", val)}
+              style={{ flex: 1, marginLeft: 8 }} inputType={"numeric"}            />
+            </View>
           </View>
+          <TouchableOpacity className="flex items-center justify-center py-2 px-4 bg-blue-500 rounded-md" 
+           onPress={addItem}
+           >
+                <Text style={styles.txadd}>Thêm hàng</Text>
+          </TouchableOpacity>
         </View>
-        {/* Thêm đơn hàng mới (Nếu có) */}
-        <View className="flex w-full items-center">
-          <Text className="text-blueText-495DC1">Thêm hàng</Text>
-        </View>
-        {/* Thông tin tổng kiện hàng */}
-        <View className="receiver-info flex flex-col gap-3">
-          <Text className="text-xl font-bold">Thông tin tổng kiện hàng</Text>
-          <View className="inputContainer flex flex-col gap-2">
-            <Input inputType="numeric" placeholder="Chiều dài / rộng / cao" />
-            <Input inputType="default" placeholder="Ghi chú" />
-          </View>
-        </View>
-        {/* Checkbox */}
-        <View className="cod-input flex flex-col gap-2">
-          <CheckboxText
-            isChecked={isChecked}
-            onCheckChange={setIsChecked}
-            setCOD={setCODInput}
-          >
-            <Text>Thu hộ COD</Text>
-          </CheckboxText>
-          {codInput && <Input inputType="numeric" placeholder="Phí thu hộ" />}
-        </View>
-        {/* Qua bước tiếp theo */}
-        <ButtonFill onPress={() => handleOnClick()}>
+
+      <View style={styles.boxinfo} className="order-info flex flex-col gap-3">
+          <Text className="text-xl font-bold">
+            Thông tin tổng kiện hàng 
+          </Text>
+          <Input
+            placeholder="Ghi chú"
+            value={formValues.ordernote}
+            onChangeText={(val) => handleInputChange("ordernote", val)} inputType={"default"}          />
+        {/* hang de vỡ */}
+        <CheckboxText
+          isChecked={isChecked2}
+          onCheckChange={setIsChecked2}
+          setCOD={setFragileInput}
+        >
+          <Text>Hàng dễ vỡ
+          </Text>
+        </CheckboxText>
+        {/* Checkbox COD */}
+        <CheckboxText
+          isChecked={isChecked}
+          onCheckChange={setIsChecked}
+          setCOD={setCODInput}
+        >
+          <Text>Thu hộ COD</Text>
+        </CheckboxText>
+        {codInput && <Input placeholder="Phí thu hộ" value={formValues.orderCOD}
+            onChangeText={(val) => handleInputChange("orderCOD", val)} inputType={"numeric"} />}
+        {/* Nút tiếp tục */}
+        <ButtonFill onPress={handleSubmit}>
           <Text className="text-white text-xl font-bold">Tiếp tục</Text>
         </ButtonFill>
       </View>
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  itembox:{
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+  },
+  txadd:{
+    color:'#495DC1',
+    alignSelf:'center'
+  },
+  boxinfo:{
+    padding: 24
+  }
+});
 
 export default CreateOrder;

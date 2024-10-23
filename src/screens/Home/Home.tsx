@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View,Image,TextInput, ScrollView, Alert } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CaculatorIC from '../../svg/DucTri/Icons/HomeIcon/Caculator'
@@ -9,12 +9,54 @@ import Banner from '../../svg/DucTri/Icons/HomeIcon/Banner1'
 import { ImagesAssets } from "../../assets/DTri/ImageAssets";
 import { InputWithIcon } from "../../components/Inputs/Inputs";
 import SearchIC from '../../svg/DucTri/Icons/HomeIcon/Search'
+import { useNavigation } from "@react-navigation/native";
 
 interface HomeProps {
   
 }
 
+interface Promotion {
+  Order_ID: string,
+  Receiver_Phone: number,
+  Receiver_Name: string,
+  Receiver_Address: string,
+  Order_Note: string,
+  Order_COD: number,
+  Order_TotalPrice: number,
+  Order_Type: string,
+  Order_Status: string,
+  Services_ID: string,
+  Voucher_ID: string,
+  Payment_ID: string,
+  Cus_ID: string,
+  Driver_ID: string,
+}
+
 const Home: React.FC<HomeProps> = () => {
+  const [orderID, setOrderID] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+  
+  const handleSearch = async () => {
+    setLoading(true); // Bắt đầu tải dữ liệu
+    try {
+      const response = await fetch(`http://tpexpress.ddns.net:3000/api/ordersearch?orderID=${orderID.trim()}`);
+      const data: Promotion[] = await response.json();
+
+      if (data.length > 0) {
+        // Nếu tìm thấy đơn hàng, chuyển đến màn hình OrderDetail
+        navigation.navigate('OrderDetail', { item: data[0] });
+      } else {
+        Alert.alert("Thông báo", "Không tìm thấy mã đơn hàng!");
+      }
+    } catch (error) {
+      console.error('Lỗi khi tìm kiếm:', error);
+      Alert.alert("Lỗi", "Có lỗi xảy ra khi tìm kiếm. Vui lòng thử lại!");
+    } finally {
+      setLoading(false); // Kết thúc tải dữ liệu
+    }
+  };
+ 
   return (
     <ScrollView style={styles.container}>
       <LinearGradient colors={["#F9801D", "#F44336"]} style={styles.topliner}>
@@ -27,7 +69,9 @@ const Home: React.FC<HomeProps> = () => {
                   placeholder="Nhập mã đơn vận chuyển"
                   inputType="default"
                   icon = {<SearchIC/>}
-                  onIconPress={() => Alert.alert("Icon được nhấn!")}
+                  value={orderID}
+                  onChangeText={setOrderID}
+                  onIconPress={handleSearch}
                 />
               </View>
               <Image source={ImagesAssets.Xeday} style={styles.imageXe} resizeMode="contain" />

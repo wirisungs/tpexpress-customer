@@ -10,7 +10,7 @@ export default function TestPush({ navigation }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://192.168.1.20:3000/api/User'); 
+        const response = await fetch('http://tpexpress.ddns.net:3000/api/User'); 
         const promotionsData = await response.json();
         setPromotions(promotionsData);
       } catch (error) {
@@ -29,12 +29,12 @@ export default function TestPush({ navigation }) {
     }
 
     try {
-      const response = await fetch('http://192.168.1.20:3000/api/User', {
+      const response = await fetch('http://tpexpress.ddns.net:3000/api/User', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: text1, password: text2 }), 
+        body: JSON.stringify({ phonenumber: text1, password: text2 }), 
       });
 
       const result = await response.json();
@@ -43,7 +43,7 @@ export default function TestPush({ navigation }) {
         Alert.alert('Thành công', 'Dữ liệu đã được thêm thành công!');
         const fetchData = async () => {
           try {
-            const response = await fetch('http://192.168.1.20:3000/api/User');
+            const response = await fetch('http://tpexpress.ddns.net:3000/api/User');
             const promotionsData = await response.json();
             setPromotions(promotionsData);
           } catch (error) {
@@ -69,7 +69,7 @@ export default function TestPush({ navigation }) {
     }
 
     try {
-      const response = await fetch(`http://192.168.1.20:3000/api/User/${selectedId}`, {
+      const response = await fetch(`http://tpexpress.ddns.net:3000/api/User/${selectedId}`, {
         method: 'DELETE',
       });
 
@@ -102,12 +102,12 @@ export default function TestPush({ navigation }) {
     }
   
     try {
-      const response = await fetch(`http://192.168.1.20:3000/api/User/${selectedId}`, {
+      const response = await fetch(`http://tpexpress.ddns.net:3000/api/User/${selectedId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: text1, password: text2 }),
+        body: JSON.stringify({ phonenumber: text1, password: text2 }),
       });
   
       const result = await response.json();
@@ -116,7 +116,7 @@ export default function TestPush({ navigation }) {
         Alert.alert('Thành công', 'Dữ liệu đã được cập nhật thành công!');
         const fetchData = async () => {
           try {
-            const response = await fetch('http://192.168.1.20:3000/api/User');
+            const response = await fetch('http://tpexpress.ddns.net:3000/api/User');
             const promotionsData = await response.json();
             setPromotions(promotionsData);
           } catch (error) {
@@ -138,7 +138,7 @@ export default function TestPush({ navigation }) {
   
 
   const handleEdit = (item) => {
-    setText1(item.username);
+    setText1(item.phonenumber);
     setText2(item.password);
     setSelectedId(item._id);
   };
@@ -155,7 +155,7 @@ export default function TestPush({ navigation }) {
       {promotions.map((item, index) => (
         <TouchableOpacity key={index}  onPress={() => handleEdit(item)}>
           <View style={styles.boxC}>
-            <Text>{item.username}</Text>
+            <Text>{item.phonenumber}</Text>
             <Text>{item.password}</Text>
           </View>
         </TouchableOpacity>
@@ -168,7 +168,7 @@ export default function TestPush({ navigation }) {
         style={styles.search}
         textContentType="none"
         autoCorrect={false}
-        keyboardType="default"
+        keyboardType="numeric"
       />
       <TextInput
         onChangeText={setText2}

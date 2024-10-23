@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, ScrollView, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Alert } from "react-native";
 import { TransHeader } from "../../components/Layouts/Headers";
 import { useRoute } from '@react-navigation/native';
 import CopyIC from "../../svg/DucTri/Icons/Order/Copy";
@@ -10,6 +10,7 @@ import LineDoneIC from "../../svg/DucTri/Icons/Order/LineDone";
 import LineGrayIC from "../../svg/DucTri/Icons/Order/LineGray";
 import Bill from "../../components/Order/Bill";
 import Info_Order from "../../components/Order/Info_Order";
+import * as Clipboard from 'expo-clipboard';
 
 const OrderDetail: React.FC = () => {
   const route = useRoute();
@@ -26,16 +27,23 @@ const OrderDetail: React.FC = () => {
       </View>
     );
   };
+
+  const copyOrderID = () => {
+    Clipboard.setString(item.Order_ID); // Sao chép mã vào clipboard
+    Alert.alert("Thông báo", "Mã đơn hàng đã được sao chép!");
+  };
   return (
     <View style={styles.container}>
       <TransHeader haveBackIcon={true} title="Chi tiết" />
       <ScrollView style={styles.scro}>
         <View style={styles.row1}>
             <View style={styles.row11}>
-              <Text style={styles.orderCode}>{item.Code}</Text> 
-              <TouchableOpacity ><CopyIC/></TouchableOpacity>             
+              <Text style={styles.orderCode}>{item.Order_ID}</Text> 
+              <TouchableOpacity onPress={copyOrderID}>
+              <CopyIC />
+            </TouchableOpacity>          
             </View>
-           <TouchableOpacity>
+           <TouchableOpacity >
             <Text style={styles.xemthem}>Xem thêm</Text>
            </TouchableOpacity>
         </View>
@@ -65,7 +73,7 @@ const OrderDetail: React.FC = () => {
         <Info_Order item={item}  />
 
         {/* phan bill */}
-        <Bill/>
+        <Bill item={item}/>
        
       </ScrollView>
       

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image,ScrollView } from "react-native";
-import { ImagesAssets } from "../../assets/DTri/ImageAssets";
-import Header from "../../components/Header/HeaderForNofi";
-import UDNofi from "../../components/Nofi/UuDaiNofi";
 import QTNofi from "../../components/Nofi/QuanTrongNofi";
+import { TransHeader } from "../../components/Layouts/Headers";
 
 export default function Nofication({}) {
   const [activeSender, setActiveSender] = useState<boolean>(true);
@@ -11,14 +9,9 @@ export default function Nofication({}) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-      <Header
-        activeSender={activeSender}
-        setActiveSender={setActiveSender}
-      />
-      </View>
+      <TransHeader haveBackIcon={false} title="Thông báo" />
       <ScrollView contentContainerStyle={styles.scrollContainer}>       
-          {activeSender ? <QTNofi /> : <UDNofi  />}
+          <QTNofi/>
       </ScrollView>
     </View>
   );
@@ -29,9 +22,9 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor:'#ffffff'
     },
-    header:{
-      marginTop: 24
-    },
+    // header:{
+    //   marginTop: 24
+    // },
     scrollContainer: {
       flexGrow: 1,
     },

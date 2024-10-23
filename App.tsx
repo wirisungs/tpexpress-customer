@@ -18,6 +18,7 @@ import Ruttien from "./src/screens/Wallet/Ruttien";
 import MyOrder from "./src/screens/Order/MyOrder";
 import User_Info from "./src/screens/Account/User_Info";
 import OrderDetail from "./src/screens/Order/OrderDetail";
+import User_Edit from "./src/screens/Account/User_Edit";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,9 +33,12 @@ export type RootStackParamList = {
   ServiceOrder: {
     senderAddress: string;
     receiverAddress: string;
+    phone: string;
+    name: string;
+    note: string;
     packageName: string;
     weight: string;
-    cod?: number;
+    COD?: number;
   };
 };
 
@@ -59,6 +63,7 @@ export default function App() {
         <Stack.Screen name="MyOrder" component={MyOrder} />
         <Stack.Screen name="User_Info" component={User_Info} />
         <Stack.Screen name="OrderDetail" component={OrderDetail} />
+        <Stack.Screen name="User_Edit" component={User_Edit} />
       </Stack.Navigator>
     </NavigationContainer>
   );
