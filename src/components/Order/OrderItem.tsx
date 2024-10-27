@@ -10,108 +10,74 @@ import {
   RefreshControl,
 } from "react-native";
 
-interface OrderItemProps {
-  status?: string;
-  phone: string;
-}
-
 interface Promotion {
-  Order_ID: string,
-  Cus_ID: string,
-  Sender_Address: string,
-  Receiver_Phone: number,
-  Receiver_Name: string,
-  Receiver_Address: string,
-  Order_Type: string,
-  Order_Fragile: boolean,
-  Order_Note: string,
-  Order_COD: number,
-  Services_ID: string,
-  Order_TotalPrice: number,
-  Payment_ID: string,
-  Status_ID: string,
-  Driver_ID: string,
-  Order_Date: string,
-  Delivery_Fee: number,
-  Proof_Success: string,
-  Order_Reason: string
+  Order_ID: string;
+  Status_ID: string;
+  Receiver_Name: string;
+  Receiver_Phone: number;
+  Receiver_Address: string;
+  Order_Note: string;
+  Order_TotalPrice: number;
 }
 
-interface Status{
-  Status_ID: string,
-  Status_Name: string,
+interface Status {
+  Status_ID: string;
+  Status_Name: string;
 }
 
-const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
+const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
   const navigation = useNavigation();
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [statusCache, setStatusCache] = useState<Map<string, string>>(new Map());
 
-  const fetchData = useCallback(async () => {
+  const fetchStatuses = useCallback(async () => {
+    try {
+      const response = await fetch(`http://tpexpress.ddns.net:3000/api/status`);
+      const statuses: Status[] = await response.json();
+      const statusMap = new Map(statuses.map(({ Status_ID, Status_Name }) => [Status_ID, Status_Name]));
+      setStatusCache(statusMap);
+    } catch (error) {
+      console.error("Error fetching statuses:", error);
+    }
+  }, []);
+
+  const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`http://tpexpress.ddns.net:3000/api/order`);
       const allOrders: Promotion[] = await response.json();
-
       const filteredOrders = status
         ? allOrders.filter((order) => order.Status_ID === status)
         : allOrders.filter((order) => order.Status_ID !== "ST001");
-
       setPromotions(filteredOrders);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching orders:", error);
     } finally {
       setLoading(false);
     }
   }, [status]);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fetchData();
+    await fetchOrders();
     setRefreshing(false);
-  }, [fetchData]);
+  }, [fetchOrders]);
 
-  const fetchStatusName = useCallback(async (statusId: string): Promise<string> => {
-    if (statusCache.has(statusId)) {
-      return statusCache.get(statusId) || "Unknown"; // Trả về từ cache nếu đã có
-    }
-    try {
-      const response = await fetch(
-        `http://tpexpress.ddns.net:3000/api/status?id=${statusId}`
-      );
-      const statusData: Status = await response.json();
-      const name = statusData.Status_Name || "Unknown";
-      setStatusCache((prev) => new Map(prev).set(statusId, name));
-      return name;
-    } catch (error) {
-      console.error("Error fetching status:", error);
-      return "Unknown";
-    }
-  }, [statusCache]);
-  
+  useEffect(() => {
+    const initializeData = async () => {
+      await fetchStatuses();
+      await fetchOrders();
+    };
+    initializeData();
+  }, [fetchStatuses, fetchOrders]);
+
   const RenderOrderItem: React.FC<{ item: Promotion }> = ({ item }) => {
-    const [statusName, setStatusName] = useState<string>("");
-  
-    useEffect(() => {
-      const fetchName = async () => {
-        const name = await fetchStatusName(item.Status_ID);
-        if (name) setStatusName(name);
-      };
-      fetchName();
-    }, [item.Status_ID, fetchStatusName]);
-  
+    const statusName = statusCache.get(item.Status_ID) || "Unknown";
+
     return (
-      <TouchableOpacity
-        key={item.Order_ID}
-        activeOpacity={1}
-        style={styles.container}
-      >
+      <TouchableOpacity key={item.Order_ID} activeOpacity={1} style={styles.container}>
         <View style={styles.shadow}>
           <View style={styles.headerContainer}>
             <Text style={styles.head1}>{item.Order_ID}</Text>
@@ -119,13 +85,10 @@ const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
               {statusName}
             </Text>
           </View>
-  
+
           <View style={styles.line} />
-  
+
           <View style={styles.headerContainer}>
-            <View style={styles.roworder}>
-              {/* <Text style={styles.info}>Tên hàng:</Text> */}
-            </View>
             <View style={styles.roworder}>
               <Text style={styles.info}>Người nhận:</Text>
               <Text style={styles.info1}>{item.Receiver_Name}</Text>
@@ -143,9 +106,9 @@ const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
               <Text style={styles.info1}>{item.Order_Note}</Text>
             </View>
           </View>
-  
+
           <View style={styles.line} />
-  
+
           <View style={styles.totalContainer}>
             <Text style={styles.head2}>Tổng:</Text>
             <Text style={styles.head2}>{formatPrice(item.Order_TotalPrice)} đ</Text>
@@ -154,7 +117,6 @@ const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
       </TouchableOpacity>
     );
   };
-  
 
   const formatPrice = (price: number) =>
     price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -175,10 +137,10 @@ const OrderItem: React.FC<OrderItemProps> = ({ status }) => {
         <FlatList
           data={promotions}
           keyExtractor={(item) => item.Order_ID}
-          renderItem={({ item }) => <RenderOrderItem item={item} />} // Sử dụng component riêng
+          renderItem={({ item }) => <RenderOrderItem item={item} />}
           refreshControl={
-           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       )}
     </View>

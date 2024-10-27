@@ -6,6 +6,7 @@ import Order from "../../screens/Home/Order";
 import Nofication from "../../screens/Home/Nofication";
 import Account from "../../screens/Home/Account";
 import TestPush from "../../screens/Home/test";
+import TestMap from "../../screens/Home/testmap";
 
 // Icon
 import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";
@@ -56,7 +57,7 @@ const RouteManager: React.FC = () => {
 
       <Tab.Screen
         name={orderName}
-        component={Order}
+        component={TestMap}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>

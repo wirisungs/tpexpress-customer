@@ -1,14 +1,67 @@
-import { useRoute } from "@react-navigation/native";
-import React from "react";
+import { NavigationProp, useNavigation, useRoute } from "@react-navigation/native";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
+import { RootStackParamList } from "../../../App";
 
 interface SenderOrderProps {
   
 }
+interface Cus {
+    cus_ID: string,
+    cus_Name: string,
+    cus_Email: string,
+    cus_Phone: string,
+    cus_Address: string,
+    cus_Birthday: string,
+    cus_Gender: string,
+}
+
 
 const Info_Order: React.FC<SenderOrderProps> = () => {
     const route = useRoute();
     const { item } = route.params as { item: any }; 
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const [statusCache, setStatusCache] = useState<Map<string, string>>(new Map());
+
+    const fetchCustomerInfo = useCallback(
+      async (cusID: string): Promise<{ name: string; phone: string }> => {
+        if (statusCache.has(cusID)) {
+          return statusCache.get(cusID) || { name: "Unknown", phone: "Unknown" };
+        }
+        try {
+          const response = await fetch(
+            `http://tpexpress.ddns.net:3000/api/cus?id=${cusID}`
+          );
+          const statusData: Cus = await response.json();
+          const name = statusData.cus_Name || "Unknown";
+          const phone = statusData.cus_Phone || "Unknown";
+    
+          const customerInfo = { name, phone };
+          setStatusCache((prev) => new Map(prev).set(cusID, customerInfo));
+    
+          return customerInfo;
+        } catch (error) {
+          console.error("Error fetching customer info:", error);
+          return { name: "Unknown", phone: "Unknown" };
+        }
+      },
+      [statusCache]
+    );
+    
+    
+    const [cusName, setCusName] = useState<string>("Unknown");
+    const [cusPhone, setCusPhone] = useState<string>("Unknown");
+    
+    useEffect(() => {
+      const fetchInfo = async () => {
+        const { name, phone } = await fetchCustomerInfo(item.Cus_ID);
+        setCusName(name);
+        setCusPhone(phone);
+      };
+      fetchInfo();
+    }, [item.Cus_ID, fetchCustomerInfo]);
+    
+      
 
   return ( 
     <View style={info.all}>
@@ -20,8 +73,8 @@ const Info_Order: React.FC<SenderOrderProps> = () => {
       </View>
       <View  style={info.v1}>
          <Text style={info.gui}>Người gửi</Text>
-         <Text style={info.namesdt}>Thris Potato - 091727776</Text>
-         <Text style={info.address}>457/13/2 Huỳnh Tấn Phát</Text>
+         <Text style={info.namesdt}>{cusName} - {cusPhone}</Text> 
+         <Text style={info.address}>{item.Sender_Address}</Text>
       </View>
   </View>
   );

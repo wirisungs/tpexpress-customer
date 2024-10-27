@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, View, ScrollView, Text, TouchableOpacity, Alert } from "react-native";
+import React, { useMemo } from "react";
+import { StyleSheet, View, Text, TouchableOpacity, Alert, FlatList } from "react-native";
 import { TransHeader } from "../../components/Layouts/Headers";
-import { useRoute } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
 import CopyIC from "../../svg/DucTri/Icons/Order/Copy";
 import BoxIC from "../../svg/DucTri/Icons/Order/Box";
 import CarIC from "../../svg/DucTri/Icons/Order/Car";
@@ -10,123 +10,139 @@ import LineDoneIC from "../../svg/DucTri/Icons/Order/LineDone";
 import LineGrayIC from "../../svg/DucTri/Icons/Order/LineGray";
 import Bill from "../../components/Order/Bill";
 import Info_Order from "../../components/Order/Info_Order";
-import * as Clipboard from 'expo-clipboard';
+import * as Clipboard from "expo-clipboard";
 
 const OrderDetail: React.FC = () => {
   const route = useRoute();
-  const { item } = route.params as { item: any }; 
-
-  const LineIcons = ({ status }) => {
-    return (
-      <View style={styles.linestatus}>
-        {status === 'completed' ? (
-          <><LineDoneIC /><LineDoneIC /></>
-        ) : (
-          <><LineDoneIC /><LineGrayIC /></>
-        )}
-      </View>
-    );
-  };
+  const { item } = route.params as { item: any };
 
   const copyOrderID = () => {
-    Clipboard.setString(item.Order_ID); // Sao chép mã vào clipboard
+    Clipboard.setString(item.Order_ID);
     Alert.alert("Thông báo", "Mã đơn hàng đã được sao chép!");
   };
+
+  const LineIcons = ({ status }: { status: string }) => (
+    <View style={styles.linestatus}>
+      {status === "completed" ? (
+        <>
+          <LineDoneIC />
+          <LineDoneIC />
+        </>
+      ) : (
+        <>
+          <LineDoneIC />
+          <LineGrayIC />
+        </>
+      )}
+    </View>
+  );
+
+  const renderOrderInfo = () => (
+    <View style={styles.row1}>
+      <View style={styles.row11}>
+        <Text style={styles.orderCode}>{item.Order_ID}</Text>
+        <TouchableOpacity onPress={copyOrderID}>
+          <CopyIC />
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity>
+        <Text style={styles.xemthem}>Xem thêm</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderStatus = () => (
+    <View style={styles.statusic}>
+      <View style={styles.boxstatus}>
+        <BoxIC />
+        <Text style={styles.textstatus}>Chờ vận chuyển</Text>
+      </View>
+      <LineIcons status="completed" />
+      <View style={styles.boxstatus}>
+        <CarIC />
+        <Text style={styles.textstatus}>Đang vận chuyển</Text>
+      </View>
+      <LineIcons status="incomplete" />
+      <View style={styles.boxstatus}>
+        <HomeIC />
+        <Text style={styles.textstatus}>Nhận hàng</Text>
+      </View>
+    </View>
+  );
+
+  // Dùng useMemo để tránh render lại không cần thiết
+  const data = useMemo(
+    () => [
+      { key: "order-info", content: renderOrderInfo },
+      { key: "status", content: renderStatus },
+      { key: "info-order", content: () => <Info_Order item={item} /> },
+      { key: "bill", content: () => <Bill item={item} /> },
+    ],
+    [item]
+  );
+
+  const renderItem = ({ item }: { item: { content: () => JSX.Element } }) => (
+    <>{item.content()}</>
+  );
+
   return (
     <View style={styles.container}>
       <TransHeader haveBackIcon={true} title="Chi tiết" />
-      <ScrollView style={styles.scro}>
-        <View style={styles.row1}>
-            <View style={styles.row11}>
-              <Text style={styles.orderCode}>{item.Order_ID}</Text> 
-              <TouchableOpacity onPress={copyOrderID}>
-              <CopyIC />
-            </TouchableOpacity>          
-            </View>
-           <TouchableOpacity >
-            <Text style={styles.xemthem}>Xem thêm</Text>
-           </TouchableOpacity>
-        </View>
-
-        <View style={styles.statusic}>
-            <View style={styles.boxstatus}>
-              <BoxIC/>
-              <Text style={styles.textstatus}>Chờ vận chuyển</Text>
-            </View>
-
-            <LineIcons status="completed" />
-
-            <View style={styles.boxstatus}>
-              <CarIC/>
-              <Text style={styles.textstatus}>Đang vận chuyển</Text>
-            </View>
-
-            <LineIcons status="incomplete" />
-
-            <View style={styles.boxstatus}>
-              <HomeIC/>
-              <Text style={styles.textstatus}>Nhận hàng</Text>
-            </View>   
-        </View>
-
-        {/* phan info */}
-        <Info_Order item={item}  />
-
-        {/* phan bill */}
-        <Bill item={item}/>
-       
-      </ScrollView>
-      
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.key}
+        contentContainerStyle={styles.scro}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   scro: {
-    flex: 1,
-    padding: 24
+    padding: 24,
   },
-  row1:{
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'space-between'
+  row1: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  row11:{
-    flexDirection:'row',
-    alignItems:'center',
+  row11: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   orderCode: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginRight: 8
+    fontWeight: "bold",
+    marginRight: 8,
   },
-  xemthem:{
-    color:'#767676',
+  xemthem: {
+    color: "#767676",
     fontSize: 14,
-    fontWeight:'medium'
+    fontWeight: "500",
   },
-  statusic:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    marginTop: 20
+  statusic: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
   },
-  linestatus:{
-    flexDirection:'row',
-    marginTop: 8
+  linestatus: {
+    flexDirection: "row",
+    marginTop: 8,
   },
-  boxstatus:{
+  boxstatus: {
     width: 76,
-    alignItems:'center'
+    alignItems: "center",
   },
-  textstatus:{
+  textstatus: {
     fontSize: 12,
-    marginVertical:8,
-    textAlign:'center',
-    fontWeight:'regular'
-  }
+    marginVertical: 8,
+    textAlign: "center",
+    fontWeight: "400",
+  },
 });
 
 export default OrderDetail;

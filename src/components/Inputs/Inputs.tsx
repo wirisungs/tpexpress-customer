@@ -157,6 +157,7 @@ const InputWithIcon: React.FC<InputIconProps> = ({
   isPassword = false,
   style,
   onIconPress,
+  isBackground,
 }) => {
   const [isHidden, setIsHidden] = useState(true);
 
@@ -166,7 +167,7 @@ const InputWithIcon: React.FC<InputIconProps> = ({
   return (
     <View
       className="flex flex-row w-full h-12 px-3 py-3 border-solid border-[1px] border-border rounded-xl"
-      style={[{ backgroundColor: '#fff' }, style]} //Sửa lại để không bị trong suốt
+      style={[{ backgroundColor: `${isBackground?'#fff' :'transparent'}` }, style]} //Sửa lại để không bị trong suốt
     >
       {isPassword ? (
         <View className="flex flex-row items-center w-full justify-between">

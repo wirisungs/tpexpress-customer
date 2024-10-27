@@ -19,6 +19,8 @@ import MyOrder from "./src/screens/Order/MyOrder";
 import User_Info from "./src/screens/Account/User_Info";
 import OrderDetail from "./src/screens/Order/OrderDetail";
 import User_Edit from "./src/screens/Account/User_Edit";
+// import LoginSSO from "./src/screens/Auth/loginwithsso";
+import TestMap from "./src/screens/Home/testmap";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,8 +39,12 @@ export type RootStackParamList = {
     name: string;
     note: string;
     packageName: string;
-    weight: string;
-    COD?: number;
+    Weight: string;
+    COD: number;
+    PriceOfItem: Number;
+    fragileInput: Boolean;
+    orders: String;
+    distance: Number;
   };
 };
 
@@ -64,6 +70,8 @@ export default function App() {
         <Stack.Screen name="User_Info" component={User_Info} />
         <Stack.Screen name="OrderDetail" component={OrderDetail} />
         <Stack.Screen name="User_Edit" component={User_Edit} />
+        <Stack.Screen name="TestMap" component={TestMap} />
+        {/* <Stack.Screen name="LoginSSO" component={LoginSSO} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

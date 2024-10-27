@@ -50,7 +50,7 @@ const MyOrderItem: React.FC<OrderItemProps> = ({ phone,currentPage }) => {
 
   return (
     <View style={styles.container}>
-      {promotions.map((item, index) => (
+      {promotions.slice().reverse().map((item, index)=> (
         <TouchableOpacity
           activeOpacity={1}
           key={index}

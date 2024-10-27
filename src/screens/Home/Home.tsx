@@ -72,6 +72,7 @@ const Home: React.FC<HomeProps> = () => {
                   value={orderID}
                   onChangeText={setOrderID}
                   onIconPress={handleSearch}
+                  isBackground = {true}
                 />
               </View>
               <Image source={ImagesAssets.Xeday} style={styles.imageXe} resizeMode="contain" />
