@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, FlatList, Alert } from "react-native";
+import { StyleSheet, View, Text, FlatList, Alert, Modal, TouchableOpacity, Dimensions } from "react-native";
 import { ButtonLine } from "../Buttons/Buttons";
 import { useRoute } from "@react-navigation/native";
 
@@ -19,9 +19,10 @@ const Bill: React.FC<SenderOrderProps> = () => {
   const [itemdetail, setItemDetail] = useState<Item[]>([]);
   const route = useRoute();
   const { item } = route.params as { item: any }; 
+  const [isPopupVisible, setPopupVisible] = useState(false);
+  const handleClosePopup = () => setPopupVisible(false);
 
-    
-
+  
     const formatCurrency = (amount: { toString: () => string; }) => {
       return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
     };
@@ -30,7 +31,7 @@ const Bill: React.FC<SenderOrderProps> = () => {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `http://tpexpress.ddns.net:3000/api/item?status=${item.Order_ID}`
+            `http://tpexpress.ddns.net:3000/api/item?status=${item.orderId}`
           );
           const messagesData: Item[] = await response.json();
           setItemDetail(messagesData);
@@ -45,13 +46,13 @@ const Bill: React.FC<SenderOrderProps> = () => {
     const handleUpdate = async () => {
       try {
         const response = await fetch(
-          `http://tpexpress.ddns.net:3000/api/order/${item.Order_ID}`, 
+          `http://tpexpress.ddns.net:3000/api/order/${item.orderId}`, 
           {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ Status_ID: "ST004" }), 
+            body: JSON.stringify({ orderStatusId: "ST004" }), 
           }
         );
     
@@ -72,16 +73,17 @@ const Bill: React.FC<SenderOrderProps> = () => {
     const renderItem = ({ item }: { item: Item }) => (
       <View style={bill.detailpro}>
         <Text style={bill.txtpro}>{item.Item_Name}</Text>
-        <Text style={bill.txtpro}>x1</Text>
+        <Text style={bill.txtpro}>{formatCurrency(item.Item_AllValue)}</Text>
       </View>
     );
 
   return (
-    <View style={bill.all}>
+    <>
+ <View style={bill.all}>
       <View style={bill.row1}>
         <Text style={bill.title}>Hóa đơn</Text>
         <View style={bill.viewdate}>
-          <Text style={bill.date}>{item.Order_Date}</Text>
+          {/* <Text style={bill.date}>{item.createdDate}</Text> */}
         </View>
       </View>
       <View style={bill.row2}>
@@ -95,15 +97,15 @@ const Bill: React.FC<SenderOrderProps> = () => {
       <View style={bill.row3}>
          <View style={bill.priceview}>
             <Text style={bill.pricepro}>Phí thu hộ (COD):</Text>
-            <Text style={bill.pricepro}>{formatCurrency(item.Order_COD)}</Text>
+            <Text style={bill.pricepro}>{formatCurrency(item.orderCOD)}</Text>
          </View>
          <View style={bill.priceview}>
             <Text style={bill.pricepro}>Phí vận:</Text>
-            <Text style={bill.pricepro}>{formatCurrency(item.Delivery_Fee)}</Text>
+            <Text style={bill.pricepro}>{formatCurrency(item.deliverPrice)}</Text>
          </View>
          <View style={bill.priceview}>
             <Text style={bill.pricepro}>Tổng:</Text>
-            <Text style={bill.pricepro}>{formatCurrency(item.Order_TotalPrice)}</Text>
+            <Text style={bill.pricepro}>{formatCurrency(item.totalPrice)}</Text>
          </View>
        </View>
        <View style={bill.btncancel}>
@@ -112,6 +114,24 @@ const Bill: React.FC<SenderOrderProps> = () => {
          </ButtonLine>
        </View>
     </View>
+      <Modal
+        visible={isPopupVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={handleClosePopup}
+      >
+        <View style={bill.modalContainer}>
+          <View style={bill.popupContent}>
+
+            <TouchableOpacity style={bill.dropic} onPress={handleClosePopup}>
+              <Text>Hủy đơn</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </>
+   
+    
   );
 };
 
@@ -175,7 +195,29 @@ const bill = StyleSheet.create({
   btncancel:{
     // alignItems:'center',
     // flex: 1
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  popupContent: {
+    height: Dimensions.get("window").height * 0.390,
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    // padding: 24,
+    paddingHorizontal: 24
+  },
+  popupTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 6,
+  },
+  dropic:{
+    alignItems:'center',
+    marginBottom: 12
+  },
 });
 
 export default Bill;

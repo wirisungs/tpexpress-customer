@@ -8,6 +8,10 @@ import GHTKIC from "../../svg/DucTri/Icons/Order/GHTK";
 import GHNIC from "../../svg/DucTri/Icons/Order/GHN";
 import GHTLIC from "../../svg/DucTri/Icons/Order/GHTL";
 import THGHIC from "../../svg/DucTri/Icons/Order/TPGH";
+//pay
+import CashIC from "../../svg/DucTri/Icons/Order/cash";
+import AtmIC from "../../svg/DucTri/Icons/Order/atm";
+import MomoIC from "../../svg/DucTri/Icons/Order/momo";
 import ButtonFill from "../../components/Buttons/Buttons";
 import {
   CommonActions,
@@ -21,12 +25,18 @@ import { RootStackParamList } from "../../../App";
 const ServiceStep = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const Route = useRoute<RouteProp<RootStackParamList, "ServiceOrder">>();
-  const [isPopupVisible, setPopupVisible] = useState(false);
   const [service, setService] = useState([]);
+  const [payment, setPayment] = useState([]);
+  //popup dịch vụ
+  const [isPopupVisible, setPopupVisible] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
-
   const handleOpenPopup = () => setPopupVisible(true);
   const handleClosePopup = () => setPopupVisible(false);
+  //popup thanh toán
+  const [isPaymentPopupVisible, setPaymentPopupVisible] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const handleOpenPaymentPopup = () => setPaymentPopupVisible(true);
+  const handleClosePaymentPopup = () => setPaymentPopupVisible(false);
 
 
   const {
@@ -51,10 +61,16 @@ const ServiceStep = () => {
     return `${year}-${month}-${day}`; // Định dạng: YYYY-MM-DD
   };
 
+  const isOutskirt = (distance: number) => {
+    return distance > 30; // Ví dụ: trên 10km được coi là ngoại thành
+  };
+  
+
   const handleSubmit = async () => {
+    const orderType = isOutskirt(distance) ? 'Ngoại thành' : 'Nội thành';
     const orderDate = getCurrentDate();
     const sanitizedCOD = Number(COD) || 0;
-    const total = sanitizedCOD + calculatorFee(selectedService.Services_Price);
+    const total = sanitizedCOD + calculatorFee(selectedService.dservicesPrice);
 
     try {
       const response = await fetch('http://tpexpress.ddns.net:3000/api/order', {
@@ -63,25 +79,26 @@ const ServiceStep = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          Order_ID: newOrderID,
-          Cus_ID: 'KH35540912',
-          Sender_Address: senderAddress,
-          Receiver_Phone: phone,
-          Receiver_Name: name,
-          Receiver_Address: receiverAddress,
-          Order_Type: 'Nội thành',
-          Order_Fragile: fragileInput,
-          Order_Note: note,
-          Order_COD: sanitizedCOD,
-          Services_ID: selectedService.Services_ID,
-          Order_TotalPrice: total,
-          Payment_ID: 'P001',
-          Status_ID: 'ST001',
-          Driver_ID: '',
-          Order_Date: orderDate,
-          Delivery_Fee: calculatorFee(selectedService.Services_Price),
-          Proof_Success: '',
-          Order_Reason: ''
+          orderId: newOrderID,
+          cusId: 'KH35540912',
+          senderAddress: senderAddress,
+          receiverPhone: phone,
+          receiverName: name,
+          receiverAddress: receiverAddress,
+          orderType: orderType,
+          orderIsFragile: fragileInput,
+          orderNote: note,
+          orderCOD: sanitizedCOD,
+          dservicesId: selectedService.dservicesId,
+          totalPrice: total,
+          paymentId: selectedPaymentMethod.Pay_ID,
+          orderStatusId: 'ST001',
+          driverId: '',
+          // createdDate: orderDate,
+          createdDate: '',
+          deliverPrice: calculatorFee(selectedService.dservicesPrice),
+          proofSuccess: '',
+          reasonFailed: ''
         }),
       });
 
@@ -169,6 +186,19 @@ const ServiceStep = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://tpexpress.ddns.net:3000/api/Payment'); 
+        const promotionsData = await response.json();
+        setPayment(promotionsData);
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu:', error);
+      }
+    }; 
+    fetchData();
+  }, []);
+
   const formatPrice = (price: number) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
@@ -183,6 +213,19 @@ const ServiceStep = () => {
         return <GHTLIC />;
       case 'S004':
         return <THGHIC />;
+      default:
+        return null; // Nếu không có icon phù hợp
+    }
+  };
+
+  const getPaymentIcon = (serviceId: any) => {
+    switch (serviceId) {
+      case 'P001':
+        return <CashIC />;
+      case 'P002':
+        return <AtmIC />;
+      case 'P003':
+        return <MomoIC />;
       default:
         return null; // Nếu không có icon phù hợp
     }
@@ -214,8 +257,6 @@ const ServiceStep = () => {
     return fee;
   };
   
-  
-  
 
   return (
     <>
@@ -240,10 +281,10 @@ const ServiceStep = () => {
   
             {/* Thông tin gói hàng */}
             <View className="package-info flex flex-col gap-3">
-              <Text style={styles.tx1}>Thông tin gói hàng</Text>
+              <Text style={styles.tx1}>Thông tin gói hàng </Text>
               {orders.map((order, index) => (
                 <View className="input flex flex-col gap-2" key={index}>
-                  <Text>Đơn hàng {order.id}</Text>
+                  <Text style={styles.tx2}>Đơn hàng {order.id}</Text>
                   <InfoBox value={order.packageName} />
                   <View style={styles.box2}>
                     <View style={styles.flexItem}>
@@ -261,7 +302,7 @@ const ServiceStep = () => {
   
             {/* Lựa chọn dịch vụ */}
             <View className="service flex flex-col gap-3">
-              <Text>Dịch vụ</Text>
+              <Text style={styles.tx1}>Dịch vụ</Text>
               
               <TouchableOpacity
                 className="validService flex flex-col gap-2"
@@ -275,14 +316,14 @@ const ServiceStep = () => {
                   <View className="right bg-[#fff] w-[97%] h-full rounded-r-xl p-3 flex flex-col justify-between">
                     <View className="title-bar flex flex-row justify-between">
                       <Text className="text-base text-basicBlack font-bold">
-                        {selectedService ? selectedService.Services_Name : 'Hãy chọn dịch vụ'}
+                        {selectedService ? selectedService.dservicesName : 'Hãy chọn dịch vụ'}
                       </Text>
                       <Text className="text-base text-basicBlack font-bold">
-                        {selectedService ? formatPrice(calculatorFee(selectedService.Services_Price)) : ''}
+                        {selectedService ? formatPrice(calculatorFee(selectedService.dservicesPrice)) : ''}
                       </Text>
                     </View>
                     <View className="timeline">
-                      <Text className="text-xs">Thời gian dự kiến:  {selectedService ? selectedService.Services_Time : 'Tùy dịch vụ'}</Text>
+                      <Text className="text-xs">Thời gian dự kiến:  {selectedService ? selectedService.dservicesTime : 'Tùy dịch vụ'}</Text>
                     </View>
                   </View>
                 </View>
@@ -292,10 +333,16 @@ const ServiceStep = () => {
   
             {/* Hình thức thanh toán */}
             <View className="package-info flex flex-col gap-3">
-              <Text>Thông tin gói hàng</Text>
-              <View className="choose-input flex flex-col gap-2">
-                <ChooseInfoBox icon={<MoreIC />} />
-              </View>
+              <Text style={styles.tx1}>Hình thức thanh toán</Text>
+              <TouchableOpacity
+                className="choose-input flex flex-col gap-2"
+                onPress={handleOpenPaymentPopup}
+              >
+                <ChooseInfoBox
+                  icon={<MoreIC />}
+                  value={selectedPaymentMethod?.Pay_Name ?? "Chọn hình thức thanh toán"}
+                />
+              </TouchableOpacity>
             </View>
           </View>
   
@@ -328,16 +375,16 @@ const ServiceStep = () => {
                   style={styles.itemservice}
                   onPress={() => {
                     setSelectedService(item); // Lưu dịch vụ đã chọn vào state
-                    handleOpenPopup(); // Mở popup
+                    handleClosePopup(); // Mở popup
                   }}
                 >
-                  {getServiceIcon(item.Services_ID)}
+                  {getServiceIcon(item.dservicesId)}
                   <View style={styles.textservice}>
                     <View style={styles.row1}>
-                      <Text style={styles.popupTitle}>{item.Services_Name}</Text>
-                      <Text style={styles.popupTitle}>{formatPrice(calculatorFee(item.Services_Price))}đ</Text>
+                      <Text style={styles.popupTitle}>{item.dservicesName}</Text>
+                      <Text style={styles.popupTitle}>{formatPrice(calculatorFee(item.dservicesPrice))}đ</Text>
                     </View>
-                    <Text>Thời gian dự kiến: {item.Services_Time}</Text>
+                    <Text>Thời gian dự kiến: {item.dservicesTime}</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -346,6 +393,42 @@ const ServiceStep = () => {
           </View>
         </View>
       </Modal>
+      {/* thanh toán */}
+      <Modal
+        visible={isPaymentPopupVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={handleClosePaymentPopup}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.popupContent}>
+            <TouchableOpacity style={styles.dropic} onPress={handleClosePaymentPopup}>
+              <CancelIC />
+            </TouchableOpacity>
+
+            {payment.map((item, index) => (
+              <View key={index}>
+                <TouchableOpacity
+                  style={styles.itemservice}
+                  onPress={() => {
+                    // setSelectedService(item); 
+                    setSelectedPaymentMethod(item);
+                    handleClosePaymentPopup(); // Mở popup
+                  }}
+                >
+                  {getPaymentIcon(item.Pay_ID)}
+                  <View style={styles.textservice}>
+                    <View style={styles.row1}>
+                      <Text style={styles.popupTitle}>{item.Pay_Name}</Text>              
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        </View>
+      </Modal>
+
     </>
   );
   
@@ -422,7 +505,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-
+  tx2:{
+    fontSize: 16,
+    fontWeight: 'medium',
+    paddingVertical: 12
+  }
 });
 
 export default ServiceStep;

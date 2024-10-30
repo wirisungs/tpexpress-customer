@@ -16,20 +16,19 @@ interface HomeProps {
 }
 
 interface Promotion {
-  Order_ID: string,
-  Receiver_Phone: number,
-  Receiver_Name: string,
-  Receiver_Address: string,
-  Order_Note: string,
-  Order_COD: number,
-  Order_TotalPrice: number,
-  Order_Type: string,
-  Order_Status: string,
-  Services_ID: string,
-  Voucher_ID: string,
-  Payment_ID: string,
-  Cus_ID: string,
-  Driver_ID: string,
+  orderId: string,
+  receiverPhone: number,
+  receiverName: string,
+  receiverAddress: string,
+  orderNote: string,
+  orderCOD: number,
+  totalPrice: number,
+  orderType: string,
+  orderStatusId: string,
+  dservicesId: string,
+  paymentId: string,
+  cusId: string,
+  driverId: string,
 }
 
 const Home: React.FC<HomeProps> = () => {

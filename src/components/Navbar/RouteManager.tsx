@@ -57,7 +57,7 @@ const RouteManager: React.FC = () => {
 
       <Tab.Screen
         name={orderName}
-        component={TestMap}
+        component={Order}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>

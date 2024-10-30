@@ -40,7 +40,7 @@ const OrderDetail: React.FC = () => {
   const renderOrderInfo = () => (
     <View style={styles.row1}>
       <View style={styles.row11}>
-        <Text style={styles.orderCode}>{item.Order_ID}</Text>
+        <Text style={styles.orderCode}>{item.orderId}</Text>
         <TouchableOpacity onPress={copyOrderID}>
           <CopyIC />
         </TouchableOpacity>

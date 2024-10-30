@@ -11,18 +11,18 @@ import {
 } from "react-native";
 
 interface Promotion {
-  Order_ID: string;
-  Status_ID: string;
-  Receiver_Name: string;
-  Receiver_Phone: number;
-  Receiver_Address: string;
-  Order_Note: string;
-  Order_TotalPrice: number;
+  orderId: string;
+  orderStatusId: string;
+  receiverName: string;
+  receiverPhone: number;
+  receiverAddress: string;
+  orderNote: string;
+  totalPrice: number;
 }
 
 interface Status {
-  Status_ID: string;
-  Status_Name: string;
+  statusId: string;
+  statusName: string;
 }
 
 const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
@@ -36,7 +36,7 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
     try {
       const response = await fetch(`http://tpexpress.ddns.net:3000/api/status`);
       const statuses: Status[] = await response.json();
-      const statusMap = new Map(statuses.map(({ Status_ID, Status_Name }) => [Status_ID, Status_Name]));
+      const statusMap = new Map(statuses.map(({ statusId, statusName }) => [statusId, statusName]));
       setStatusCache(statusMap);
     } catch (error) {
       console.error("Error fetching statuses:", error);
@@ -49,8 +49,8 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
       const response = await fetch(`http://tpexpress.ddns.net:3000/api/order`);
       const allOrders: Promotion[] = await response.json();
       const filteredOrders = status
-        ? allOrders.filter((order) => order.Status_ID === status)
-        : allOrders.filter((order) => order.Status_ID !== "ST001");
+        ? allOrders.filter((order) => order.orderStatusId === status)
+        : allOrders.filter((order) => order.orderStatusId !== "ST001");
       setPromotions(filteredOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -74,14 +74,14 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
   }, [fetchStatuses, fetchOrders]);
 
   const RenderOrderItem: React.FC<{ item: Promotion }> = ({ item }) => {
-    const statusName = statusCache.get(item.Status_ID) || "Unknown";
+    const statusName = statusCache.get(item.orderStatusId) || "Unknown";
 
     return (
-      <TouchableOpacity key={item.Order_ID} activeOpacity={1} style={styles.container}>
+      <TouchableOpacity key={item.orderId} activeOpacity={1} style={styles.container}>
         <View style={styles.shadow}>
           <View style={styles.headerContainer}>
-            <Text style={styles.head1}>{item.Order_ID}</Text>
-            <Text style={[styles.status, { color: getStatusColor(item.Status_ID) }]}>
+            <Text style={styles.head1}>{item.orderId}</Text>
+            <Text style={[styles.status, { color: getStatusColor(item.orderStatusId) }]}>
               {statusName}
             </Text>
           </View>
@@ -91,19 +91,19 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
           <View style={styles.headerContainer}>
             <View style={styles.roworder}>
               <Text style={styles.info}>Người nhận:</Text>
-              <Text style={styles.info1}>{item.Receiver_Name}</Text>
+              <Text style={styles.info1}>{item.receiverName}</Text>
             </View>
             <View style={styles.roworder}>
               <Text style={styles.info}>Số điện thoại:</Text>
-              <Text style={styles.info1}>{item.Receiver_Phone}</Text>
+              <Text style={styles.info1}>{item.receiverPhone}</Text>
             </View>
             <View style={styles.roworder}>
               <Text style={styles.info}>Địa chỉ:</Text>
-              <Text style={styles.info1}>{item.Receiver_Address}</Text>
+              <Text style={styles.info1}>{item.receiverAddress}</Text>
             </View>
             <View style={styles.roworder}>
               <Text style={styles.info}>Note:</Text>
-              <Text style={styles.info1}>{item.Order_Note}</Text>
+              <Text style={styles.info1}>{item.orderNote}</Text>
             </View>
           </View>
 
@@ -111,7 +111,7 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
 
           <View style={styles.totalContainer}>
             <Text style={styles.head2}>Tổng:</Text>
-            <Text style={styles.head2}>{formatPrice(item.Order_TotalPrice)} đ</Text>
+            <Text style={styles.head2}>{formatPrice(item.totalPrice)} đ</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -136,7 +136,7 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
       ) : (
         <FlatList
           data={promotions}
-          keyExtractor={(item) => item.Order_ID}
+          keyExtractor={(item) => item.orderId}
           renderItem={({ item }) => <RenderOrderItem item={item} />}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

@@ -10,20 +10,19 @@ interface OrderItemProps {
 }
 
 interface Promotion {
-  Order_ID: string,
-  Receiver_Phone: number,
-  Receiver_Name: string,
-  Receiver_Address: string,
-  Order_Note: string,
-  Order_COD: number,
-  Order_TotalPrice: number,
-  Order_Type: string,
-  Order_Status: string,
-  Services_ID: string,
-  Voucher_ID: string,
-  Payment_ID: string,
-  Cus_ID: string,
-  Driver_ID: string,
+  orderId: string,
+  receiverPhone: number,
+  receiverName: string,
+  receiverAddress: string,
+  orderNote: string,
+  orderCOD: number,
+  totalPrice: number,
+  orderType: string,
+  orderStatusId: string,
+  dservicesId: string,
+  paymentId: string,
+  cusId: string,
+  driverId: string,
 }
 
 const MyOrderItem: React.FC<OrderItemProps> = ({ phone,currentPage }) => {
@@ -60,15 +59,15 @@ const MyOrderItem: React.FC<OrderItemProps> = ({ phone,currentPage }) => {
             onPress={() => navigation.navigate('OrderDetail', { item})} 
             >
             <View style={styles.headerContainer}>
-              <Text style={styles.head1}>{item.Order_ID}</Text>
+              <Text style={styles.head1}>{item.orderId}</Text>
               <TouchableOpacity>
                 <Text style={styles.detail}>Chi tiết</Text>
               </TouchableOpacity>
             </View>
-              <Text style={styles.info1}>{item.Order_Note}</Text>
+              <Text style={styles.info1}>{item.orderNote}</Text>
             <View style={styles.totalContainer}>
               <Text style={styles.head2}>Tổng:</Text>
-              <Text style={styles.money}>{formatPrice(item.Order_TotalPrice)} đ</Text>
+              <Text style={styles.money}>{formatPrice(item.totalPrice)} đ</Text>
             </View>
           </TouchableOpacity>
         </TouchableOpacity>

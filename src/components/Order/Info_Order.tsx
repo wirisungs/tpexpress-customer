@@ -7,13 +7,13 @@ interface SenderOrderProps {
   
 }
 interface Cus {
-    cus_ID: string,
-    cus_Name: string,
-    cus_Email: string,
-    cus_Phone: string,
-    cus_Address: string,
-    cus_Birthday: string,
-    cus_Gender: string,
+    cusId: string,
+    cusName: string,
+    cusEmail: string,
+    cusPhone: string,
+    cusAddress: string,
+    cusBirthday: string,
+    cusGender: number,
 }
 
 
@@ -24,20 +24,20 @@ const Info_Order: React.FC<SenderOrderProps> = () => {
     const [statusCache, setStatusCache] = useState<Map<string, string>>(new Map());
 
     const fetchCustomerInfo = useCallback(
-      async (cusID: string): Promise<{ name: string; phone: string }> => {
-        if (statusCache.has(cusID)) {
-          return statusCache.get(cusID) || { name: "Unknown", phone: "Unknown" };
+      async (cusId: string): Promise<{ name: string; phone: string }> => {
+        if (statusCache.has(cusId)) {
+          return statusCache.get(cusId) || { name: "Unknown", phone: "Unknown" };
         }
         try {
           const response = await fetch(
-            `http://tpexpress.ddns.net:3000/api/cus?id=${cusID}`
+            `http://tpexpress.ddns.net:3000/api/cus?id=${cusId}`
           );
           const statusData: Cus = await response.json();
-          const name = statusData.cus_Name || "Unknown";
-          const phone = statusData.cus_Phone || "Unknown";
+          const name = statusData.cusName || "Unknown";
+          const phone = statusData.cusPhone || "Unknown";
     
           const customerInfo = { name, phone };
-          setStatusCache((prev) => new Map(prev).set(cusID, customerInfo));
+          setStatusCache((prev) => new Map(prev).set(cusId, customerInfo));
     
           return customerInfo;
         } catch (error) {
@@ -54,12 +54,12 @@ const Info_Order: React.FC<SenderOrderProps> = () => {
     
     useEffect(() => {
       const fetchInfo = async () => {
-        const { name, phone } = await fetchCustomerInfo(item.Cus_ID);
+        const { name, phone } = await fetchCustomerInfo(item.cusId);
         setCusName(name);
         setCusPhone(phone);
       };
       fetchInfo();
-    }, [item.Cus_ID, fetchCustomerInfo]);
+    }, [item.cusId, fetchCustomerInfo]);
     
       
 
@@ -68,13 +68,13 @@ const Info_Order: React.FC<SenderOrderProps> = () => {
     <Text style={info.title}>Thông tin giao nhận</Text>
       <View  style={info.v1}>
          <Text style={info.nhan}>Người nhận</Text>
-         <Text style={info.namesdt}>{item.Receiver_Name} - {item.Receiver_Phone}</Text>
-         <Text style={info.address}>{item.Receiver_Address}</Text>
+         <Text style={info.namesdt}>{item.receiverName} - {item.receiverPhone}</Text>
+         <Text style={info.address}>{item.receiverAddress}</Text>
       </View>
       <View  style={info.v1}>
          <Text style={info.gui}>Người gửi</Text>
          <Text style={info.namesdt}>{cusName} - {cusPhone}</Text> 
-         <Text style={info.address}>{item.Sender_Address}</Text>
+         <Text style={info.address}>{item.senderAddress}</Text>
       </View>
   </View>
   );
