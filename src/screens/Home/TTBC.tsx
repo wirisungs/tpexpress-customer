@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Button, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
+import { TransHeader } from "../../components/Layouts/Headers";
+import { InputWithIcon } from "../../components/Inputs/Inputs";
+import SearchIC from '../../svg/DucTri/Icons/HomeIcon/Search'
 
 const MAPBOX_API_KEY = "pk.eyJ1IjoiYmx1ZWR1Y2swOTA3IiwiYSI6ImNtMnI0ZWJ6aTEzengyanNibHpkanp4djEifQ.iaoeQHLQaLkNHLga6ZUffw"; // Thay bằng token Mapbox của bạn
 
@@ -66,6 +69,7 @@ const TestMap = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={100} // Thay đổi giá trị nếu cần thiết
     >
+      <TransHeader haveBackIcon={true} title="Tra tính bưu cục" />
       <MapView
         style={styles.map}
         initialRegion={{
@@ -92,20 +96,14 @@ const TestMap = () => {
       </MapView>
 
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Nhập địa chỉ điểm đi"
-          value={origin}
-          onChangeText={setOrigin}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Nhập địa chỉ điểm đến"
-          value={destination}
-          onChangeText={setDestination}
-        />
-        <Button title="Tính khoảng cách" onPress={calculateDistance} />
-        {distance && <Text style={styles.result}>Khoảng cách: {distance}</Text>}
+        <Text style={styles.textbc}>Tìm kiếm bưu cục</Text>
+        <InputWithIcon
+            placeholder="Nhập tên / địa chỉ bưu cục"
+            value={origin}
+            icon={<SearchIC />}
+            onChangeText={setOrigin}
+            inputType="default"
+          />
       </View>
     </KeyboardAvoidingView>
   );
@@ -119,8 +117,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    padding: 10,
+    padding: 16,
     backgroundColor: "#fff",
+    borderRadius: 12,
+    height: 136
   },
   input: {
     borderWidth: 1,
@@ -129,11 +129,12 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 5,
   },
-  result: {
-    marginTop: 10,
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+  textbc:{
+      color:'#EB455F',
+      fontSize: 20,
+      fontWeight:'bold',
+      marginBottom: 8
+  }
 });
 
 export default TestMap;

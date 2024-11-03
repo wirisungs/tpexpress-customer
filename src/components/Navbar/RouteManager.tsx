@@ -6,7 +6,7 @@ import Order from "../../screens/Home/Order";
 import Nofication from "../../screens/Home/Nofication";
 import Account from "../../screens/Home/Account";
 import TestPush from "../../screens/Home/test";
-import TestMap from "../../screens/Home/testmap";
+import TestMap from "../../screens/Home/TTBC";
 
 // Icon
 import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";

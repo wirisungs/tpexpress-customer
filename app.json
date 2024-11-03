@@ -14,7 +14,10 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "Ứng dụng cần quyền truy cập camera để quét mã QR."
+        "NSCameraUsageDescription": "Ứng dụng cần quyền truy cập camera để quét mã QR.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
       }
     },
     "android": {
@@ -43,6 +46,8 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
         }
       ]
-    ]
+    ],
+    "scheme": "tpexpress", 
+    "platforms": ["ios", "android", "web"]
   }
 }

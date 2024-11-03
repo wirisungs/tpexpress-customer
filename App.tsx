@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
 // Import screens
-import LoginScreen from "./src/screens/Auth/login";
+import Login from "./src/screens/Auth/login";
 import RegisterScreen from "./src/screens/Auth/register";
 import VerifyScreen from "./src/screens/Auth/verify";
 import CreateOrder from "./src/screens/Order/CreateOrderInfo";
@@ -19,8 +19,9 @@ import MyOrder from "./src/screens/Order/MyOrder";
 import User_Info from "./src/screens/Account/User_Info";
 import OrderDetail from "./src/screens/Order/OrderDetail";
 import User_Edit from "./src/screens/Account/User_Edit";
-// import LoginSSO from "./src/screens/Auth/loginwithsso";
-import TestMap from "./src/screens/Home/testmap";
+import TestMap from "./src/screens/Home/TTBC";
+import TTCP from "./src/components/Order/TTCP";
+import KQCP from "./src/components/Order/KQCP";
 
 const Stack = createNativeStackNavigator();
 
@@ -52,10 +53,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="LoginPage"
+        initialRouteName="HomePage"
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="LoginPage" component={LoginScreen} />
+        <Stack.Screen name="LoginPage" component={Login} />
         <Stack.Screen name="RegisterPage" component={RegisterScreen} />
         <Stack.Screen name="VerifyPage" component={VerifyScreen} />
         <Stack.Screen name="CreateOrder" component={CreateOrder} />
@@ -71,7 +72,8 @@ export default function App() {
         <Stack.Screen name="OrderDetail" component={OrderDetail} />
         <Stack.Screen name="User_Edit" component={User_Edit} />
         <Stack.Screen name="TestMap" component={TestMap} />
-        {/* <Stack.Screen name="LoginSSO" component={LoginSSO} /> */}
+        <Stack.Screen name="TTCP" component={TTCP} />
+        <Stack.Screen name="KQCP" component={KQCP} />
       </Stack.Navigator>
     </NavigationContainer>
   );

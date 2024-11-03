@@ -9,6 +9,9 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
+// import DeviceInfo from 'react-native-device-info';
+//import * as Network from 'expo-network';
+
 
 interface Promotion {
   orderId: string;
@@ -31,10 +34,23 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [statusCache, setStatusCache] = useState<Map<string, string>>(new Map());
+  // const [ipAddress, setIpAddress] = useState('');
+
+  // const getLocalIpAddress = async () => {
+  //   try {
+  //     // Lấy thông tin mạng
+  //     const { ipAddress } = await Network.getIpAddressAsync(); // Lấy địa chỉ IP cục bộ
+  //     setIpAddress(ipAddress); // Cập nhật địa chỉ IP vào state
+  //     console.log(`Your local IP address is: ${ipAddress}`);
+  //   } catch (error) {
+  //     console.error('Error getting IP address:', error);
+  //   }
+  // };
 
   const fetchStatuses = useCallback(async () => {
     try {
       const response = await fetch(`http://tpexpress.ddns.net:3000/api/status`);
+      // const response = await fetch(`http://192.168.1.15:3000/api/status`);
       const statuses: Status[] = await response.json();
       const statusMap = new Map(statuses.map(({ statusId, statusName }) => [statusId, statusName]));
       setStatusCache(statusMap);
@@ -143,6 +159,7 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
           }
         />
       )}
+      
     </View>
   );
 };

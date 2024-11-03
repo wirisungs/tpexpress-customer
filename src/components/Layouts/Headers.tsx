@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import BackIC from "../../svg/MTri/BackIC";
 import { useNavigation } from "@react-navigation/native";
