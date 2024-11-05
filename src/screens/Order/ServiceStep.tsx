@@ -93,12 +93,11 @@ const ServiceStep = () => {
           totalPrice: total,
           paymentId: selectedPaymentMethod.Pay_ID,
           orderStatusId: 'ST001',
-          driverId: '',
+          driverId: null,
           createdDate: orderDate,
-          createdDate: '',
           deliverPrice: calculatorFee(selectedService.dservicesPrice),
-          proofSuccess: '',
-          reasonFailed: ''
+          proofSuccess: null,
+          reasonFailed: null
         }),
       });
 
@@ -319,7 +318,7 @@ const ServiceStep = () => {
                         {selectedService ? selectedService.dservicesName : 'Hãy chọn dịch vụ'}
                       </Text>
                       <Text className="text-base text-basicBlack font-bold">
-                        {selectedService ? formatPrice(calculatorFee(selectedService.dservicesPrice)) : ''}
+                        {selectedService ? formatPrice(calculatorFee(selectedService.dservicesPrice)) : ''} 
                       </Text>
                     </View>
                     <View className="timeline">
@@ -382,7 +381,7 @@ const ServiceStep = () => {
                   <View style={styles.textservice}>
                     <View style={styles.row1}>
                       <Text style={styles.popupTitle}>{item.dservicesName}</Text>
-                      <Text style={styles.popupTitle}>{formatPrice(calculatorFee(item.dservicesPrice))}đ</Text>
+                      <Text style={styles.popupTitle}>{formatPrice(calculatorFee(item.dservicesPrice))} đ</Text>
                     </View>
                     <Text>Thời gian dự kiến: {item.dservicesTime}</Text>
                   </View>

@@ -6,6 +6,8 @@ import { RootStackParamList } from "../../../App";
 import Chat from "../../svg/DucTri/Icons/Helpdesk/chat"
 import Chinhsach from "../../svg/DucTri/Icons/Helpdesk/chinhsach"
 import Info from "../../svg/DucTri/Icons/Helpdesk/infoapp"
+import NoteIC from "../../svg/DucTri/Icons/Helpdesk/note"
+import PhoneIC from "../../svg/DucTri/Icons/Helpdesk/phone"
 
 const Helpdesk = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -30,6 +32,36 @@ const Helpdesk = () => {
                     <Text style={styles.txt}>Nhắn tin với nhân viên hỗ trợ</Text>
                 </View>
             </View>
+            <View style={body.container}>
+                <Text style={body.tx}>Yêu cầu hỗ trợ</Text> 
+                <View style={body.box}>
+                    <View style={body.yc}>
+                        <NoteIC />
+                        <Text style={body.tx1}>Hàng của tôi bị lạc</Text>
+                    </View>
+                    <View style={body.yc}>
+                        <NoteIC />
+                        <Text style={body.tx1}>Hàng của tôi bị vỡ</Text>
+                    </View>
+                    <View style={body.yc}>
+                        <NoteIC />
+                        <Text style={body.tx1}>Hàng của tôi chưa được vận chuyển</Text>
+                    </View>
+                    <View style={body.yc}>
+                        <NoteIC />
+                        <Text style={body.tx1}>Tôi chưa nhận được tiền khi hoàn tất đơn</Text>
+                    </View>
+                </View>
+
+                <Text style={body.tx}>Hotline</Text> 
+                <View style={body.box}>
+                    <View style={body.yc}>
+                        <PhoneIC />
+                        <Text style={body.tx1}>19005566</Text>
+                    </View>
+                </View>
+               
+            </View>
         </ScrollView>
     );
 };
@@ -44,7 +76,7 @@ const styles = StyleSheet.create({
         backgroundColor:'#ffffff',
         paddingVertical: 20,
         paddingHorizontal: 10,
-        flex: 1,
+        flex: 1.3,
         borderTopLeftRadius: 12
     },
     box2: {
@@ -83,6 +115,31 @@ const styles = StyleSheet.create({
     },
     icon:{
         marginRight: 8
+    }
+});
+
+const body = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 24
+    },
+    box: {
+        marginTop: 8
+    },
+    tx:{
+        fontSize: 28,
+        fontWeight: 'bold',
+        marginTop: 8
+    },
+    yc:{
+        flexDirection:'row',
+        alignItems:'center',
+        paddingVertical: 10
+    },
+    tx1:{
+        color:'#767676',
+        marginLeft: 8,
+        fontSize: 16
     }
 });
 

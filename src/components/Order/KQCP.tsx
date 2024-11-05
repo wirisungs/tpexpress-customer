@@ -110,25 +110,22 @@ const KQCP = () => {
   
             {/* Lựa chọn dịch vụ */}
             <View className="service flex flex-col gap-3">
-              <Text style={styles.tx1}>Dịch vụ {distance}</Text>
+              <Text style={styles.tx1}>Dịch vụ </Text>
               {service.map((item, index) => (
               <View key={index}>
-                <TouchableOpacity
-                  style={styles.itemservice}
-                  onPress={() => {
-                    setSelectedService(item); // Lưu dịch vụ đã chọn vào state
-                    handleClosePopup(); // Mở popup
-                  }}
+                <View
+                  style={styles.itemservice}  
                 >
                   {getServiceIcon(item.dservicesId)}
                   <View style={styles.textservice}>
                     <View style={styles.row1}>
                       <Text style={styles.popupTitle}>{item.dservicesName}</Text>
                       <Text style={styles.popupTitle}>{formatPrice(calculatorFee(item.dservicesPrice))}đ</Text>
+                      
                     </View>
                     <Text>Thời gian dự kiến: {item.dservicesTime}</Text>
                   </View>
-                </TouchableOpacity>
+                </View>
               </View>
             ))}
               <Text>Lưu ý</Text>

@@ -52,7 +52,7 @@ const TTCP = () => {
     // map
     const [originCoords, setOriginCoords] = useState<Coordinates | null>(null);
     const [destinationCoords, setDestinationCoords] = useState<Coordinates | null>(null);
-    const [distance, setDistance] = useState<string | null>(null);
+    const [distance, setDistance] = useState<Number | null>(null);
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -77,29 +77,27 @@ const TTCP = () => {
         try {
             const originCoords = await getCoordinates(formValues.senderAddress);
             const destinationCoords = await getCoordinates(formValues.receiverAddress);
-
+    
             setOriginCoords(originCoords);
             setDestinationCoords(destinationCoords);
-
+    
             const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoords.longitude},${originCoords.latitude};${destinationCoords.longitude},${destinationCoords.latitude}?access_token=${MAPBOX_API_KEY}`;
-
+    
             const response = await axios.get(url);
             console.log("Response from Mapbox API:", response.data);
-
+    
             if (!response.data.routes || response.data.routes.length === 0) {
                 Alert.alert("Lỗi", "Không tìm thấy tuyến đường hợp lệ.");
-                setDistance(null); // Reset distance
-                return;
+                return null; // Trả về null nếu không tìm thấy tuyến đường
             }
-
+    
             const distanceMeters = response.data.routes[0].distance;
             const distanceKm = (distanceMeters / 1000).toFixed(2); // Đổi sang km
-
-            setDistance(`${distanceKm} km`); // Cập nhật giá trị distance trong state
+            return distanceKm; // Trả về khoảng cách đã tính
         } catch (error) {
             console.error(error);
             Alert.alert("Lỗi", "Có lỗi xảy ra khi tính khoảng cách.");
-            setDistance(null); // Reset distance
+            return null; // Trả về null nếu có lỗi
         }
     };
 
@@ -124,13 +122,17 @@ const TTCP = () => {
 
     const nextToKQ = async () => {
         const calculatedDistance = await calculateDistance(); // Đợi hàm tính khoảng cách
-        navigation.navigate("KQCP", {
-            orders,
-            COD: formValues.orderCOD || 0,
-            fragileInput,
-            distance: calculatedDistance, // Gửi giá trị đã tính toán
-        });
+    
+        if (calculatedDistance) {
+            navigation.navigate("KQCP", {
+                orders,
+                COD: formValues.orderCOD || 0,
+                fragileInput,
+                distance: calculatedDistance, // Gửi giá trị đã tính toán
+            });
+        }
     };
+    
 
 
     const errorStyle: StyleProp<TextStyle> = { borderColor: "#EB455F" };
@@ -161,13 +163,13 @@ const TTCP = () => {
                                 inputType="default"
                             />
                             {renderError("senderAddress")}
-                            <Text>Vd: Người gửi ở Huyện Nhà Bè̀ thì chỉ ghi “Nha Be”</Text>
+                            <Text>Chú ý: chỉ địa chỉ gửi phải hợp lệ</Text>
                         </View>
 
                         {/* Thông tin người nhận */}
                         <View className="receiver-info flex flex-col gap-3">
                             <Text className="text-xl font-bold">
-                                Nơi nhận
+                                Nơi nhận 
                             </Text>
 
                             <InputWithIcon
@@ -178,7 +180,7 @@ const TTCP = () => {
                                 inputType="default"
                             />
                             {renderError("receiverAddress")}
-                            <Text>Vd: Người gửi ở Quận 5̀ thì chỉ ghi “Quan 5”</Text>
+                            <Text>Chú ý: chỉ địa chỉ gửi phải hợp lệ</Text>
                         </View>
 
                         {/* Thông tin đơn hàng */}

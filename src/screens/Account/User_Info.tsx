@@ -6,6 +6,7 @@ import EditIC from "../../svg/DucTri/Icons/AccIcon/Edit"
 import ButtonFill from "../../components/Buttons/Buttons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
+import AvaIC from '../../svg/DucTri/Icons/AccIcon/Ava'
 
 interface RouteParams {
   
@@ -19,9 +20,10 @@ const User_Info: React.FC<RouteParams> = () => {
       <TransHeader haveBackIcon={true} title="Thông tin cá nhân" />
       <ScrollView style={styles.all}>
         <View style={styles.avatar}>
-        <TouchableOpacity style={styles.edit}>
+          <AvaIC />
+          <TouchableOpacity style={styles.edit}>
             <EditIC />
-        </TouchableOpacity>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.viewbody}>
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   viewbody:{
-    paddingVertical: 20
+    paddingVertical: 10
   },
   viewbodymk:{
     paddingVertical: 20,

@@ -23,19 +23,25 @@ const OrderDetail: React.FC = () => {
 
   const LineIcons = ({ status }: { status: string }) => (
     <View style={styles.linestatus}>
-      {status === "completed" ? (
+      {status === "1" ? (
         <>
           <LineDoneIC />
           <LineDoneIC />
         </>
-      ) : (
+      ) : status === "2" ? (
         <>
           <LineDoneIC />
           <LineGrayIC />
         </>
-      )}
+      ) : status === "3" ? (
+        <>
+          <LineGrayIC />
+          <LineGrayIC />
+        </>
+      ) : null}
     </View>
   );
+
 
   const renderOrderInfo = () => (
     <View style={styles.row1}>
@@ -51,24 +57,34 @@ const OrderDetail: React.FC = () => {
     </View>
   );
 
-  const renderStatus = () => (
-    <View style={styles.statusic}>
-      <View style={styles.boxstatus}>
-        <BoxIC />
-        <Text style={styles.textstatus}>Chờ vận chuyển</Text>
+  const renderStatus = () => {
+    // Xác định màu sắc dựa trên trạng thái của order
+    const boxColor = (item.orderStatusId === "ST001" || item.orderStatusId === "ST002" || item.orderStatusId === "ST003") ? "#2FA087" : "#767676";
+    const carColor = (item.orderStatusId === "ST002" || item.orderStatusId === "ST003") ? "#2FA087" : "#767676";
+    const homeColor = item.orderStatusId === "ST003" ? "#2FA087" : "#767676";
+
+    return (
+      <View style={styles.statusic}>
+        <View style={styles.boxstatus}>
+          <BoxIC color={boxColor} />
+          <Text style={styles.textstatus}>Chờ vận chuyển</Text>
+        </View>
+        <LineIcons status={item.orderStatusId === "ST001" ? "2" : item.orderStatusId === "ST002"? "1": item.orderStatusId === "ST003"? "1": "3"} />
+        <View style={styles.boxstatus}>
+          <CarIC color={carColor} />
+          <Text style={styles.textstatus}>Đang vận chuyển</Text>
+        </View>
+        <LineIcons
+          status={item.orderStatusId === "ST002"? "2": item.orderStatusId === "ST003"? "1": "3"}
+        />
+        <View style={styles.boxstatus}>
+          <HomeIC color={homeColor} />
+          <Text style={styles.textstatus}>Nhận hàng</Text>
+        </View>
       </View>
-      <LineIcons status="completed" />
-      <View style={styles.boxstatus}>
-        <CarIC />
-        <Text style={styles.textstatus}>Đang vận chuyển</Text>
-      </View>
-      <LineIcons status="incomplete" />
-      <View style={styles.boxstatus}>
-        <HomeIC />
-        <Text style={styles.textstatus}>Nhận hàng</Text>
-      </View>
-    </View>
-  );
+    );
+  };
+
 
   // Dùng useMemo để tránh render lại không cần thiết
   const data = useMemo(
@@ -88,6 +104,7 @@ const OrderDetail: React.FC = () => {
   return (
     <View style={styles.container}>
       <TransHeader haveBackIcon={true} title="Chi tiết" />
+     
       <FlatList
         data={data}
         renderItem={renderItem}
