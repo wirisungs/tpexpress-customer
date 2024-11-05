@@ -155,11 +155,11 @@ const CreateOrder = () => {
     if (Object.keys(newErrors).length > 0) return;
   
     try {
-      const calculatedDistance = await calculateDistance(); // Đợi giá trị distance
+      // const calculatedDistance = await calculateDistance(); // Đợi giá trị distance
   
-      if (!calculatedDistance) {
-        return; // Nếu không có khoảng cách, dừng quá trình
-      }
+      // if (!calculatedDistance) {
+      //   return; // Nếu không có khoảng cách, dừng quá trình
+      // }
   
       // Điều hướng sau khi tính khoảng cách thành công
       navigation.navigate("ServiceOrder", {
@@ -171,7 +171,8 @@ const CreateOrder = () => {
         note: formValues.ordernote,
         COD: formValues.orderCOD || 0,
         fragileInput,
-        distance: calculatedDistance, // Truyền giá trị mới
+        // distance: calculatedDistance,
+        distance: 12 // Truyền giá trị mới
       });
     } catch (error) {
       console.error("Có lỗi xảy ra:", error);

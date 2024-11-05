@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View, Text, Alert, TouchableOpacity, Dimensions, Modal } from "react-native";
 import BasicHeader from "../../components/Layouts/Headers";
-import InfoBox, { ChooseInfoBox } from "../../components/Box/InfoBox";
-import MoreIC from "../../svg/MTri/MoreIC";
-import CancelIC from "../../svg/DucTri/Icons/Order/Drop";
 import GHTKIC from "../../svg/DucTri/Icons/Order/GHTK";
 import GHNIC from "../../svg/DucTri/Icons/Order/GHN";
 import GHTLIC from "../../svg/DucTri/Icons/Order/GHTL";
 import THGHIC from "../../svg/DucTri/Icons/Order/TPGH";
 //pay
-import CashIC from "../../svg/DucTri/Icons/Order/cash";
-import AtmIC from "../../svg/DucTri/Icons/Order/atm";
-import MomoIC from "../../svg/DucTri/Icons/Order/momo";
 import ButtonFill from "../../components/Buttons/Buttons";
 import {
   CommonActions,

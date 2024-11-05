@@ -80,7 +80,7 @@ const ServiceStep = () => {
         },
         body: JSON.stringify({
           orderId: newOrderID,
-          cusId: 'KH35540912',
+          cusId: 'KH84723774',
           senderAddress: senderAddress,
           receiverPhone: phone,
           receiverName: name,
@@ -94,7 +94,7 @@ const ServiceStep = () => {
           paymentId: selectedPaymentMethod.Pay_ID,
           orderStatusId: 'ST001',
           driverId: '',
-          // createdDate: orderDate,
+          createdDate: orderDate,
           createdDate: '',
           deliverPrice: calculatorFee(selectedService.dservicesPrice),
           proofSuccess: '',
@@ -272,7 +272,7 @@ const ServiceStep = () => {
           <View className="content flex flex-col gap-6">
             {/* Lộ trình */}
             <View className="route-info flex flex-col gap-3">
-              <Text style={styles.tx1}>Lộ trình {distance}</Text>
+              <Text style={styles.tx1}>Lộ trình </Text>
               <View className="input flex flex-col gap-2">
                 <InfoBox value={senderAddress} />
                 <InfoBox value={receiverAddress} />

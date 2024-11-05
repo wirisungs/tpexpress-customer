@@ -77,24 +77,24 @@ const TTCP = () => {
         try {
             const originCoords = await getCoordinates(formValues.senderAddress);
             const destinationCoords = await getCoordinates(formValues.receiverAddress);
-    
+
             setOriginCoords(originCoords);
             setDestinationCoords(destinationCoords);
-    
+
             const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoords.longitude},${originCoords.latitude};${destinationCoords.longitude},${destinationCoords.latitude}?access_token=${MAPBOX_API_KEY}`;
-    
+
             const response = await axios.get(url);
             console.log("Response from Mapbox API:", response.data);
-    
+
             if (!response.data.routes || response.data.routes.length === 0) {
                 Alert.alert("Lỗi", "Không tìm thấy tuyến đường hợp lệ.");
                 setDistance(null); // Reset distance
                 return;
             }
-    
+
             const distanceMeters = response.data.routes[0].distance;
             const distanceKm = (distanceMeters / 1000).toFixed(2); // Đổi sang km
-    
+
             setDistance(`${distanceKm} km`); // Cập nhật giá trị distance trong state
         } catch (error) {
             console.error(error);
@@ -102,7 +102,7 @@ const TTCP = () => {
             setDistance(null); // Reset distance
         }
     };
-    
+
 
     const handleInputChange = (field: string, value: string) => {
         setFormValues((prev) => ({ ...prev, [field]: value }));
@@ -140,84 +140,88 @@ const TTCP = () => {
             className="flex flex-col bg-grayBG-FCFCFC" showsVerticalScrollIndicator={false}
             data={[{ key: 'content' }]}
             renderItem={() => (
-                <View className="content flex flex-col gap-6 p-6">
+                <View>
                     <TransHeader haveBackIcon={true} title="Tra tính cước phí" />
+                    <View className="content flex flex-col gap-6 p-6">
+                        {/* <TransHeader haveBackIcon={true} title="Tra tính cước phí" /> */}
 
-                    {/* Thông tin người gửi */}
-                    <View className="sender-info flex flex-col gap-3">
-                        <Text className="text-2xl font-bold">
-                            Khoảng cách {distance} <Text className="text-primary">*</Text>
-                        </Text>
-                        <Text className="text-xl font-bold">
-                            Nơi gửi 
-                        </Text>
-                        <InputWithIcon
-                            placeholder="Tỉnh / Thành / Quận / Huyện"
-                            value={formValues.senderAddress}
-                            onChangeText={(val) => handleInputChange("senderAddress", val)}
-                            style={inputErrors.senderAddress && errorStyle}
-                            inputType="default"
-                        />
-                        {renderError("senderAddress")}
-                        <Text>Vd: Người gửi ở Huyện Nhà Bè̀ thì chỉ ghi “Nha Be”</Text>
-                    </View>
+                        {/* Thông tin người gửi */}
+                        <View className="sender-info flex flex-col gap-3">
+                            <Text className="text-2xl font-bold">
+                                Khoảng cách {distance} <Text className="text-primary">*</Text>
+                            </Text>
+                            <Text className="text-xl font-bold">
+                                Nơi gửi
+                            </Text>
+                            <InputWithIcon
+                                placeholder="Tỉnh / Thành / Quận / Huyện"
+                                value={formValues.senderAddress}
+                                onChangeText={(val) => handleInputChange("senderAddress", val)}
+                                style={inputErrors.senderAddress && errorStyle}
+                                inputType="default"
+                            />
+                            {renderError("senderAddress")}
+                            <Text>Vd: Người gửi ở Huyện Nhà Bè̀ thì chỉ ghi “Nha Be”</Text>
+                        </View>
 
-                    {/* Thông tin người nhận */}
-                    <View className="receiver-info flex flex-col gap-3">
-                        <Text className="text-xl font-bold">
-                           Nơi nhận 
-                        </Text>
-                       
-                        <InputWithIcon
-                            placeholder="Địa chỉ"
-                            value={formValues.receiverAddress}
-                            onChangeText={(val) => handleInputChange("receiverAddress", val)}
-                            style={inputErrors.receiverAddress && errorStyle}
-                            inputType="default"
-                        />
-                        {renderError("receiverAddress")}
-                        <Text>Vd: Người gửi ở Quận 5̀ thì chỉ ghi “Quan 5”</Text>
-                    </View>
+                        {/* Thông tin người nhận */}
+                        <View className="receiver-info flex flex-col gap-3">
+                            <Text className="text-xl font-bold">
+                                Nơi nhận
+                            </Text>
 
-                    {/* Thông tin đơn hàng */}
-                    <View className="receiver-info flex flex-col gap-3">
-                        <Text className="text-xl font-bold">
-                            Khối lượng & kích thước <Text className="text-primary">*</Text>
-                        </Text>
-                        <Input
-                            placeholder="Nặng"
-                            value={formValues.weight}
-                            onChangeText={(val) => handleInputChange("weight", val)}
-                            inputType="numeric"
-                        />
-                        {renderError("weight")}
-                    </View>
+                            <InputWithIcon
+                                placeholder="Địa chỉ"
+                                value={formValues.receiverAddress}
+                                onChangeText={(val) => handleInputChange("receiverAddress", val)}
+                                style={inputErrors.receiverAddress && errorStyle}
+                                inputType="default"
+                            />
+                            {renderError("receiverAddress")}
+                            <Text>Vd: Người gửi ở Quận 5̀ thì chỉ ghi “Quan 5”</Text>
+                        </View>
 
-                    {/* Thông tin tổng kiện hàng */}
-                    <View style={styles.boxinfo} className="order-info flex flex-col gap-3">
-                        
-
-                        <CheckboxText
-                            isChecked={isChecked}
-                            onCheckChange={setIsChecked}
-                            setCOD={setCODInput}
-                        >
-                            <Text>Thu hộ COD</Text>
-                        </CheckboxText>
-                        {codInput && (
+                        {/* Thông tin đơn hàng */}
+                        <View className="receiver-info flex flex-col gap-3">
+                            <Text className="text-xl font-bold">
+                                Khối lượng & kích thước <Text className="text-primary">*</Text>
+                            </Text>
                             <Input
-                                placeholder="Phí thu hộ"
-                                value={formValues.orderCOD}
-                                onChangeText={(val) => handleInputChange("orderCOD", val)}
+                                placeholder="Nặng"
+                                value={formValues.weight}
+                                onChangeText={(val) => handleInputChange("weight", val)}
                                 inputType="numeric"
                             />
-                        )}
-                        <ButtonFill onPress={nextToKQ}>
-                            <Text className="text-white text-xl font-bold">Tra cứu</Text>
-                        </ButtonFill>
-       
+                            {renderError("weight")}
+                        </View>
+
+                        {/* Thông tin tổng kiện hàng */}
+                        <View style={styles.boxinfo} className="order-info flex flex-col gap-3">
+
+
+                            <CheckboxText
+                                isChecked={isChecked}
+                                onCheckChange={setIsChecked}
+                                setCOD={setCODInput}
+                            >
+                                <Text>Thu hộ COD</Text>
+                            </CheckboxText>
+                            {codInput && (
+                                <Input
+                                    placeholder="Phí thu hộ"
+                                    value={formValues.orderCOD}
+                                    onChangeText={(val) => handleInputChange("orderCOD", val)}
+                                    inputType="numeric"
+                                />
+                            )}
+                            <ButtonFill onPress={nextToKQ}>
+                                <Text className="text-white text-xl font-bold">Tra cứu</Text>
+                            </ButtonFill>
+
+                        </View>
                     </View>
                 </View>
+
             )}
             keyExtractor={(item) => item.key}
         />

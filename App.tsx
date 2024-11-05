@@ -22,6 +22,7 @@ import User_Edit from "./src/screens/Account/User_Edit";
 import TestMap from "./src/screens/Home/TTBC";
 import TTCP from "./src/components/Order/TTCP";
 import KQCP from "./src/components/Order/KQCP";
+import Helpdesk from "./src/screens/Home/Helpdesk";
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,7 @@ export default function App() {
         <Stack.Screen name="TestMap" component={TestMap} />
         <Stack.Screen name="TTCP" component={TTCP} />
         <Stack.Screen name="KQCP" component={KQCP} />
+        <Stack.Screen name="Helpdesk" component={Helpdesk} />
       </Stack.Navigator>
     </NavigationContainer>
   );

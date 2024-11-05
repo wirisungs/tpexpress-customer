@@ -82,7 +82,8 @@ const Home: React.FC<HomeProps> = () => {
               inputType="default"
               icon={<SearchIC />}
               value={orderID}
-              onChangeText={setOrderID}
+              // onChangeText={setOrderID}
+              onChangeText={(text) => setOrderID(text.toUpperCase())}
               onIconPress={handleSearch}
               isBackground={true}
             />
@@ -106,10 +107,10 @@ const Home: React.FC<HomeProps> = () => {
             <Text style={styles.textcn}>Tra cứu bưu cục</Text>
           </TouchableOpacity>
 
-          <View style={styles.item1}>
+          <TouchableOpacity style={styles.item1} onPress={() => navigation.navigate('Helpdesk')}>
             <QuesIC />
             <Text style={styles.textcn}>Trợ giúp</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.news}>
           <Text style={styles.chucnang}>Tin tức</Text>
@@ -297,7 +298,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   imageXe: {
-    zIndex: -1
+    zIndex: 1
   }
 });
 
