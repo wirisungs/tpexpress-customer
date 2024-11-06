@@ -22,14 +22,14 @@ import AboutIC from "../../svg/DucTri/Icons/AccIcon/About";
 import HdsdIC from "../../svg/DucTri/Icons/AccIcon/Hssd";
 import SetIC from "../../svg/DucTri/Icons/AccIcon/Setting";
 
-export default function Account() {
+export default function Account({email}) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <View style={styles.container}>
       <View style={styles.top}>
         <View style={styles.infoContainer}>
           <Text style={styles.name}>Trần Hữu Minh Trí</Text>
-          <Text style={styles.email}>leeminho97@gmail.com</Text>
+          <Text style={styles.email}>{email}</Text>
         </View>
         <Image
           source={ImagesAssets.AvaAcc}

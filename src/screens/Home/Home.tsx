@@ -8,10 +8,11 @@ import Banner from '../../svg/DucTri/Icons/HomeIcon/Banner1'
 import { ImagesAssets } from "../../assets/DTri/ImageAssets";
 import { InputWithIcon } from "../../components/Inputs/Inputs";
 import SearchIC from '../../svg/DucTri/Icons/HomeIcon/Search'
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 
 interface HomeProps {
+  email: string | null;
 }
 
 interface Promotion {
@@ -38,7 +39,7 @@ const bannerData = [
 
 const screenWidth = Dimensions.get("window").width - 48;
 
-const Home: React.FC<HomeProps> = () => {
+const Home: React.FC<HomeProps> = ({email}) => {
   const [orderID, setOrderID] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -74,6 +75,7 @@ const Home: React.FC<HomeProps> = () => {
       <LinearGradient colors={["#F9801D", "#F44336"]} style={styles.topliner}>
         <View style={styles.top}>
           <Text style={styles.title}>Theo dõi đơn hàng của bạn</Text>
+          
           <Text style={styles.title1}>Hãy chắc chắn rằng Mã đơn hàng của bạn chính xác</Text>
 
           <View style={styles.viewsearch}>

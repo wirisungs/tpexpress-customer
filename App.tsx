@@ -4,9 +4,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
 // Import screens
-import Login from "./src/screens/Auth/login";
-import RegisterScreen from "./src/screens/Auth/register";
-import VerifyScreen from "./src/screens/Auth/verify";
 import CreateOrder from "./src/screens/Order/CreateOrderInfo";
 import RouteManager from "./src/components/Navbar/RouteManager";
 import ServiceStep from "./src/screens/Order/ServiceStep";
@@ -23,6 +20,8 @@ import TestMap from "./src/screens/Home/TTBC";
 import TTCP from "./src/components/Order/TTCP";
 import KQCP from "./src/components/Order/KQCP";
 import Helpdesk from "./src/screens/Home/Helpdesk";
+import SSO from "./src/screens/Auth/SSO";
+import Verify from "./src/screens/Auth/Verify";
 
 const Stack = createNativeStackNavigator();
 
@@ -54,12 +53,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="HomePage"
+        initialRouteName="SSO"
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="LoginPage" component={Login} />
-        <Stack.Screen name="RegisterPage" component={RegisterScreen} />
-        <Stack.Screen name="VerifyPage" component={VerifyScreen} />
+        <Stack.Screen name="Verify" component={Verify} />
         <Stack.Screen name="CreateOrder" component={CreateOrder} />
         <Stack.Screen name="ServiceOrder" component={ServiceStep} />
         <Stack.Screen name="SuccessStep" component={SuccessStep} />
@@ -76,6 +73,7 @@ export default function App() {
         <Stack.Screen name="TTCP" component={TTCP} />
         <Stack.Screen name="KQCP" component={KQCP} />
         <Stack.Screen name="Helpdesk" component={Helpdesk} />
+        <Stack.Screen name="SSO" component={SSO} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -17,6 +17,8 @@ import CreateIC from "../../svg/DucTri/Icons/NavIcon/plus";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CreateOrder from "../../screens/Order/CreateOrderInfo";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { RootStackParamList } from "../../../App";
 
 const homeName = "Trang chủ";
 const orderName = "Đơn hàng";
@@ -27,6 +29,9 @@ const createOrderName = "Lên đơn";
 const Tab = createBottomTabNavigator();
 
 const RouteManager: React.FC = () => {
+  const Route = useRoute<RouteProp<RootStackParamList, "HomePage">>();
+  const { email = null, } = Route.params || {};
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -36,7 +41,6 @@ const RouteManager: React.FC = () => {
     >
       <Tab.Screen
         name={homeName}
-        component={Home}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
@@ -53,7 +57,9 @@ const RouteManager: React.FC = () => {
           ),
           headerShown: false,
         }}
-      />
+      >
+        {() => <Home email={email} />}
+      </Tab.Screen>
 
       <Tab.Screen
         name={orderName}
@@ -113,7 +119,6 @@ const RouteManager: React.FC = () => {
 
       <Tab.Screen
         name={supportName}
-        component={Account}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
@@ -130,7 +135,10 @@ const RouteManager: React.FC = () => {
           ),
           headerShown: false,
         }}
-      />
+      >
+        {() => <Account email={email} />}
+      </Tab.Screen>
+
     </Tab.Navigator>
   );
 };

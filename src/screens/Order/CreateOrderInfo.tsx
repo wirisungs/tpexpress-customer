@@ -93,7 +93,7 @@ const CreateOrder = () => {
       const distanceMeters = response.data.routes[0].distance;
       const distanceKm = (distanceMeters / 1000).toFixed(2); // Đổi sang km
   
-      return `${distanceKm} km`; // Trả về khoảng cách
+      return distanceKm; // Trả về khoảng cách
     } catch (error) {
       console.error(error);
       Alert.alert("Lỗi", "Có lỗi xảy ra khi tính khoảng cách.");
@@ -155,11 +155,11 @@ const CreateOrder = () => {
     if (Object.keys(newErrors).length > 0) return;
   
     try {
-      // const calculatedDistance = await calculateDistance(); // Đợi giá trị distance
+      const calculatedDistance = await calculateDistance(); // Đợi giá trị distance
   
-      // if (!calculatedDistance) {
-      //   return; // Nếu không có khoảng cách, dừng quá trình
-      // }
+      if (!calculatedDistance) {
+        return; // Nếu không có khoảng cách, dừng quá trình
+      }
   
       // Điều hướng sau khi tính khoảng cách thành công
       navigation.navigate("ServiceOrder", {
@@ -171,8 +171,7 @@ const CreateOrder = () => {
         note: formValues.ordernote,
         COD: formValues.orderCOD || 0,
         fragileInput,
-        // distance: calculatedDistance,
-        distance: 12 // Truyền giá trị mới
+        distance: calculatedDistance,
       });
     } catch (error) {
       console.error("Có lỗi xảy ra:", error);

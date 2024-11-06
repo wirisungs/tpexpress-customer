@@ -1,92 +1,166 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { TransHeader } from "../../components/Layouts/Headers";
-import SendOTPIC from "../../svg/MTri/SendOTPIC";
-import {
-  NavigationProp,
-  RouteProp,
-  useIsFocused,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { StyleSheet, View, Text } from "react-native";
+import { CommonActions, NavigationProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
-import { OTPInput } from "../../components/Inputs/Inputs";
-import ButtonFill from "../../components/Buttons/Buttons";
+import { jwtDecode } from "jwt-decode";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Verify = () => {
-  const Route = useRoute<RouteProp<RootStackParamList, "VerifyPage">>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const { phoneNumber } = Route.params;
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [decodedToken, setDecodedToken] = useState<any>(null);
+  const [emailExists, setEmailExists] = useState<boolean | null>(null);
 
-  const startTimer = (initialTime: number) => {
-    setTimeLeft(initialTime);
-  };
+  const route = useRoute();
+  const valueFromWeb = route.params?.value;
 
-  // Đếm ngược gửi OTP
   useEffect(() => {
-    if (timeLeft === 0) return;
+    if (valueFromWeb) {
+      try {
+        const decoded = jwtDecode(valueFromWeb);
+        setDecodedToken(decoded);
+        AsyncStorage.setItem('decodedToken', JSON.stringify(decoded));
+        
+        // Kiểm tra email khi có token giải mã
+        checkEmailExists(
+          `${decoded.lastName} ${decoded.firstName}`,
+          decoded.email,
+          decoded.dob
+        );
+      } catch (error) {
+        console.error("Không thể giải mã token:", error);
+      }
+    }
+  }, [valueFromWeb]);
 
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => prevTime - 1);
-    }, 1000);
+  const generateCusId = () => {
+    const randomNumber = Math.floor(10000000 + Math.random() * 90000000); // Tạo số ngẫu nhiên 8 chữ số
+    return `KH${randomNumber}`;
+  };
+  
 
-    return () => clearInterval(timer);
-  }, [timeLeft]);
-
-  const handleOTPComplete = (otp: string) => {
-    if (otp.length == 6) {
-      navigation.navigate("HomePage");
-      navigation.reset({
-        index: 0,
-        routes: [{ name: "HomePage" }],
-      });
+  const checkEmailExists = async (name: string, email: string, birth: Date) => {
+    try {
+      const response = await fetch(`http://tpexpress.ddns.net:3000/api/cusE?email=${email}`);
+      const data = await response.json();
+  
+      if (data.exists) {
+        setEmailExists(true);
+        // Email đã tồn tại, chờ 3 giây rồi chuyển hướng sang HomePage
+        setTimeout(() => {
+          navigateToHomePage();
+        }, 3000);
+      } else {
+        setEmailExists(false);
+        // Email không tồn tại, tạo tài khoản và xác thực lại
+        await createAccount({ 
+          cusId: generateCusId(),
+          name,
+          email, 
+          phone: '',
+          address: '',
+          birth,
+          cusGender: 0
+        });
+        setEmailExists(true);
+        // Sau khi tạo tài khoản, chờ 3 giây rồi chuyển hướng sang HomePage
+        setTimeout(() => {
+          navigateToHomePage();
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Lỗi khi kiểm tra email:", error);
     }
   };
+  
+
+  const createAccount = async (userData: {cusId: string; name: string; email: string; phone: string; address: string; birth: Date, cusGender: number }) => {
+    try {
+      const response = await fetch("http://tpexpress.ddns.net:3000/api/cusE", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.message); // Hiển thị thông báo thành công
+      } else {
+        const errorData = await response.json();
+        console.error("Lỗi khi tạo tài khoản fe:", errorData.error);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tạo tài khoản fe2:", error);
+    }
+  };
+
+  const navigateToHomePage = async () => {
+    try {
+      // Lấy decoded token từ AsyncStorage
+      const storedToken = await AsyncStorage.getItem('decodedToken');
+      if (storedToken) {
+        const decoded = JSON.parse(storedToken);
+        // Kiểm tra nếu email tồn tại trong token giải mã
+        if (decoded?.email) {
+          console.log("Email:", decoded.email); // In email ra console
+          navigation.navigate('HomePage', { email: decoded.email });
+        } else {
+          console.error("Email không tồn tại trong token giải mã");
+        }
+      } else {
+        console.error("Không tìm thấy token trong AsyncStorage");
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy token từ AsyncStorage:", error);
+    }
+  };
+
   return (
-    <View className="w-full">
-      <TransHeader haveBackIcon={true} />
-      <View className="body flex flex-col gap-6 items-center justify-center">
-        <SendOTPIC />
-        <View className="title flex flex-col gap-2 items-center">
-          <Text className="text-basicBlack text-[28px] font-bold">
-            Nhập mã xác nhận
-          </Text>
-          <View className="subtitle flex flex-col items-center">
-            <Text className="text-grayText-767676 font-medium">
-              Hãy nhập mã OTP được gửi cho {phoneNumber}
-            </Text>
-            <Text className="text-grayText-767676 font-medium">
-              Gửi lại OTP sau (
-              {timeLeft !== 0 ? (
-                <Text className="text-grayText-767676 font-medium">
-                  {" "}
-                  {timeLeft}{" "}
-                </Text>
-              ) : (
-                <Text
-                  onPress={() => startTimer(60)}
-                  className="text-xs text-primary underline font-medium"
-                >
-                  {" "}
-                  Gửi lại{" "}
-                </Text>
-              )}
-              )
-            </Text>
-          </View>
-        </View>
-        <View className="inputBox w-full px-6 flex items-center flex-col gap-3">
-          <OTPInput length={6} onComplete={handleOTPComplete} />
-          <ButtonFill onPress={() => handleOTPComplete}>
-            <Text className="text-white font-bold text-xl">Xác thực</Text>
-          </ButtonFill>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.noticeBox}>  
+        <Text style={styles.successText}>THIEN PHUC EXPRESS </Text>
       </View>
+
+      {decodedToken && (
+        <View>
+          <Text style={styles.emailText}>Thông tin giải mã: {decodedToken.firstName}</Text>
+          <Text className="text-lg">Thông tin giải mã: {decodedToken.email}</Text>
+          <Text className="text-m">{JSON.stringify(decodedToken, null, 2)}</Text>
+          {emailExists !== null && (
+            <Text style={styles.statusText}>
+              {emailExists ? "Email đã tồn tại trong hệ thống" : "Đang tạo tài khoản mới..."}
+            </Text>
+          )}
+        </View>
+      )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    padding: 24,
+  },
+  noticeBox: {
+    flex: 1, 
+    alignItems: 'center',
+    justifyContent:'center',
+  },
+  successText: {
+    color: '#EB455F',
+    fontWeight:'bold',
+    fontSize: 32
+  },
+  emailText: {
+    fontSize: 18,
+    marginVertical: 10,
+  },
+  statusText: {
+    fontSize: 16,
+    color: '#333',
+  },
+});
 
 export default Verify;
