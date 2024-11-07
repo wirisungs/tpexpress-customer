@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View, Text, Alert, TouchableOpacity, Dimensions, Modal } from "react-native";
 import BasicHeader from "../../components/Layouts/Headers";
 import InfoBox, { ChooseInfoBox } from "../../components/Box/InfoBox";
-import MoreIC from "../../svg/MTri/MoreIC";
 import CancelIC from "../../svg/DucTri/Icons/Order/Drop";
 import GHTKIC from "../../svg/DucTri/Icons/Order/GHTK";
 import GHNIC from "../../svg/DucTri/Icons/Order/GHN";
 import GHTLIC from "../../svg/DucTri/Icons/Order/GHTL";
 import THGHIC from "../../svg/DucTri/Icons/Order/TPGH";
 //pay
-import CashIC from "../../svg/DucTri/Icons/Order/cash";
-import AtmIC from "../../svg/DucTri/Icons/Order/atm";
-import MomoIC from "../../svg/DucTri/Icons/Order/momo";
+import Wallet from "./Wallet";
+
 import ButtonFill from "../../components/Buttons/Buttons";
 import {
   CommonActions,
@@ -21,6 +19,7 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
+
 
 const ServiceStep = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -32,11 +31,6 @@ const ServiceStep = () => {
   const [selectedService, setSelectedService] = useState(null);
   const handleOpenPopup = () => setPopupVisible(true);
   const handleClosePopup = () => setPopupVisible(false);
-  //popup thanh toán
-  const [isPaymentPopupVisible, setPaymentPopupVisible] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-  const handleOpenPaymentPopup = () => setPaymentPopupVisible(true);
-  const handleClosePaymentPopup = () => setPaymentPopupVisible(false);
 
 
   const {
@@ -152,6 +146,8 @@ const ServiceStep = () => {
     handleSubmit();
   };
 
+  
+
   function generateOrderID(length = 10) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let orderID = '';
@@ -185,18 +181,7 @@ const ServiceStep = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://tpexpress.ddns.net:3000/api/Payment'); 
-        const promotionsData = await response.json();
-        setPayment(promotionsData);
-      } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu:', error);
-      }
-    }; 
-    fetchData();
-  }, []);
+
 
   const formatPrice = (price: number) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -217,18 +202,6 @@ const ServiceStep = () => {
     }
   };
 
-  const getPaymentIcon = (serviceId: any) => {
-    switch (serviceId) {
-      case 'P001':
-        return <CashIC />;
-      case 'P002':
-        return <AtmIC />;
-      case 'P003':
-        return <MomoIC />;
-      default:
-        return null; // Nếu không có icon phù hợp
-    }
-  };
 
   const calculatorFee = (servicePrice: Number) => {
     // Nếu không có giá dịch vụ, trả về 0
@@ -330,21 +303,9 @@ const ServiceStep = () => {
 
             </View>
   
-            {/* Hình thức thanh toán */}
-            <View className="package-info flex flex-col gap-3">
-              <Text style={styles.tx1}>Hình thức thanh toán</Text>
-              <TouchableOpacity
-                className="choose-input flex flex-col gap-2"
-                onPress={handleOpenPaymentPopup}
-              >
-                <ChooseInfoBox
-                  icon={<MoreIC />}
-                  value={selectedPaymentMethod?.Pay_Name ?? "Chọn hình thức thanh toán"}
-                />
-              </TouchableOpacity>
-            </View>
+           
           </View>
-  
+          <Wallet onSelectPayment={(method: React.SetStateAction<null>) => setSelectedPaymentMethod(method)} />
           {/* Thanh toán */}
           <View className="bottom-0">
             <ButtonFill onPress={SubmitAll}>
@@ -392,42 +353,8 @@ const ServiceStep = () => {
           </View>
         </View>
       </Modal>
-      {/* thanh toán */}
-      <Modal
-        visible={isPaymentPopupVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={handleClosePaymentPopup}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.popupContent}>
-            <TouchableOpacity style={styles.dropic} onPress={handleClosePaymentPopup}>
-              <CancelIC />
-            </TouchableOpacity>
-
-            {payment.map((item, index) => (
-              <View key={index}>
-                <TouchableOpacity
-                  style={styles.itemservice}
-                  onPress={() => {
-                    // setSelectedService(item); 
-                    setSelectedPaymentMethod(item);
-                    handleClosePaymentPopup(); // Mở popup
-                  }}
-                >
-                  {getPaymentIcon(item.Pay_ID)}
-                  <View style={styles.textservice}>
-                    <View style={styles.row1}>
-                      <Text style={styles.popupTitle}>{item.Pay_Name}</Text>              
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            ))}
-          </View>
-        </View>
-      </Modal>
-
+     
+      
     </>
   );
   

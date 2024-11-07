@@ -1,27 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { WebView } from 'react-native-webview';
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 
-const SSO = () => {
+const WalletDetal = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const [url, setUrl] = useState("http://tpexpress.ddns.net:4000/");
-    // const [url, setUrl] = useState("https://wowo.htilssu.id.vn/order/4");
+    const [url, setUrl] = useState("https://wowo.htilssu.id.vn/order/476");
+
+    useEffect(() => {
+        // Set a timeout to automatically navigate after 10 seconds
+        const timer = setTimeout(() => {
+            navigation.navigate("SuccessStep");
+        }, 10000); // 10 seconds
+
+        // Clear the timeout if the component unmounts to avoid memory leaks
+        return () => clearTimeout(timer);
+    }, [navigation]);
 
     const onMessage = (event) => {
-        // Nhận dữ liệu từ web
         const valueFromWeb = event.nativeEvent.data;
         console.log("Dữ liệu nhận từ web:", valueFromWeb);
-        // Điều hướng đến trang chính và truyền dữ liệu
-        navigation.navigate("Verify", { value: valueFromWeb });
+        navigation.navigate("SuccessStep");
     };
 
     return (
         <View style={{ flex: 1 }}>
             <WebView
                 source={{ uri: url }}
-                onMessage={onMessage} // Để nhận dữ liệu từ trang web
+                onMessage={onMessage} 
             />
         </View>
     );
@@ -33,4 +40,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SSO;
+export default WalletDetal;

@@ -22,6 +22,9 @@ import KQCP from "./src/components/Order/KQCP";
 import Helpdesk from "./src/screens/Home/Helpdesk";
 import SSO from "./src/screens/Auth/SSO";
 import Verify from "./src/screens/Auth/Verify";
+import Setting from "./src/screens/Account/Setting";
+import WalletVerify from "./src/screens/Order/WalletVerify";
+import WalletDetal from "./src/screens/Order/WalletDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -53,7 +56,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SSO"
+        initialRouteName="HomePage"
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Verify" component={Verify} />
@@ -74,6 +77,9 @@ export default function App() {
         <Stack.Screen name="KQCP" component={KQCP} />
         <Stack.Screen name="Helpdesk" component={Helpdesk} />
         <Stack.Screen name="SSO" component={SSO} />
+        <Stack.Screen name="Setting" component={Setting} />
+        <Stack.Screen name="WalletVerify" component={WalletVerify} />
+        <Stack.Screen name="WalletDetal" component={WalletDetal} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -50,7 +50,6 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
   const fetchStatuses = useCallback(async () => {
     try {
       const response = await fetch(`http://tpexpress.ddns.net:3000/api/status`);
-      // const response = await fetch(`http://192.168.1.15:3000/api/status`);
       const statuses: Status[] = await response.json();
       const statusMap = new Map(statuses.map(({ statusId, statusName }) => [statusId, statusName]));
       setStatusCache(statusMap);

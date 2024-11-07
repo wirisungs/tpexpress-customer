@@ -30,7 +30,9 @@ const Tab = createBottomTabNavigator();
 
 const RouteManager: React.FC = () => {
   const Route = useRoute<RouteProp<RootStackParamList, "HomePage">>();
-  const { email = null, } = Route.params || {};
+  // const { email = null, } = Route.params || {};
+  const { email = 'ductri0907' } = Route.params || {};
+
 
   return (
     <Tab.Navigator

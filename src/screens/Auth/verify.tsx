@@ -104,7 +104,13 @@ const Verify = () => {
         // Kiểm tra nếu email tồn tại trong token giải mã
         if (decoded?.email) {
           console.log("Email:", decoded.email); // In email ra console
-          navigation.navigate('HomePage', { email: decoded.email });
+          // Đặt trang HomePage làm gốc và truyền email
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'HomePage', params: { email: decoded.email } }],
+            })
+          );
         } else {
           console.error("Email không tồn tại trong token giải mã");
         }

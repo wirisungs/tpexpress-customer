@@ -4,17 +4,17 @@ import { WebView } from 'react-native-webview';
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 
-const SSO = () => {
+const WalletVerify = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    const [url, setUrl] = useState("http://tpexpress.ddns.net:4000/");
-    // const [url, setUrl] = useState("https://wowo.htilssu.id.vn/order/4");
+    const [url, setUrl] = useState("http://tpexpress.ddns.net:4000/verifywallet");
+  
 
     const onMessage = (event) => {
         // Nhận dữ liệu từ web
         const valueFromWeb = event.nativeEvent.data;
         console.log("Dữ liệu nhận từ web:", valueFromWeb);
         // Điều hướng đến trang chính và truyền dữ liệu
-        navigation.navigate("Verify", { value: valueFromWeb });
+        navigation.navigate("WalletDetal", { value: valueFromWeb });
     };
 
     return (
@@ -33,4 +33,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SSO;
+export default WalletVerify;

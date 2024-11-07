@@ -4,16 +4,19 @@ import { TransHeader } from "../../components/Layouts/Headers";
 import MuiTenIC from "../../svg/DucTri/Icons/AccIcon/MuiTen"
 import EditIC from "../../svg/DucTri/Icons/AccIcon/Edit"
 import ButtonFill from "../../components/Buttons/Buttons";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 import AvaIC from '../../svg/DucTri/Icons/AccIcon/Ava'
 
 interface RouteParams {
   
 }
+type UserInfoRouteProp = RouteProp<RootStackParamList, 'User_Info'>;
 
 const User_Info: React.FC<RouteParams> = () => {
+  const route = useRoute<UserInfoRouteProp>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { customerData } = route.params || {}; 
 
   return (
     <View style={styles.container}>
@@ -28,40 +31,34 @@ const User_Info: React.FC<RouteParams> = () => {
 
         <View style={styles.viewbody}>
           <Text style={styles.titlename}>Họ và tên</Text>
-          <Text style={styles.name}>Ruby</Text>
+          <Text style={styles.name}>{customerData?.cusName}</Text>
         </View>
 
         <View style={styles.viewbody}>
           <Text style={styles.titlename}>Số điện thoại</Text>
-          <Text style={styles.name}>091600xxx xxx</Text>
+          <Text style={styles.name}>{customerData?.cusPhone || "Vui lòng thêm số điện thoại"}</Text>
         </View>
 
         <View style={styles.viewbody}>
           <Text style={styles.titlename}>Email</Text>
-          <Text style={styles.name}>tpexpress@gmail.com</Text>
+          <Text style={styles.name}>{customerData?.cusEmail}</Text>
         </View>
 
         <View style={styles.viewbody}>
           <Text style={styles.titlename}>Địa chỉ</Text>
-          <Text style={styles.name}>QL22, Trung Mỹ Tân, Tân Thuận, Hóc Môn</Text>
+          <Text style={styles.name}>{customerData?.cusAddress || "Vui lòng thêm địa chỉ"}</Text>
         </View>
 
         <View style={styles.viewbody}>
           <Text style={styles.titlename}>Giới tính</Text>
-          <Text style={styles.name}>Nam</Text>
+          <Text style={styles.name}>
+            {customerData?.cusGender === 0 ? "Nam" : customerData?.cusGender === 1 ? "Nữ" : "Chưa có"}
+          </Text>
         </View>
 
-        <TouchableOpacity style={styles.viewbodymk}>
-          <Text style={styles.titlename}>Mật khẩu</Text>
-          <MuiTenIC/>
-        </TouchableOpacity>
-        {/* <View style={styles.viewbodymk}>
-        <ButtonFill onPress={() => navigation.navigate('OrderDetail')} >
-              <Text className="text-white font-bold text-lg">Đăng nhập</Text>
-        </ButtonFill>
-        <View/> */}
+       
        <View style={styles.btnedit}>
-       <ButtonFill onPress={() => navigation.navigate('User_Edit')} >
+       <ButtonFill onPress={() => navigation.navigate('User_Edit', { customerData})} >
               <Text className="text-white font-bold text-lg">Sửa thông tin</Text>
         </ButtonFill>
        </View>
