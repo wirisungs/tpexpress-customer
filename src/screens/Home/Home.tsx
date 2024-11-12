@@ -12,7 +12,7 @@ import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navig
 import { RootStackParamList } from "../../../App";
 
 interface HomeProps {
-  email: string | null;
+  cus: string
 }
 
 interface Promotion {
@@ -39,7 +39,9 @@ const bannerData = [
 
 const screenWidth = Dimensions.get("window").width - 48;
 
-const Home: React.FC<HomeProps> = ({email}) => {
+
+
+const Home: React.FC<HomeProps> = ({cus}) => {
   const [orderID, setOrderID] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -74,7 +76,7 @@ const Home: React.FC<HomeProps> = ({email}) => {
     <ScrollView style={styles.container}>
       <LinearGradient colors={["#F9801D", "#F44336"]} style={styles.topliner}>
         <View style={styles.top}>
-          <Text style={styles.title}>Theo dõi đơn hàng của bạn</Text>
+          <Text style={styles.title}>Theo dõi đơn hàng của bạn </Text>
           
           <Text style={styles.title1}>Hãy chắc chắn rằng Mã đơn hàng của bạn chính xác</Text>
 
@@ -109,7 +111,7 @@ const Home: React.FC<HomeProps> = ({email}) => {
             <Text style={styles.textcn}>Tra cứu bưu cục</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.item1} onPress={() => navigation.navigate('Helpdesk')}>
+          <TouchableOpacity style={styles.item1} onPress={() => navigation.navigate('Helpdesk',{ customerData: cus })}>
             <QuesIC />
             <Text style={styles.textcn}>Trợ giúp</Text>
           </TouchableOpacity>

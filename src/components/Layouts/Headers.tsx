@@ -40,7 +40,7 @@ const TransHeader = ({ haveBackIcon, title }: BasicHeaderProps) => {
     navigation.goBack();
   };
   return (
-    <View className="bg-transparent">
+    <View style={styles.shadow} className="bg-transparent">
     <View className="flex relative p-6 h-header115 bg-transparent justify-end items-center">
       <View className="absolute left-6 bottom-6">
         <TouchableOpacity onPress={() => handleBack()}>

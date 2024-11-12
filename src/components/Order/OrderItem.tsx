@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect, useCallback } from "react";
+import OderE from "../../svg/DucTri/Icons/Order/oderempty"
 import {
   StyleSheet,
   View,
@@ -9,9 +10,6 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
-// import DeviceInfo from 'react-native-device-info';
-//import * as Network from 'expo-network';
-
 
 interface Promotion {
   orderId: string;
@@ -28,24 +26,12 @@ interface Status {
   statusName: string;
 }
 
-const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
+const OrderItem: React.FC<{ status?: string; email?: string }> = ({ status, email }) => {
   const navigation = useNavigation();
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [statusCache, setStatusCache] = useState<Map<string, string>>(new Map());
-  // const [ipAddress, setIpAddress] = useState('');
-
-  // const getLocalIpAddress = async () => {
-  //   try {
-  //     // Lấy thông tin mạng
-  //     const { ipAddress } = await Network.getIpAddressAsync(); // Lấy địa chỉ IP cục bộ
-  //     setIpAddress(ipAddress); // Cập nhật địa chỉ IP vào state
-  //     console.log(`Your local IP address is: ${ipAddress}`);
-  //   } catch (error) {
-  //     console.error('Error getting IP address:', error);
-  //   }
-  // };
 
   const fetchStatuses = useCallback(async () => {
     try {
@@ -62,17 +48,21 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
     try {
       setLoading(true);
       const response = await fetch(`http://tpexpress.ddns.net:3000/api/order`);
-      const allOrders: Promotion[] = await response.json();
-      const filteredOrders = status
-        ? allOrders.filter((order) => order.orderStatusId === status)
-        : allOrders.filter((order) => order.orderStatusId !== "ST001");
+      const allOrders = await response.json();
+
+      const filteredOrders = allOrders.filter((order) => {
+        const matchesStatus = status ? order.orderStatusId === status : order.orderStatusId !== "ST001";
+        const matchesCusId = email.cusId ? order.cusId === email.cusId : true;
+        return matchesStatus && matchesCusId;
+      });
+
       setPromotions(filteredOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
     } finally {
       setLoading(false);
     }
-  }, [status]);
+  }, [status, email?.cusId]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -95,7 +85,7 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
       <TouchableOpacity key={item.orderId} activeOpacity={1} style={styles.container}>
         <View style={styles.shadow}>
           <View style={styles.headerContainer}>
-            <Text style={styles.head1}>{item.orderId}</Text>
+            <Text style={styles.head1}>{item.orderId} </Text>
             <Text style={[styles.status, { color: getStatusColor(item.orderStatusId) }]}>
               {statusName}
             </Text>
@@ -105,7 +95,7 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
 
           <View style={styles.headerContainer}>
             <View style={styles.roworder}>
-              <Text style={styles.info}>Người nhận:</Text>
+              <Text style={styles.info}>Người nhận:{email.cusId}</Text>
               <Text style={styles.info1}>{item.receiverName}</Text>
             </View>
             <View style={styles.roworder}>
@@ -148,6 +138,11 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
         <View style={styles.all}>
           <ActivityIndicator size="large" color="#03A63C" />
         </View>
+      ) : promotions.length === 0 ? (
+        <View style={styles.empty}>
+          <OderE />
+          <Text style={styles.txtempty}>Bạn không có đơn nào</Text>
+        </View>
       ) : (
         <FlatList
           data={promotions}
@@ -158,7 +153,6 @@ const OrderItem: React.FC<{ status?: string }> = ({ status }) => {
           }
         />
       )}
-      
     </View>
   );
 };
@@ -175,6 +169,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  empty: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    marginTop: 150
+    // backgroundColor:'#ffff00'
+  },
+  txtempty: {
+    color: '#2FA087',
+    fontSize: 18,
+    fontWeight:'medium',
+    margin: 8
   },
   headerContainer: {
     flexDirection: "column",

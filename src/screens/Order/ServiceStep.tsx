@@ -15,6 +15,7 @@ import {
   CommonActions,
   NavigationProp,
   RouteProp,
+  useFocusEffect,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
@@ -25,13 +26,12 @@ const ServiceStep = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const Route = useRoute<RouteProp<RootStackParamList, "ServiceOrder">>();
   const [service, setService] = useState([]);
-  const [payment, setPayment] = useState([]);
   //popup dịch vụ
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+ const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const handleOpenPopup = () => setPopupVisible(true);
   const handleClosePopup = () => setPopupVisible(false);
-
 
   const {
     senderAddress = null,
@@ -43,6 +43,8 @@ const ServiceStep = () => {
     fragileInput = null,
     orders = null,
     distance = null,
+    email = null
+    
   } = Route.params || {};
   const newOrderID = generateOrderID();
   const newItemID = generateItemID();
@@ -74,7 +76,7 @@ const ServiceStep = () => {
         },
         body: JSON.stringify({
           orderId: newOrderID,
-          cusId: 'KH84723774',
+          cusId: email.cusId,
           senderAddress: senderAddress,
           receiverPhone: phone,
           receiverName: name,
@@ -98,8 +100,16 @@ const ServiceStep = () => {
       const result = await response.json();
 
       if (response.ok) {
-        // Alert.alert('Thành công', 'Dữ liệu đã được thêm thành công!');
-        navigation.navigate('SuccessStep')
+        const items = orders.map(order => ({
+          Item_Name: order.packageName,
+          Item_AllValue: order.priceOfItem,
+        }));
+
+        if (selectedPaymentMethod?.Pay_ID === "P003") {
+          navigation.navigate("WalletVerify", { totalPrice: total, items: items });
+        } else {
+          navigation.navigate("SuccessStep");
+        }
       } else {
         Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi gửi dữ liệu.');
       }
@@ -109,10 +119,12 @@ const ServiceStep = () => {
     }
   };
 
+  // const formattedWeight = orders.weight.replace(',', '.');
 
   const handleSubmitItem = async () => {
     try {
       for (const order of orders) {
+        const formattedWeight = order.weight.replace(',', '.');
         const response = await fetch('http://tpexpress.ddns.net:3000/api/item', {
           method: 'POST',
           headers: {
@@ -121,7 +133,7 @@ const ServiceStep = () => {
           body: JSON.stringify({
             Item_ID: generateItemID(),
             Item_Name: order.packageName,
-            Item_Weight: order.weight,
+            Item_Weight: formattedWeight,
             Item_AllValue: order.priceOfItem,
             Order_ID: newOrderID,
           }),
@@ -141,12 +153,19 @@ const ServiceStep = () => {
     }
   };
   
-  const SubmitAll = async () => {
-    handleSubmitItem();
-    handleSubmit();
-  };
 
+
+  const SubmitAll = async () => {
+    await handleSubmitItem();
   
+    await handleSubmit(); 
+  };
+  
+
+  const handleSelectPaymentMethod = (paymentMethod) => {
+    setSelectedPaymentMethod(paymentMethod);
+    console.log('Phương thức thanh toán đã chọn:', paymentMethod);
+};  
 
   function generateOrderID(length = 10) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -305,7 +324,7 @@ const ServiceStep = () => {
   
            
           </View>
-          <Wallet onSelectPayment={(method: React.SetStateAction<null>) => setSelectedPaymentMethod(method)} />
+          <Wallet onSelectPayment={handleSelectPaymentMethod} />
           {/* Thanh toán */}
           <View className="bottom-0">
             <ButtonFill onPress={SubmitAll}>

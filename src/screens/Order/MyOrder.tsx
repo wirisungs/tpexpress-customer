@@ -3,6 +3,7 @@ import { StyleSheet, View, ScrollView,Text } from "react-native";
 import { TransHeader } from "../../components/Layouts/Headers";
 import MyOrderItem from "../../components/Order/MyOrderItem";
 import NavOrder from "../../components/Navbar/NavOrder";
+import { useRoute } from "@react-navigation/native";
 
 interface RouteParams {
   currentPage: string;
@@ -11,12 +12,14 @@ interface RouteParams {
 
 const MyOrder: React.FC<RouteParams> = () => {
   const [currentPage, setCurrentPage] = useState<string>("ST001"); 
+  const route = useRoute();
+  const { cus } = route.params as { cus: any };
 
   return (
     <View style={styles.container}>
      <TransHeader haveBackIcon={true} title="Đơn hàng của bạn" />
      <ScrollView style={styles.scro}>  
-      <MyOrderItem currentPage={currentPage} phone={""}/>
+      <MyOrderItem cus = {cus} currentPage={currentPage} phone={""}/>
      </ScrollView>
      <NavOrder currentPage={currentPage} setCurrentPage={setCurrentPage} /> 
     </View>
@@ -29,6 +32,7 @@ const styles = StyleSheet.create({
   },
   scro:{
     flex: 1,
+    //backgroundColor:'#ff0000'
   }
 });
 

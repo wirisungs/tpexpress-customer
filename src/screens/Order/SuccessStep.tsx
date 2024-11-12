@@ -11,7 +11,7 @@ const SuccessStep = () => {
   const handleOnClick = () => {
     navigation.dispatch(
       CommonActions.reset({
-        index: 0, // Trả về tab thứ 0
+        index: 0, 
         routes: [{ name: "HomePage" }],
       })
     );

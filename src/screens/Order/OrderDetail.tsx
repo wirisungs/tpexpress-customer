@@ -56,6 +56,7 @@ const OrderDetail: React.FC = () => {
       </TouchableOpacity>
     </View>
   );
+  
 
   const renderStatus = () => {
     // Xác định màu sắc dựa trên trạng thái của order

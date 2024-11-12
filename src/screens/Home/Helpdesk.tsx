@@ -1,65 +1,71 @@
 import React from "react";
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { TransHeader } from "../../components/Layouts/Headers";
-import { CommonActions, NavigationProp, useNavigation } from "@react-navigation/native";
+import { CommonActions, NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 import Chat from "../../svg/DucTri/Icons/Helpdesk/chat"
 import Chinhsach from "../../svg/DucTri/Icons/Helpdesk/chinhsach"
 import Info from "../../svg/DucTri/Icons/Helpdesk/infoapp"
 import NoteIC from "../../svg/DucTri/Icons/Helpdesk/note"
 import PhoneIC from "../../svg/DucTri/Icons/Helpdesk/phone"
+import { TouchableOpacity } from "react-native";
 
+
+type UserInfoRouteProp = RouteProp<RootStackParamList, 'Helpdesk'>;
 const Helpdesk = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const route = useRoute<UserInfoRouteProp>();
+    const { customerData } = route.params || {}; 
+    
 
     return (
         <ScrollView style={styles.container}>
             <TransHeader haveBackIcon={true} title="Trợ giúp" />
             <View style={styles.boxall}>
                 <View style={styles.boxall1}>
-                    <View style={styles.box1}>
+                    <TouchableOpacity style={styles.box1}>
                         <Chinhsach style={styles.icon}/>
-                        <Text style={styles.txt}>Chính sách</Text>
-                    </View>
-                    <View style={styles.box2}>
+                        <Text style={styles.txt}>Chính sách </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.box2}>
                         <Info style={styles.icon}/>
                         <Text style={styles.txt}>Thông tin ứng dụng</Text>
-                    </View>
+                    </TouchableOpacity>
 
                 </View>
-                <View style={styles.box3}>
+                <TouchableOpacity style={styles.box3}>
                     <Chat style={styles.icon}/>
                     <Text style={styles.txt}>Nhắn tin với nhân viên hỗ trợ</Text>
-                </View>
+                </TouchableOpacity>
             </View>
             <View style={body.container}>
                 <Text style={body.tx}>Yêu cầu hỗ trợ</Text> 
                 <View style={body.box}>
-                    <View style={body.yc}>
+                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest',{customerData})}>
                         <NoteIC />
                         <Text style={body.tx1}>Hàng của tôi bị lạc</Text>
-                    </View>
-                    <View style={body.yc}>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest')}>
                         <NoteIC />
                         <Text style={body.tx1}>Hàng của tôi bị vỡ</Text>
-                    </View>
-                    <View style={body.yc}>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest')}>
                         <NoteIC />
                         <Text style={body.tx1}>Hàng của tôi chưa được vận chuyển</Text>
-                    </View>
-                    <View style={body.yc}>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest')}>
                         <NoteIC />
                         <Text style={body.tx1}>Tôi chưa nhận được tiền khi hoàn tất đơn</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
 
                 <Text style={body.tx}>Hotline</Text> 
-                <View style={body.box}>
+                <TouchableOpacity style={body.box}>
                     <View style={body.yc}>
                         <PhoneIC />
                         <Text style={body.tx1}>19005566</Text>
                     </View>
-                </View>
+                </TouchableOpacity>
                
             </View>
         </ScrollView>

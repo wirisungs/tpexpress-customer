@@ -1,15 +1,17 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View ,Text} from "react-native";
 import OrderItem from "./OrderItem";
 
 interface ReceiverOrderProps {
-  status?: string[]; // Cho phép nhận một mảng status
+  status?: string[]; 
+  email: string; 
 }
 
-const ReceiverOrder: React.FC<ReceiverOrderProps> = ({ status }) => {
+const ReceiverOrder: React.FC<ReceiverOrderProps> = ({ status,email }) => {
   return (
     <View style={styles.container}>
-      <OrderItem status={status} phone="0123456789" />
+      {/* <Text>{email}</Text> */}
+      <OrderItem status={status} email={email} phone="0123456789" />
     </View>
   );
 };

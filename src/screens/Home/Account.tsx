@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useFocusEffect, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 import { ImagesAssets } from "../../assets/DTri/ImageAssets";
 import AccIC from "../../svg/DucTri/Icons/AccIcon/User";
@@ -22,49 +22,17 @@ import AboutIC from "../../svg/DucTri/Icons/AccIcon/About";
 import HdsdIC from "../../svg/DucTri/Icons/AccIcon/Hssd";
 import SetIC from "../../svg/DucTri/Icons/AccIcon/Setting";
 
-interface Cus {
-  orderId: string;
-  cusId: string;
-  cusName: string;
-  cusEmail: string;
-  cusPhone: string;
-  cusAddress: string;
-  cusBirthday: Date;
-  cusGender: number;
-}
+
 
 export default function Account({ email }: { email: string }) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [cus, setCus] = useState<Cus | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://tpexpress.ddns.net:3000/api/cusE2?email=${email}`);
-        if (!response.ok) {
-          console.warn("Email không tồn tại trong hệ thống hoặc lỗi xảy ra.");
-          return;
-        }
-        const data = await response.json();
-        if (data.exists) {
-          setCus(data.customer);
-        } else {
-          console.warn("Email không tồn tại trong hệ thống.");
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, [email]);
 
   return (
     <View style={styles.container}>
       <View style={styles.top}>
         <View style={styles.infoContainer}>
-          <Text style={styles.name}>{cus ? cus.cusName : "Loading..."}</Text>
-          <Text style={styles.email}>{email}</Text>
+          <Text style={styles.name}>{email ? email.cusName : "Loading..."}</Text>
+          <Text style={styles.email}>{email.cusEmail}</Text>
         </View>
         <Image
           source={ImagesAssets.AvaAcc}
@@ -75,11 +43,11 @@ export default function Account({ email }: { email: string }) {
       <ScrollView style={body.body}>
         <View style={body.row}>
           <Text style={body.title}>Tài khoản</Text>
-          <TouchableOpacity style={body.rowdetail} onPress={() => navigation.navigate('User_Info', { customerData: cus })}>
+          <TouchableOpacity style={body.rowdetail} onPress={() => navigation.navigate('User_Info', { customerData: email })}>
             <AccIC />
             <Text style={body.textdetail}>Thông tin cá nhân & Bảo mật</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={body.rowdetail} onPress={() => navigation.navigate('MyOrder')}>
+          <TouchableOpacity style={body.rowdetail} onPress={() => navigation.navigate('MyOrder',{cus:email})}>
             <ProIC />
             <Text style={body.textdetail}>Đơn hàng của tôi</Text>
           </TouchableOpacity>

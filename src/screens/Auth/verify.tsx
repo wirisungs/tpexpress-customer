@@ -19,8 +19,10 @@ const Verify = () => {
         const decoded = jwtDecode(valueFromWeb);
         setDecodedToken(decoded);
         AsyncStorage.setItem('decodedToken', JSON.stringify(decoded));
-        
-        // Kiểm tra email khi có token giải mã
+  
+        // Lưu email riêng biệt trong AsyncStorage
+        AsyncStorage.setItem('email', decoded.email);
+  
         checkEmailExists(
           `${decoded.lastName} ${decoded.firstName}`,
           decoded.email,
@@ -31,6 +33,7 @@ const Verify = () => {
       }
     }
   }, [valueFromWeb]);
+  
 
   const generateCusId = () => {
     const randomNumber = Math.floor(10000000 + Math.random() * 90000000); // Tạo số ngẫu nhiên 8 chữ số
@@ -48,7 +51,7 @@ const Verify = () => {
         // Email đã tồn tại, chờ 3 giây rồi chuyển hướng sang HomePage
         setTimeout(() => {
           navigateToHomePage();
-        }, 3000);
+        }, 2000);
       } else {
         setEmailExists(false);
         // Email không tồn tại, tạo tài khoản và xác thực lại
@@ -65,7 +68,7 @@ const Verify = () => {
         // Sau khi tạo tài khoản, chờ 3 giây rồi chuyển hướng sang HomePage
         setTimeout(() => {
           navigateToHomePage();
-        }, 3000);
+        }, 2000);
       }
     } catch (error) {
       console.error("Lỗi khi kiểm tra email:", error);
@@ -122,13 +125,15 @@ const Verify = () => {
     }
   };
 
+  
+
   return (
     <View style={styles.container}>
       <View style={styles.noticeBox}>  
         <Text style={styles.successText}>THIEN PHUC EXPRESS </Text>
       </View>
 
-      {decodedToken && (
+      {/* {decodedToken && (
         <View>
           <Text style={styles.emailText}>Thông tin giải mã: {decodedToken.firstName}</Text>
           <Text className="text-lg">Thông tin giải mã: {decodedToken.email}</Text>
@@ -139,7 +144,7 @@ const Verify = () => {
             </Text>
           )}
         </View>
-      )}
+      )} */}
     </View>
   );
 };

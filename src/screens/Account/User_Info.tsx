@@ -7,6 +7,7 @@ import ButtonFill from "../../components/Buttons/Buttons";
 import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 import AvaIC from '../../svg/DucTri/Icons/AccIcon/Ava'
+import { useTheme } from "../../components/Darkmode/ThemeContext";
 
 interface RouteParams {
   
@@ -17,9 +18,10 @@ const User_Info: React.FC<RouteParams> = () => {
   const route = useRoute<UserInfoRouteProp>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { customerData } = route.params || {}; 
+  const { isDarkMode } = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: isDarkMode ? "#202020" : "#fff" }]}   >
       <TransHeader haveBackIcon={true} title="Thông tin cá nhân" />
       <ScrollView style={styles.all}>
         <View style={styles.avatar}>

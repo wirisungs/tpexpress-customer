@@ -11,7 +11,7 @@ interface Item {
   Item_ID: string,
   Item_Name: string,
   Item_Weight: number,
-  Item_AllValue: number,
+  Item_AllValue: string,
   Order_ID: string,
 }
 

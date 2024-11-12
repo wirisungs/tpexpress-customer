@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 // Screen
 import Home from "../../screens/Home/Home";
 import Order from "../../screens/Home/Order";
 import Nofication from "../../screens/Home/Nofication";
-import Account from "../../screens/Home/Account";
-import TestPush from "../../screens/Home/test";
-import TestMap from "../../screens/Home/TTBC";
+import Account from "../../screens/Home/Account"
+import CreateOrder from "../../screens/Order/CreateOrderInfo";
+//test
+import DistanceCalculator from "../../screens/Home/TestMap";
 
 // Icon
 import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";
@@ -16,9 +17,9 @@ import AccIC from "../../svg/DucTri/Icons/NavIcon/Account";
 import CreateIC from "../../svg/DucTri/Icons/NavIcon/plus";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import CreateOrder from "../../screens/Order/CreateOrderInfo";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const homeName = "Trang chủ";
 const orderName = "Đơn hàng";
@@ -28,10 +29,71 @@ const createOrderName = "Lên đơn";
 
 const Tab = createBottomTabNavigator();
 
+interface Cus {
+  orderId: string;
+  cusId: string;
+  cusName: string;
+  cusEmail: string;
+  cusPhone: string;
+  cusAddress: string;
+  cusBirthday: Date;
+  cusGender: number;
+}
+
 const RouteManager: React.FC = () => {
   const Route = useRoute<RouteProp<RootStackParamList, "HomePage">>();
-  // const { email = null, } = Route.params || {};
-  const { email = 'ductri0907' } = Route.params || {};
+  const [email, setEmail] = useState<string | null>(null);
+  const [cus, setCus] = useState<Cus | null>(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchEmail = async () => {
+        try {
+          const storedEmail = await AsyncStorage.getItem('email'); // Lấy email từ AsyncStorage
+          if (storedEmail) {
+            setEmail(storedEmail); // Cập nhật state email
+          } else {
+            console.warn("Không tìm thấy email trong AsyncStorage.");
+          }
+        } catch (error) {
+          console.error("Lỗi khi lấy email từ AsyncStorage:", error);
+        }
+      };
+
+      fetchEmail();
+    }, [])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (email) {
+        // Lấy thông tin khách hàng khi có email
+        const fetchData = async () => {
+          try {
+            const response = await fetch(`http://tpexpress.ddns.net:3000/api/cusE2?email=${email}`);
+            if (!response.ok) {
+              console.warn("Email không tồn tại trong hệ thống hoặc lỗi xảy ra.");
+              return;
+            }
+            const data = await response.json();
+            if (data.exists) {
+              setCus(data.customer);
+            } else {
+              console.warn("Email không tồn tại trong hệ thống.");
+            }
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        };
+
+        fetchData();
+      }
+    }, [email]) 
+  );
+
+  if (!email) {
+    return <Text>Đang tải...</Text>; // Nếu email chưa được lấy, hiển thị "Đang tải..."
+  }
 
 
   return (
@@ -53,19 +115,18 @@ const RouteManager: React.FC = () => {
                   { color: focused ? "#EB455F" : "#1c1c1c" },
                 ]}
               >
-                Trang chủ
+                Trang chủ 
               </Text>
             </View>
           ),
           headerShown: false,
         }}
       >
-        {() => <Home email={email} />}
+        {() => <Home cus={cus}/>}
       </Tab.Screen>
 
       <Tab.Screen
         name={orderName}
-        component={Order}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
@@ -82,11 +143,13 @@ const RouteManager: React.FC = () => {
           ),
           headerShown: false,
         }}
-      />
+      >
+        {() => <Order email={cus} />}
+      </Tab.Screen>
+
 
       <Tab.Screen
         name={createOrderName}
-        component={CreateOrder}
         options={{
           tabBarIcon: () => (
             <View style={styles.iconContainerplus}>
@@ -96,7 +159,9 @@ const RouteManager: React.FC = () => {
           tabBarStyle: { display: "none" },
           headerShown: false,
         }}
-      />
+      >
+        {() => <CreateOrder email={cus} />}
+      </Tab.Screen>
 
       <Tab.Screen
         name={offerName}
@@ -138,7 +203,7 @@ const RouteManager: React.FC = () => {
           headerShown: false,
         }}
       >
-        {() => <Account email={email} />}
+        {() => <Account email={cus} />}
       </Tab.Screen>
 
     </Tab.Navigator>

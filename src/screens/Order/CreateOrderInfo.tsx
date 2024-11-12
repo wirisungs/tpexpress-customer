@@ -18,7 +18,7 @@ import CheckboxText from "../../components/Inputs/CheckboxText";
 import ButtonFill from "../../components/Buttons/Buttons";
 import Marker from "../../svg/MTri/Marker";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { Touchable } from "react-native";
+import { ActivityIndicator } from 'react-native';
 import CancelIC from "../../svg/DucTri/Icons/Order/Cancel"
 import axios from "axios";
 
@@ -42,7 +42,7 @@ interface Coordinates {
   longitude: number;
 }
 
-const CreateOrder = () => {
+const CreateOrder = ({ email }: { email: string }) => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [isChecked, setIsChecked] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
@@ -51,6 +51,7 @@ const CreateOrder = () => {
   const [inputErrors, setInputErrors] = useState({});
   const [orders, setOrders] = useState([{ id: 1 }]);
   const [showErrorNote, setShowErrorNote] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   // map
   const [originCoords, setOriginCoords] = useState<Coordinates | null>(null);
   const [destinationCoords, setDestinationCoords] = useState<Coordinates | null>(null);
@@ -75,6 +76,7 @@ const CreateOrder = () => {
 
   // Hàm tính khoảng cách giữa hai tọa độ bằng Mapbox Directions API
   const calculateDistance = async () => {
+    setIsLoading(true);
     try {
       const originCoords = await getCoordinates(formValues.senderAddress);
       const destinationCoords = await getCoordinates(formValues.receiverAddress);
@@ -100,6 +102,8 @@ const CreateOrder = () => {
       console.error(error);
       Alert.alert("Lỗi", "Có lỗi xảy ra khi tính khoảng cách.");
       return null;
+    } finally {
+      setIsLoading(false); // Kết thúc loading
     }
   };
 
@@ -174,6 +178,7 @@ const CreateOrder = () => {
         COD: formValues.orderCOD || 0,
         fragileInput,
         distance: calculatedDistance,
+        email,
       });
     } catch (error) {
       console.error("Có lỗi xảy ra:", error);
@@ -256,10 +261,6 @@ const CreateOrder = () => {
     </View>
   );
 
-  const ttWoWo = async () => {
-    navigation.navigate('WalletVerify')
-  };
-
   const errorStyle: StyleProp<TextStyle> = { borderColor: "#EB455F" };
 
   return (
@@ -267,6 +268,12 @@ const CreateOrder = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
+      {isLoading && (
+        <View style={styles.load}>
+          <ActivityIndicator size="large" color="#495DC1" />
+          <Text style={styles.txtload}>Vui lòng đợi...</Text>
+        </View>
+      )}
 
       <FlatList
         className="flex flex-col bg-grayBG-FCFCFC" showsVerticalScrollIndicator={false}
@@ -280,7 +287,7 @@ const CreateOrder = () => {
               {/* Thông tin người gửi */}
               <View className="sender-info flex flex-col gap-3">
                 <Text className="text-xl font-bold">
-                  Thông tin người gửi {distance} <Text className="text-primary">*</Text>
+                  Thông tin người gửi <Text className="text-primary">*</Text>
                 </Text>
                 <InputWithIcon
                   placeholder="Địa chỉ"
@@ -380,7 +387,7 @@ const CreateOrder = () => {
                     inputType="numeric"
                   />
                 )}
-                <ButtonFill onPress={ttWoWo}>
+                <ButtonFill onPress={handleSubmit}>
                   <Text className="text-white text-xl font-bold">Tiếp tục</Text>
                 </ButtonFill>
               </View>
@@ -418,7 +425,25 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#495DC1",
     marginLeft: 5
+  },
+  load: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -50 }, { translateY: -50 }],
+    zIndex: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 20,
+    borderRadius: 8,
+    width: 100, 
+    height: 100,
+  },
+  txtload:{
+    textAlign: 'center',
   }
+
 });
 
 export default CreateOrder;

@@ -25,7 +25,9 @@ import Verify from "./src/screens/Auth/Verify";
 import Setting from "./src/screens/Account/Setting";
 import WalletVerify from "./src/screens/Order/WalletVerify";
 import WalletDetal from "./src/screens/Order/WalletDetail";
-
+import OrderRequest from "./src/screens/Order/OrderRequest";
+import { ThemeProvider } from "./src/components/Darkmode/ThemeContext";
+import DarkModeWrapper from "./src/components/Darkmode/DarkmodeW";
 const Stack = createNativeStackNavigator();
 
 export type RootStackParamList = {
@@ -54,34 +56,41 @@ export type RootStackParamList = {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="HomePage"
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="Verify" component={Verify} />
-        <Stack.Screen name="CreateOrder" component={CreateOrder} />
-        <Stack.Screen name="ServiceOrder" component={ServiceStep} />
-        <Stack.Screen name="SuccessStep" component={SuccessStep} />
-        <Stack.Screen name="HomePage" component={RouteManager} />
-        <Stack.Screen name="MainWallet" component={Main} />
-        <Stack.Screen name="ScanQR" component={ScanQR} />
-        <Stack.Screen name="Naptien" component={Naptien} />
-        <Stack.Screen name="Ruttien" component={Ruttien} />
-        <Stack.Screen name="MyOrder" component={MyOrder} />
-        <Stack.Screen name="User_Info" component={User_Info} />
-        <Stack.Screen name="OrderDetail" component={OrderDetail} />
-        <Stack.Screen name="User_Edit" component={User_Edit} />
-        <Stack.Screen name="TestMap" component={TestMap} />
-        <Stack.Screen name="TTCP" component={TTCP} />
-        <Stack.Screen name="KQCP" component={KQCP} />
-        <Stack.Screen name="Helpdesk" component={Helpdesk} />
-        <Stack.Screen name="SSO" component={SSO} />
-        <Stack.Screen name="Setting" component={Setting} />
-        <Stack.Screen name="WalletVerify" component={WalletVerify} />
-        <Stack.Screen name="WalletDetal" component={WalletDetal} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider>
+      <DarkModeWrapper>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="SSO"
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen name="Verify" component={Verify} />
+            <Stack.Screen name="CreateOrder" component={CreateOrder} />
+            <Stack.Screen name="ServiceOrder" component={ServiceStep} />
+            <Stack.Screen name="SuccessStep" component={SuccessStep} />
+            <Stack.Screen name="HomePage" component={RouteManager} />
+            <Stack.Screen name="MainWallet" component={Main} />
+            <Stack.Screen name="ScanQR" component={ScanQR} />
+            <Stack.Screen name="Naptien" component={Naptien} />
+            <Stack.Screen name="Ruttien" component={Ruttien} />
+            <Stack.Screen name="MyOrder" component={MyOrder} />
+            <Stack.Screen name="User_Info" component={User_Info} />
+            <Stack.Screen name="OrderDetail" component={OrderDetail} />
+            <Stack.Screen name="User_Edit" component={User_Edit} />
+            <Stack.Screen name="TestMap" component={TestMap} />
+            <Stack.Screen name="TTCP" component={TTCP} />
+            <Stack.Screen name="KQCP" component={KQCP} />
+            <Stack.Screen name="Helpdesk" component={Helpdesk} />
+            <Stack.Screen name="SSO" component={SSO} />
+            <Stack.Screen name="Setting" component={Setting} />
+            <Stack.Screen name="WalletVerify" component={WalletVerify} />
+            <Stack.Screen name="WalletDetal" component={WalletDetal} />
+            <Stack.Screen name="OrderRequest" component={OrderRequest} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </DarkModeWrapper>
+
+    </ThemeProvider>
+
   );
 }
 

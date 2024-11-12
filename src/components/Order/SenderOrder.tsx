@@ -1,16 +1,19 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import OrderItem from "./OrderItem";
 
 interface SenderOrderProps {
   status?: string;
+  email: string; 
 }
 
-const SenderOrder: React.FC<SenderOrderProps> = ({  status = 'ST001' }) => {
+const SenderOrder: React.FC<SenderOrderProps> = ({  status = 'ST001', email }) => {
   return (
     <View style={styles.container}>
       <View>
-        <OrderItem status={status} phone="0123456789" />
+      {/* <Text>{email}</Text> */}
+        <OrderItem status={status} email={email} phone="0123456789" />
+        
       </View>
     </View>
   );
