@@ -124,15 +124,16 @@ const Login = () => {
             <ButtonFill onPress={() => handleLogin()}>
               <Text className="text-white font-bold text-lg">Đăng nhập</Text>
             </ButtonFill>
+            <ButtonFill onPress={() => handleLogin()}>
+              <Text className="text-white font-bold text-lg">Đăng nhập bằng tài khoản Oggy Club</Text>
+            </ButtonFill>
           </View>
           <FingerscanSetup />
         </View>
       </View>
 
       {/* Tạo account  */}
-      <View className="dontHaveAccount">
-        <TextAndFunction text="Chưa có tài khoản?" clickableText="Đăng ký" />
-      </View>
+
 
       {/* Phương thức đăng nhập khác */}
       <View className="anotherWays">

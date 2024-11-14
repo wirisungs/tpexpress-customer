@@ -32,7 +32,7 @@ interface OTPInputProps {
 interface InputIconProps extends InputProps {
   icon?: ReactNode;
   isPassword?: boolean;
-  onIconPress?: () => void; //Trí thêm để có thể dùng hàm 
+  onIconPress?: () => void; //Trí thêm để có thể dùng hàm
 }
 
 // Input thông thường
@@ -166,7 +166,7 @@ const InputWithIcon: React.FC<InputIconProps> = ({
   return (
     <View
       className="flex flex-row w-full h-12 px-3 py-3 border-solid border-[1px] border-border rounded-xl"
-      style={[{ backgroundColor: '#fff' }, style]} //Sửa lại để không bị trong suốt
+      style={[{ backgroundColor: 'transparent' }, style]} //Sửa lại để không bị trong suốt
     >
       {isPassword ? (
         <View className="flex flex-row items-center w-full justify-between">
