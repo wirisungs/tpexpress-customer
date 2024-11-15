@@ -59,6 +59,10 @@ const Wallet = ({onSelectPayment }) => {
                         value={selectedPaymentMethod?.Pay_Name ?? "Chọn hình thức thanh toán"}
                     />
                 </TouchableOpacity>
+
+                {!selectedPaymentMethod?.Pay_Name && (
+                    <Text style={styles.madon2}>Hãy chọn hình thức thanh toán</Text>
+                )}
             </View>
             <Modal
                 visible={isPaymentPopupVisible}
@@ -147,6 +151,11 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
     },
+    madon2: {
+        fontSize: 14,
+        color: '#F44336',
+        fontWeight: 'bold',
+      },
 });
 
 export default Wallet;

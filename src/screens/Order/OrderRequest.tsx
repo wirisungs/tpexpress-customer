@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, Alert, TouchableOpacity, ScrollView, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, Text, Alert, TouchableOpacity, ScrollView, Image, ActivityIndicator } from "react-native";
 import * as ImagePicker from 'expo-image-picker';  // Thêm import cho ImagePicker
 import { CommonActions, NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
@@ -8,6 +8,7 @@ import { TransHeader } from "../../components/Layouts/Headers";
 import { InputWithIcon } from "../../components/Inputs/Inputs";
 import RequestIC from "../../svg/DucTri/Icons/Order/InputRequest"
 import ButtonFill from "../../components/Buttons/Buttons";
+import * as FileSystem from 'expo-file-system';
 
 interface Promotion {
   orderId: string,
@@ -24,21 +25,34 @@ interface Promotion {
   cusId: string,
   driverId: string,
 }
+
 type UserInfoRouteProp = RouteProp<RootStackParamList, 'OrderRequest'>;
+
 const OrderRequest = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [orderID, setOrderID] = useState('');
   const [loading, setLoading] = useState(false);
   const [foundOrderId, setFoundOrderId] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); // Để lưu trữ ảnh đã chọn
   const [imageUri, setImageUri] = useState<string | null>(null);
   const route = useRoute<UserInfoRouteProp>();
-  const { customerData } = route.params || {};
+  const { customerData, type } = route.params || {};
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Request permissions to access media library
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission required', 'You need to allow access to the media library.');
+      }
+    };
+    requestPermissions();
+  }, []);
 
   const handleSearch = async () => {
-    setLoading(true); // Bắt đầu tải dữ liệu
+    setLoading(true); // Start loading data
     try {
-      const response = await fetch(`http://tpexpress.ddns.net:3000/api/ordersearch?orderID=${orderID.trim()}`);
+      const response = await fetch(`http://tpexpress.ddns.net:3000/api/ordersearch?orderID=${orderID.trim()}&cusId=${customerData.cusId.trim()}`);
       const data: Promotion[] = await response.json();
 
       if (data.length > 0) {
@@ -52,7 +66,7 @@ const OrderRequest = () => {
       console.error('Lỗi khi tìm kiếm:', error);
       Alert.alert("Lỗi", "Có lỗi xảy ra khi tìm kiếm. Vui lòng thử lại!");
     } finally {
-      setLoading(false); // Kết thúc tải dữ liệu
+      setLoading(false); // End loading
     }
   };
 
@@ -71,40 +85,9 @@ const OrderRequest = () => {
   const getCurrentDate = () => {
     const today = new Date();
     const day = String(today.getDate()).padStart(2, '0');
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Month starts from 0
     const year = today.getFullYear();
-    return `${year}-${month}-${day}`; // Định dạng: YYYY-MM-DD
-  };
-
-  const handleSubmit = async () => {
-    const orderDate = getCurrentDate();
-    try {
-      const response = await fetch('http://tpexpress.ddns.net:3000/api/request', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          Request_ID: newRequestID,
-          Cus_ID: customerData.cusId,
-          Order_ID: foundOrderId,
-          Request_Picture: imageUri,  // Truyền ảnh đã chọn
-          Request_Status: 'Pending',
-          Request_Date: orderDate,
-          Request_Type: 'HBL',
-          Driver_ID: null,
-        }),
-      });
-      const result = await response.json();
-      if (response.ok) {
-        navigation.navigate('HomePage')
-      } else {
-        Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi gửi dữ liệu.');
-      }
-    } catch (error) {
-      console.error('Lỗi khi gửi dữ liệu:', error);
-      Alert.alert('Lỗi', 'Có lỗi xảy ra khi gửi dữ liệu.');
-    }
+    return `${year}-${month}-${day}`; // Format: YYYY-MM-DD
   };
 
   const handleImagePick = async () => {
@@ -114,15 +97,108 @@ const OrderRequest = () => {
       aspect: [4, 3],
       quality: 1,
     });
-    
-    if (!result.canceled) {
-      setImageUri(result.assets[0].uri);  // Cập nhật trạng thái với URI của ảnh đã chọn
+
+    if (!result.canceled && result.assets?.[0]?.uri) {
+      setImageUri(result.assets[0].uri);  // Update state with the selected image URI
     }
   };
+
+  const handleSubmitIMG = async (imageUrl) => {
+    setIsLoading(true);
+    try {
+      // Tải ảnh từ URL file:// và chuyển thành base64
+      const fileUri = imageUrl;
+      const fileData = await FileSystem.readAsStringAsync(fileUri, {
+        encoding: FileSystem.EncodingType.Base64,  // Đọc file dưới dạng base64
+      });
+  
+      // Tạo đối tượng FormData để gửi ảnh lên Cloudinary
+      const formData = new FormData();
+      formData.append('file', `data:image/png;base64,${fileData}`);  // Đưa ảnh base64 vào formData
+      formData.append('upload_preset', 'blueduck');  // Upload preset
+      formData.append('cloud_name', 'dcdaz0dzb');  // Cloud name
+  
+      // Gửi ảnh lên Cloudinary
+      const cloudinaryResponse = await fetch('https://api.cloudinary.com/v1_1/dcdaz0dzb/image/upload', {
+        method: 'POST',
+        body: formData,
+      });
+  
+      const cloudinaryData = await cloudinaryResponse.json();
+      console.log('Cloudinary Response:', cloudinaryData);  // Log phản hồi từ Cloudinary
+  
+      if (!cloudinaryResponse.ok) {
+        throw new Error(cloudinaryData.error.message || 'Image upload failed');
+      }
+  
+      const uploadedImageUrl = cloudinaryData.secure_url || cloudinaryData.url;  // Lấy URL ảnh đã upload
+      console.log('Uploaded Image URL:', uploadedImageUrl);  // In ra URL ảnh đã upload
+  
+      return uploadedImageUrl;  // Trả về URL của ảnh đã upload
+    } catch (error) {
+      console.error('Lỗi trong quá trình upload ảnh:', error);
+      throw new Error('There was an issue uploading the image');
+    }finally {
+      setIsLoading(false); // Kết thúc loading
+    }
+  };
+  
+  const handleSubmit = async () => {
+    if (!foundOrderId) {
+      return;
+    }
+    if (!imageUri) {
+      return;
+    }
+  
+    try {
+      // Gọi hàm upload ảnh
+      const uploadedImageUrl = await handleSubmitIMG(imageUri);  // Gọi đúng hàm upload ảnh
+  
+      const orderDate = getCurrentDate();
+  
+      // Gửi dữ liệu đến API của bạn
+      const apiResponse = await fetch('http://tpexpress.ddns.net:3000/api/request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Request_ID: newRequestID,
+          Cus_ID: customerData.cusId,
+          Order_ID: foundOrderId,
+          Request_Picture: uploadedImageUrl,  // Sử dụng URL ảnh đã upload
+          Request_Status: 'Pending',
+          Request_Date: orderDate,
+          Request_Type: type,
+          Driver_ID: null,
+        }),
+      });
+  
+      const result = await apiResponse.json();
+      console.log('API Response:', result);  // Log phản hồi API
+      if (apiResponse.ok) {
+        navigation.navigate('HomePage');
+      } else {
+        Alert.alert('Error', result.error || 'There was an issue submitting your request');
+      }
+    } catch (error) {
+      console.error('Error while submitting request:', error);
+      Alert.alert('Error', error.message || 'There was an issue uploading the image');
+    }
+  };
+  
+
 
   return (
     <ScrollView style={styles.container}>
       <TransHeader haveBackIcon={true} title="Gửi yêu cầu" />
+      {isLoading && (
+        <View style={styles.load}>
+          <ActivityIndicator size="large" color="#495DC1" />
+          <Text style={styles.txtload}>Vui lòng đợi...</Text>
+        </View>
+      )}
       <View style={styles.viewbox}>
         <Text style={styles.txt}>Nhập mã đơn hàng </Text>
         <Text style={styles.txtsmall}>Chú ý: Yêu cầu sẽ được phản hồi từ
@@ -139,14 +215,21 @@ const OrderRequest = () => {
           onIconPress={handleSearch}
           isBackground={true}
         />
-
-        <Text style={styles.madon}>Mã đơn hàng của bạn là:
-          {foundOrderId && (
+        {foundOrderId ? (
+          <Text style={styles.madon}>
+            Mã đơn hàng của bạn là:
             <Text style={styles.madon2}> {foundOrderId}</Text>
-          )}
-        </Text>
+          </Text>
+        ) : (
+          <Text style={styles.madon2}>Vui lòng nhập mã đơn hàng</Text>
+        )}
 
-        <Text style={styles.txt}>Hình ảnh & video đính kèm</Text>
+        {!imageUri && (
+          <>
+            <Text style={styles.txt}>Hình ảnh & video đính kèm</Text>
+            <Text style={styles.madon2}>Vui lòng thêm hình ảnh/video đơn hàng</Text>
+          </>
+        )}
         <View style={styles.viewimg}>
           <TouchableOpacity onPress={handleImagePick}>
             <RequestIC />
@@ -154,18 +237,20 @@ const OrderRequest = () => {
           {imageUri && (
             <Image source={{ uri: imageUri }} style={styles.selectedImage} />
           )}
-     
-          
         </View>
        
+
         <Text style={styles.txtnote}>Chú ý:
           <Text style={styles.txtnoteR}>Bắt buộc</Text> phải có
           <Text style={styles.txtnoteR}>video mở gói hàng</Text>
           để xác minh đối với những yêu cầu liên quan đến lỗi trong quá trình vận chuyển</Text>
 
-        <ButtonFill onPress={handleSubmit}>
+          {imageUri && (
+          <ButtonFill onPress={handleSubmit}>
           <Text className="text-white text-xl font-bold">Hoàn tất</Text>
         </ButtonFill>
+        )}
+        
       </View>
     </ScrollView>
   );
@@ -210,15 +295,32 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginVertical: 12
   },
-  viewimg:{
-   flexDirection:'row',
-  //  justifyContent:'space-between'
+  viewimg: {
+    flexDirection: 'row',
+    //  justifyContent:'space-between'
   },
   selectedImage: {
     width: 101,
     height: 101,
     marginLeft: 12,
     resizeMode: 'contain',
+  },
+  load: {
+    position: 'absolute',
+    top: '68%',
+    left: '50%',
+    transform: [{ translateX: -50 }, { translateY: -50 }],
+    zIndex: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    padding: 20,
+    borderRadius: 8,
+    width: 100, 
+    height: 100,
+  },
+  txtload:{
+    textAlign: 'center',
   }
 });
 

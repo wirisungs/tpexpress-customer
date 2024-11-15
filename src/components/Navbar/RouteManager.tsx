@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 // Screen
 import Home from "../../screens/Home/Home";
 import Order from "../../screens/Home/Order";
-import Nofication from "../../screens/Home/Nofication";
+import Nofication from "../../screens/Home/Nofi/Nofication";
 import Account from "../../screens/Home/Account"
 import CreateOrder from "../../screens/Order/CreateOrderInfo";
-//test
-import DistanceCalculator from "../../screens/Home/TestMap";
+
 
 // Icon
 import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";
@@ -17,7 +16,7 @@ import AccIC from "../../svg/DucTri/Icons/NavIcon/Account";
 import CreateIC from "../../svg/DucTri/Icons/NavIcon/plus";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
+import { NavigationProp, RouteProp, useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -44,6 +43,7 @@ const RouteManager: React.FC = () => {
   const Route = useRoute<RouteProp<RootStackParamList, "HomePage">>();
   const [email, setEmail] = useState<string | null>(null);
   const [cus, setCus] = useState<Cus | null>(null);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -78,6 +78,10 @@ const RouteManager: React.FC = () => {
             const data = await response.json();
             if (data.exists) {
               setCus(data.customer);
+              if (data.customer && !data.customer.cusPhone && !data.customer.cusAddress) {
+                navigation.navigate('User_Info', { customerData: data.customer });
+              }
+              
             } else {
               console.warn("Email không tồn tại trong hệ thống.");
             }
@@ -91,9 +95,7 @@ const RouteManager: React.FC = () => {
     }, [email]) 
   );
 
-  if (!email) {
-    return <Text>Đang tải...</Text>; // Nếu email chưa được lấy, hiển thị "Đang tải..."
-  }
+ 
 
 
   return (
@@ -165,7 +167,6 @@ const RouteManager: React.FC = () => {
 
       <Tab.Screen
         name={offerName}
-        component={Nofication}
         options={{
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
@@ -176,13 +177,15 @@ const RouteManager: React.FC = () => {
                   { color: focused ? "#EB455F" : "#1c1c1c" },
                 ]}
               >
-                Thông báo
+                Thông báo 
               </Text>
             </View>
           ),
           headerShown: false,
         }}
-      />
+      >
+        {() => <Nofication cus={cus} />}
+      </Tab.Screen>
 
       <Tab.Screen
         name={supportName}

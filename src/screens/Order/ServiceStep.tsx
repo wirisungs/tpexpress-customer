@@ -7,6 +7,7 @@ import GHTKIC from "../../svg/DucTri/Icons/Order/GHTK";
 import GHNIC from "../../svg/DucTri/Icons/Order/GHN";
 import GHTLIC from "../../svg/DucTri/Icons/Order/GHTL";
 import THGHIC from "../../svg/DucTri/Icons/Order/TPGH";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 //pay
 import Wallet from "./Wallet";
 
@@ -67,7 +68,13 @@ const ServiceStep = () => {
     const orderDate = getCurrentDate();
     const sanitizedCOD = Number(COD) || 0;
     const total = sanitizedCOD + calculatorFee(selectedService.dservicesPrice);
-
+    if(!selectedPaymentMethod.Pay_ID.trim()){
+        return;
+    }
+    if(!selectedService.dservicesId.trim()){
+      return;
+  }
+    
     try {
       const response = await fetch('http://tpexpress.ddns.net:3000/api/order', {
         method: 'POST',
@@ -77,8 +84,8 @@ const ServiceStep = () => {
         body: JSON.stringify({
           orderId: newOrderID,
           cusId: email.cusId,
-          senderAddress: senderAddress,
-          receiverPhone: phone,
+          senderAddress: senderAddress, 
+          receiverPhone: phone,  
           receiverName: name,
           receiverAddress: receiverAddress,
           orderType: orderType,
@@ -108,7 +115,7 @@ const ServiceStep = () => {
         if (selectedPaymentMethod?.Pay_ID === "P003") {
           navigation.navigate("WalletVerify", { totalPrice: total, items: items });
         } else {
-          navigation.navigate("SuccessStep");
+          navigation.navigate("SuccessStep",{email:email,id:newOrderID});
         }
       } else {
         Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi gửi dữ liệu.');
@@ -119,7 +126,17 @@ const ServiceStep = () => {
     }
   };
 
-  // const formattedWeight = orders.weight.replace(',', '.');
+  // const handleCreateVoucher = async () => {
+  //   try {
+  //     const token = AsyncStorage.getItem('token');
+  //     if(!token) {
+  //       return;
+  //     }
+  //     const response
+  //   } catch {
+
+  //   }
+  // }
 
   const handleSubmitItem = async () => {
     try {
@@ -247,13 +264,16 @@ const ServiceStep = () => {
   
     return fee;
   };
+
+  
   
 
   return (
     <>
       <ScrollView
-        className="flex flex-col h-full bg-grayBG-FCFCFC"
-        showsVerticalScrollIndicator={false}
+        // className="flex flex-col h-full bg-grayBG-FCFCFC"
+        // showsVerticalScrollIndicator={false}
+        style={styles.all}
       >
         {/* Header */}
         <BasicHeader haveBackIcon={true} title="Chọn dịch vụ" />
@@ -320,6 +340,11 @@ const ServiceStep = () => {
                 </View>
               </TouchableOpacity>
 
+              {!selectedService?.dservicesName && (
+                <Text style={styles.madon2}>Hãy chọn dịch vụ</Text>
+              )}
+         
+
             </View>
   
            
@@ -381,6 +406,9 @@ const ServiceStep = () => {
 
 
 const styles = StyleSheet.create({
+  all:{
+    backgroundColor:'#ffffff'
+    },
   shadow: {
     width: "100%",
     backgroundColor: "#767676",
@@ -454,7 +482,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'medium',
     paddingVertical: 12
-  }
+  },
+  madon2: {
+    fontSize: 14,
+    color: '#F44336',
+    fontWeight: 'bold',
+  },
 });
 
 export default ServiceStep;

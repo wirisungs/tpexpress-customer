@@ -10,6 +10,7 @@ import { useTheme } from "../../components/Darkmode/ThemeContext";
 
 interface SenderOrderProps { }
 
+
 type UserEditRouteProp = RouteProp<RootStackParamList, 'User_Edit'>;
 
 const User_Edit: React.FC<SenderOrderProps> = () => {
@@ -17,7 +18,6 @@ const User_Edit: React.FC<SenderOrderProps> = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { customerData } = route.params || {};
   const { isDarkMode } = useTheme();
-
   const [cusName, setCusName] = useState(customerData?.cusName || '');
   const [cusPhone, setCusPhone] = useState(customerData?.cusPhone || '');
   const [cusAddress, setCusAddress] = useState(customerData?.cusAddress || '');
@@ -25,6 +25,17 @@ const User_Edit: React.FC<SenderOrderProps> = () => {
   const [open, setOpen] = useState(false);
 
   const handleUpdate = async () => {
+    if (!cusPhone.trim() || !cusAddress.trim() || !cusName.trim()) {
+      return;
+    }
+    if (cusAddress.length > 255) {
+      return;
+    }
+    const phoneRegex = /^0\d{9}$/; 
+    if (!phoneRegex.test(cusPhone)) {
+      return;
+    }
+
     try {
       const response = await fetch(`http://tpexpress.ddns.net:3000/api/cusA/${customerData._id}`, {
         method: 'PUT',
@@ -40,7 +51,7 @@ const User_Edit: React.FC<SenderOrderProps> = () => {
       const result = await response.json();
 
       if (response.ok) {
-        Alert.alert('Thành công', 'Dữ liệu đã được cập nhật thành công!');
+        // Alert.alert('Thành công', 'Dữ liệu đã được cập nhật thành công!');
         navigation.navigate('HomePage', { emailE: customerData.cusEmail });
       } else {
         Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi cập nhật dữ liệu.');
@@ -50,6 +61,7 @@ const User_Edit: React.FC<SenderOrderProps> = () => {
       Alert.alert('Lỗi', 'Có lỗi xảy ra khi cập nhật dữ liệu.');
     }
   };
+
 
   // Thay ScrollView bằng FlatList
   const renderItem = ({ item }: { item: any }) => {
@@ -65,6 +77,9 @@ const User_Edit: React.FC<SenderOrderProps> = () => {
               style={styles.name}
               placeholder="Nhập họ và tên"
             />
+            {!cusName.trim() && (
+              <Text style={styles.madon2}>Vui lòng tên</Text>
+            )}
           </View>
         );
       case 'cusPhone':
@@ -78,6 +93,11 @@ const User_Edit: React.FC<SenderOrderProps> = () => {
               style={styles.name}
               placeholder="Nhập số điện thoại"
             />
+            {!cusPhone.trim() ? (
+              <Text style={styles.madon2}>Vui lòng nhập số điện thoại</Text>
+            ) : cusPhone.length !== 10 || cusPhone[0] !== '0' ? (
+              <Text style={styles.madon2}>Vui lòng nhập đủ 10 số và bắt đầu bằng 0</Text>
+            ) : null}
           </View>
         );
       case 'cusAddress':
@@ -91,6 +111,12 @@ const User_Edit: React.FC<SenderOrderProps> = () => {
               style={styles.name}
               placeholder="Nhập địa chỉ"
             />
+            {!cusAddress.trim() && (
+              <Text style={styles.madon2}>Vui lòng nhập địa chỉ</Text>
+            )}
+            {cusAddress.length > 255 && (
+              <Text style={styles.madon2}>Địa chỉ không được vượt quá 255 ký tự</Text>
+            )}
           </View>
         );
       case 'cusGender':
@@ -139,7 +165,7 @@ const User_Edit: React.FC<SenderOrderProps> = () => {
 
       <View style={styles.btnedit}>
         <ButtonFill onPress={handleUpdate}>
-          <Text className="text-white font-bold text-lg">Sửa thông tin</Text>
+          <Text className="text-white font-bold text-lg">Lưu thông tin</Text>
         </ButtonFill>
       </View>
     </KeyboardAvoidingView>
@@ -149,7 +175,6 @@ const User_Edit: React.FC<SenderOrderProps> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
   },
   scrollContent: {
     paddingBottom: 80,
@@ -157,13 +182,13 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     backgroundColor: "#ffffff",
-    borderColor: "gray",
+    borderColor: "#E0E0E0",
     borderWidth: 1,
     height: 50,
   },
   dropdownContainer: {
     backgroundColor: "#fcfcfc",
-    borderColor: "gray",
+    borderColor: "#E0E0E0",
   },
   titlename: {
     fontSize: 20,
@@ -181,6 +206,11 @@ const styles = StyleSheet.create({
   },
   btnedit: {
     padding: 24
+  },
+  madon2: {
+    fontSize: 14,
+    color: '#F44336',
+    fontWeight: 'bold',
   },
 });
 

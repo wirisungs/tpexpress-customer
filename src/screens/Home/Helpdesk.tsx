@@ -41,19 +41,19 @@ const Helpdesk = () => {
             <View style={body.container}>
                 <Text style={body.tx}>Yêu cầu hỗ trợ</Text> 
                 <View style={body.box}>
-                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest',{customerData})}>
+                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest',{customerData, type: 'HBL'})}>
                         <NoteIC />
                         <Text style={body.tx1}>Hàng của tôi bị lạc</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest')}>
+                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest',{customerData, type: 'HBV'})}>
                         <NoteIC />
                         <Text style={body.tx1}>Hàng của tôi bị vỡ</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest')}>
+                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest',{customerData, type: 'HCVC'})}>
                         <NoteIC />
                         <Text style={body.tx1}>Hàng của tôi chưa được vận chuyển</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest')}>
+                    <TouchableOpacity style={body.yc} onPress={() => navigation.navigate('OrderRequest',{customerData, type: 'CNT'})}>
                         <NoteIC />
                         <Text style={body.tx1}>Tôi chưa nhận được tiền khi hoàn tất đơn</Text>
                     </TouchableOpacity>

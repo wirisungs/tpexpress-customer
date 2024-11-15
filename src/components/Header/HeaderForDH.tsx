@@ -1,4 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
+
 import React, { useState } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity,TextInput, Alert } from "react-native";
 // import SearchBar from "../Home/SearchBar";
@@ -6,10 +6,12 @@ import { useNavigation } from "@react-navigation/native";
 import { InputWithIcon } from "../Inputs/Inputs";
 import SearchIC from '../../svg/DucTri/Icons/HomeIcon/Search'
 
+
 interface HeaderProps {
   screenName: string;
   activeSender: boolean;
   setActiveSender: (value: boolean) => void;
+  email: string
 }
 
 interface Promotion {
@@ -28,7 +30,7 @@ interface Promotion {
   driverId: string,
 }
 
-const Header: React.FC<HeaderProps> = ({ screenName, activeSender, setActiveSender }) => {
+const Header: React.FC<HeaderProps> = ({ screenName, activeSender, setActiveSender,email }) => {
   const navigation = useNavigation();
   const [orderID, setOrderID] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ screenName, activeSender, setActiveSend
   const handleSearch = async () => {
     setLoading(true); // Bắt đầu tải dữ liệu
     try {
-      const response = await fetch(`http://tpexpress.ddns.net:3000/api/ordersearch?orderID=${orderID.trim()}`);
+      const response = await fetch(`http://tpexpress.ddns.net:3000/api/ordersearch?orderID=${orderID.trim()}&cusId=${email.cusId.trim()}`);
       const data: Promotion[] = await response.json();
 
       if (data.length > 0) {
@@ -67,13 +69,14 @@ const Header: React.FC<HeaderProps> = ({ screenName, activeSender, setActiveSend
       <View style={styles.header}>     
           <Text style={styles.title}>{screenName}</Text>
       </View>
+    
       <View style={styles.viewsearch}>
         <InputWithIcon
           placeholder="Nhập mã đơn vận chuyển"
           inputType="default"
           icon={<SearchIC />}
           value={orderID}
-          onChangeText={setOrderID}
+          onChangeText={(text) => setOrderID(text.toUpperCase())}
           onIconPress={handleSearch}
           isBackground={true}
         />

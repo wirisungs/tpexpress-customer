@@ -95,7 +95,7 @@ const OrderItem: React.FC<{ status?: string; email?: string }> = ({ status, emai
 
           <View style={styles.headerContainer}>
             <View style={styles.roworder}>
-              <Text style={styles.info}>Người nhận:{email.cusId}</Text>
+              <Text style={styles.info}>Người nhận:</Text>
               <Text style={styles.info1}>{item.receiverName}</Text>
             </View>
             <View style={styles.roworder}>

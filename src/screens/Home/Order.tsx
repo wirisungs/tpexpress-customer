@@ -20,6 +20,7 @@ const Order: React.FC<RouteParams> = ({ email }) => {
         screenName={title}
         activeSender={activeSender}
         setActiveSender={setActiveSender}
+        email={email}
       />
       {/* <Text>{email.cusId}</Text> */}
       <FlatList

@@ -14,10 +14,7 @@ import { TransHeader } from "../../components/Layouts/Headers";
 import Input, { InputWithIcon, PhoneInput } from "../../components/Inputs/Inputs";
 import CheckboxText from "../../components/Inputs/CheckboxText";
 import ButtonFill from "../../components/Buttons/Buttons";
-import Marker from "../../svg/MTri/Marker";
 import { NavigationProp, useIsFocused, useNavigation } from "@react-navigation/native";
-import { Touchable } from "react-native";
-import CancelIC from "../../svg/DucTri/Icons/Order/Cancel"
 import axios from "axios";
 import { RootStackParamList } from "../../../App";
 
@@ -77,20 +74,20 @@ const TTCP = () => {
         try {
             const originCoords = await getCoordinates(formValues.senderAddress);
             const destinationCoords = await getCoordinates(formValues.receiverAddress);
-    
+
             setOriginCoords(originCoords);
             setDestinationCoords(destinationCoords);
-    
+
             const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoords.longitude},${originCoords.latitude};${destinationCoords.longitude},${destinationCoords.latitude}?access_token=${MAPBOX_API_KEY}`;
-    
+
             const response = await axios.get(url);
             console.log("Response from Mapbox API:", response.data);
-    
+
             if (!response.data.routes || response.data.routes.length === 0) {
                 Alert.alert("Lỗi", "Không tìm thấy tuyến đường hợp lệ.");
                 return null; // Trả về null nếu không tìm thấy tuyến đường
             }
-    
+
             const distanceMeters = response.data.routes[0].distance;
             const distanceKm = (distanceMeters / 1000).toFixed(2); // Đổi sang km
             return distanceKm; // Trả về khoảng cách đã tính
@@ -122,7 +119,7 @@ const TTCP = () => {
 
     const nextToKQ = async () => {
         const calculatedDistance = await calculateDistance(); // Đợi hàm tính khoảng cách
-    
+
         if (calculatedDistance) {
             navigation.navigate("KQCP", {
                 orders,
@@ -132,14 +129,14 @@ const TTCP = () => {
             });
         }
     };
-    
+
 
 
     const errorStyle: StyleProp<TextStyle> = { borderColor: "#EB455F" };
 
     return (
         <FlatList
-            className="flex flex-col bg-grayBG-FCFCFC" showsVerticalScrollIndicator={false}
+            // className="flex flex-col bg-grayBG-FCFCFC" showsVerticalScrollIndicator={false}
             data={[{ key: 'content' }]}
             renderItem={() => (
                 <View>
@@ -150,7 +147,7 @@ const TTCP = () => {
                         {/* Thông tin người gửi */}
                         <View className="sender-info flex flex-col gap-3">
                             <Text className="text-2xl font-bold">
-                                Khoảng cách {distance} <Text className="text-primary">*</Text>
+                                Khoảng cách   <Text className="text-primary">*</Text>
                             </Text>
                             <Text className="text-xl font-bold">
                                 Nơi gửi
@@ -159,27 +156,27 @@ const TTCP = () => {
                                 placeholder="Tỉnh / Thành / Quận / Huyện"
                                 value={formValues.senderAddress}
                                 onChangeText={(val) => handleInputChange("senderAddress", val)}
-                                style={inputErrors.senderAddress && errorStyle}
+                                // style={inputErrors.senderAddress && errorStyle}
                                 inputType="default"
                             />
-                            {renderError("senderAddress")}
+                            {/* {renderError("senderAddress")} */}
                             <Text>Chú ý: chỉ địa chỉ gửi phải hợp lệ</Text>
                         </View>
 
                         {/* Thông tin người nhận */}
                         <View className="receiver-info flex flex-col gap-3">
                             <Text className="text-xl font-bold">
-                                Nơi nhận 
+                                Nơi nhận
                             </Text>
 
                             <InputWithIcon
                                 placeholder="Địa chỉ"
                                 value={formValues.receiverAddress}
                                 onChangeText={(val) => handleInputChange("receiverAddress", val)}
-                                style={inputErrors.receiverAddress && errorStyle}
+                                // style={inputErrors.receiverAddress && errorStyle}
                                 inputType="default"
                             />
-                            {renderError("receiverAddress")}
+                            {/* {renderError("receiverAddress")} */}
                             <Text>Chú ý: chỉ địa chỉ gửi phải hợp lệ</Text>
                         </View>
 
@@ -194,11 +191,11 @@ const TTCP = () => {
                                 onChangeText={(val) => handleInputChange("weight", val)}
                                 inputType="numeric"
                             />
-                            {renderError("weight")}
+                            {/* {renderError("weight")} */}
                         </View>
 
                         {/* Thông tin tổng kiện hàng */}
-                        <View style={styles.boxinfo} className="order-info flex flex-col gap-3">
+                        <View className="order-info flex flex-col gap-3">
 
 
                             <CheckboxText

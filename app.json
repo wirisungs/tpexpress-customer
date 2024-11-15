@@ -17,15 +17,19 @@
         "NSCameraUsageDescription": "Ứng dụng cần quyền truy cập camera để quét mã QR.",
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
-        }
-      }
+        },
+        "UIBackgroundModes": ["fetch", "remote-notification"],
+        "NSUserTrackingUsageDescription": "Ứng dụng cần quyền truy cập thông báo để gửi thông báo đẩy cho bạn."
+      },
+      "newArchEnabled": true
     },
     "android": {
-      "permissions": ["CAMERA"],
+      "permissions": ["CAMERA", "NOTIFICATIONS"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "newArchEnabled": true
     },
     "web": {
       "bundler": "metro",
@@ -47,7 +51,7 @@
         }
       ]
     ],
-    "scheme": "tpexpress", 
+    "scheme": "tpexpress",
     "platforms": ["ios", "android", "web"]
   }
 }

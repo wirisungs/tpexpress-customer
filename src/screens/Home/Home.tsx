@@ -48,9 +48,13 @@ const Home: React.FC<HomeProps> = ({cus}) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleSearch = async () => {
-    setLoading(true); // Bắt đầu tải dữ liệu
+    if (!orderID.trim()) {
+      Alert.alert("Thông báo", "Vui lòng nhập mã đơn hàng!");
+      return;
+    }
+    setLoading(true); 
     try {
-      const response = await fetch(`http://tpexpress.ddns.net:3000/api/ordersearch?orderID=${orderID.trim()}`);
+      const response = await fetch(`http://tpexpress.ddns.net:3000/api/ordersearch?orderID=${orderID.trim()}&cusId=${cus.cusId.trim()}`);
       const data: Promotion[] = await response.json();
 
       if (data.length > 0) {
@@ -80,18 +84,17 @@ const Home: React.FC<HomeProps> = ({cus}) => {
           
           <Text style={styles.title1}>Hãy chắc chắn rằng Mã đơn hàng của bạn chính xác</Text>
 
-          <View style={styles.viewsearch}>
+          
             <InputWithIcon
               placeholder="Nhập mã đơn vận chuyển"
               inputType="default"
               icon={<SearchIC />}
-              value={orderID}
-              // onChangeText={setOrderID}
+              value={orderID}        
               onChangeText={(text) => setOrderID(text.toUpperCase())}
               onIconPress={handleSearch}
               isBackground={true}
             />
-          </View>
+   
           <Image source={ImagesAssets.Xeday} style={styles.imageXe} resizeMode="contain" />
         </View>
 
@@ -103,7 +106,7 @@ const Home: React.FC<HomeProps> = ({cus}) => {
 
           <TouchableOpacity style={styles.item1} onPress={() => navigation.navigate('TTCP')}>
             <CaculatorIC />
-            <Text style={styles.textcn}>Tra tính cước phí</Text>
+            <Text style={styles.textcn}>Tra tính cước phí </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.item1} onPress={() => navigation.navigate('TestMap')}>
@@ -302,7 +305,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   imageXe: {
-    zIndex: 1
+    zIndex: -1,
+    marginTop:-70
   }
 });
 

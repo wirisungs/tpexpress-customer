@@ -140,18 +140,34 @@ const CreateOrder = ({ email }: { email: string }) => {
     } else if (phone[0] !== "0") {
       newErrors.phoneNumber = "Số điện thoại phải bắt đầu bằng 0.";
     }
+   
 
     // Kiểm tra các trường trong từng đơn hàng
     orders.forEach((order, index) => {
       if (!order.packageName) {
         newErrors[`packageName-${index}`] = `Tên hàng của đơn ${index + 1} không được bỏ trống.`;
       }
+
       if (!order.weight) {
         newErrors[`weight-${index}`] = `Khối lượng của đơn ${index + 1} không được bỏ trống.`;
+      } else if (!/^\d+(,\d+)?$/.test(order.weight)) {
+        // Kiểm tra định dạng khối lượng: chấp nhận số nguyên và số thực có dấu phẩy (1,2 hoặc 12, không cho dấu phẩy ở đầu hoặc cuối)
+        newErrors[`weight-${index}`] = `Vui lòng nhập số dương hợp lệ`;
+      } else if (parseFloat(order.weight.replace(',', '.')) <= 0) {
+        // Kiểm tra cân nặng phải là số dương
+        newErrors[`weight-${index}`] = `Khối lượng của đơn ${index + 1} phải lớn hơn 0.`;
       }
+
       if (!order.priceOfItem) {
         newErrors[`priceOfItem-${index}`] = `Giá trị món hàng của đơn ${index + 1} không được bỏ trống.`;
+      } else if (!/^\d+(\.\d+)?$/.test(order.priceOfItem)) {
+        // Kiểm tra định dạng giá trị món hàng: chỉ chấp nhận số dương (không âm và không có dấu phẩy)
+        newErrors[`priceOfItem-${index}`] = `Giá trị món hàng của đơn ${index + 1} không hợp lệ. Vui lòng nhập số dương, không có dấu phẩy.`;
+      } else if (parseFloat(order.priceOfItem) <= 0) {
+        // Kiểm tra giá trị món hàng phải lớn hơn 0
+        newErrors[`priceOfItem-${index}`] = `Giá trị món hàng của đơn ${index + 1} phải lớn hơn 0.`;
       }
+    
     });
 
     setInputErrors(newErrors);
@@ -276,7 +292,8 @@ const CreateOrder = ({ email }: { email: string }) => {
       )}
 
       <FlatList
-        className="flex flex-col bg-grayBG-FCFCFC" showsVerticalScrollIndicator={false}
+        // className="flex flex-col bg-grayBG-FCFCFC" showsVerticalScrollIndicator={false}
+        style={styles.all}
         data={[{ key: 'content' }]}
         renderItem={() => (
           <View className="content flex flex-col  ">
@@ -363,6 +380,7 @@ const CreateOrder = ({ email }: { email: string }) => {
                   onChangeText={(val) => handleInputChange("ordernote", val)}
                   inputType="default"
                 />
+                
                 <CheckboxText
                   isChecked={isChecked2}
                   onCheckChange={setIsChecked2}
@@ -403,6 +421,9 @@ const CreateOrder = ({ email }: { email: string }) => {
 };
 
 const styles = StyleSheet.create({
+  all:{
+  backgroundColor:'#ffffff'
+  },
   row: {
     flexDirection: "row",
     alignItems: "center",

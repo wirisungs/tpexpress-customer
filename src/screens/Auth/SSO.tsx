@@ -7,7 +7,6 @@ import { RootStackParamList } from "../../../App";
 const SSO = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const [url, setUrl] = useState("http://tpexpress.ddns.net:4000/");
-    // const [url, setUrl] = useState("https://wowo.htilssu.id.vn/order/4");
 
     const onMessage = (event) => {
         // Nhận dữ liệu từ web
