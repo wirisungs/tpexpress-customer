@@ -6,7 +6,7 @@ import Order from "../../screens/Home/Order";
 import Nofication from "../../screens/Home/Nofi/Nofication";
 import Account from "../../screens/Home/Account"
 import CreateOrder from "../../screens/Order/CreateOrderInfo";
-
+import DistanceCalculator from "../../screens/Home/TestMap";
 
 // Icon
 import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";

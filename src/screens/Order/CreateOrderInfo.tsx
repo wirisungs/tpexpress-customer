@@ -355,7 +355,7 @@ const CreateOrder = ({ email }: { email: string }) => {
               <View className="order-info flex flex-col ">
                 <Text className="text-xl font-bold">
                   Thông tin đơn hàng <Text className="text-primary">*</Text>
-                </Text>
+                </Text> 
 
                 <FlatList
                   data={orders}

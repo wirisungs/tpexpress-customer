@@ -50,6 +50,7 @@ const Wallet = ({onSelectPayment }) => {
         <View style={styles.container}>
             <View className="package-info flex flex-col gap-3">
                 <Text style={styles.tx1}>Hình thức thanh toán</Text>
+                {/* <Text>{selectedPaymentMethod?.Pay_ID}</Text> */}
                 <TouchableOpacity
                     className="choose-input flex flex-col gap-2"
                     onPress={handleOpenPaymentPopup}
@@ -93,6 +94,7 @@ const Wallet = ({onSelectPayment }) => {
                                         </View>
                                     </View>
                                 </TouchableOpacity>
+                                
                             </View>
                         ))}
                     </View>

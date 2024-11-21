@@ -29,6 +29,7 @@ import OrderRequest from "./src/screens/Order/OrderRequest";
 import { ThemeProvider } from "./src/components/Darkmode/ThemeContext";
 import DarkModeWrapper from "./src/components/Darkmode/DarkmodeW";
 import { NotificationProvider } from "./src/screens/Home/Nofi/AdminNofi";
+import Login from "./src/screens/Auth/login";
 const Stack = createNativeStackNavigator();
 
 export type RootStackParamList = {
@@ -66,6 +67,7 @@ export default function App() {
               screenOptions={{ headerShown: false }}
             >
               <Stack.Screen name="Verify" component={Verify} />
+              <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="CreateOrder" component={CreateOrder} />
               <Stack.Screen name="ServiceOrder" component={ServiceStep} />
               <Stack.Screen name="SuccessStep" component={SuccessStep} />

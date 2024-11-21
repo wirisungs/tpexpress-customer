@@ -245,11 +245,11 @@ const OrderRequest = () => {
           <Text style={styles.txtnoteR}>video mở gói hàng</Text>
           để xác minh đối với những yêu cầu liên quan đến lỗi trong quá trình vận chuyển</Text>
 
-          {imageUri && (
-          <ButtonFill onPress={handleSubmit}>
-          <Text className="text-white text-xl font-bold">Hoàn tất</Text>
+          
+        <ButtonFill onPress={handleSubmit}>
+          <Text className="text-white text-xl font-bold">Gửi yêu cầu</Text>
         </ButtonFill>
-        )}
+       
         
       </View>
     </ScrollView>

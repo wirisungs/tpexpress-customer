@@ -118,7 +118,7 @@ const ServiceStep = () => {
           navigation.navigate("SuccessStep",{email:email,id:newOrderID});
         }
       } else {
-        Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi gửi dữ liệu.');
+        // Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi gửi dữ liệu.');
       }
     } catch (error) {
       console.error('Lỗi khi gửi dữ liệu:', error);
@@ -170,8 +170,6 @@ const ServiceStep = () => {
     }
   };
   
-
-
   const SubmitAll = async () => {
     await handleSubmitItem();
   
