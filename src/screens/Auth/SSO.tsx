@@ -20,7 +20,7 @@ const SSO = () => {
         <View style={{ flex: 1 }}>
             <WebView
                 source={{ uri: url }}
-                onMessage={onMessage} // Để nhận dữ liệu từ trang web
+                onMessage={onMessage} 
             />
         </View>
     );

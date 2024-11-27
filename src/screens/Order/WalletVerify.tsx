@@ -6,33 +6,45 @@ import { RootStackParamList } from "../../../App";
 
 const WalletVerify = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const route = useRoute(); 
+  const route = useRoute();
   const [url, setUrl] = useState("http://tpexpress.ddns.net:4000/verifywallet");
   const [items, setItems] = useState([]);
   const [valueFromWeb, setValueFromWeb] = useState(null); // State để lưu dữ liệu từ WebView
-  
+  const { id, email } = route.params || {};
+
   const totalPrice = route.params?.totalPrice;
-  const orderItems = route.params?.items; // Get items from params
+  const orderItems = route.params?.items;
 
   useEffect(() => {
     if (orderItems) {
-      setItems(orderItems); // Set items data when available
+      setItems(orderItems);
     }
   }, [orderItems]);
 
-  const onMessage = (event) => {
-    const dataFromWeb = event.nativeEvent.data;
-    console.log("Dữ liệu nhận từ web:", dataFromWeb);
-    
-    // Lưu dữ liệu vào state và hiển thị trên màn hình
-    setValueFromWeb(dataFromWeb);
 
-    // Quay lại màn hình hiện tại và hiển thị dữ liệu
-    navigation.navigate("SuccessStep", { webData: dataFromWeb });
+  const onMessage = (event) => {
+    try {
+      const dataFromWeb = JSON.parse(event.nativeEvent.data); // Parse dữ liệu từ chuỗi JSON
+      console.log("Dữ liệu nhận từ web:", dataFromWeb);
+
+      // Lưu dữ liệu vào state nếu cần
+      setValueFromWeb(dataFromWeb);
+
+
+      navigation.navigate("SuccessStep", {
+        idW: dataFromWeb.id,
+        status: dataFromWeb.status,
+        money: dataFromWeb.money,
+        email,
+        id
+      });
+    } catch (error) {
+      console.error("Lỗi khi parse dữ liệu từ web:", error);
+    }
   };
 
+
   useEffect(() => {
-    // Nếu có dữ liệu được gửi về từ trang web, cập nhật state để hiển thị
     if (route.params?.webData) {
       setValueFromWeb(route.params.webData);
     }
@@ -40,16 +52,18 @@ const WalletVerify = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Hiển thị dữ liệu nhận từ WebView */}
-      {valueFromWeb && (
+      {/* <Text>   {id}</Text> */}
+      {valueFromWeb && (  // Kiểm tra nếu valueFromWeb có giá trị thì hiển thị
         <View style={styles.dataContainer}>
-          <Text style={styles.txt}>Dữ liệu nhận từ web: {valueFromWeb}</Text>
+          <Text style={styles.txt}>Dữ liệu từ Web:</Text>
+          <Text>ID đơn hàng: {valueFromWeb.id}</Text>
+          <Text>Trạng thái: {valueFromWeb.status}</Text>
+          <Text>Số tiền: {valueFromWeb.money}</Text>
         </View>
       )}
-      
       <WebView
         source={{ uri: url }}
-        injectedJavaScript={`window.totalPrice = ${totalPrice}; window.items = ${JSON.stringify(items)};`}
+        injectedJavaScript={`window.totalPrice = ${totalPrice}; window.items = ${JSON.stringify(items)}`}
         onMessage={onMessage}
       />
     </View>

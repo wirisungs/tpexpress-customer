@@ -21,7 +21,7 @@ const Login = () => {
     <View className="w-full h-full flex flex-col items-center justify-center px-6 gap-6">
       <HeroSection />
       <View className="form flex flex-col gap-3 w-full">
-        <Input
+        {/* <Input
           value={email}
           onChangeText={setEmail}
           // style={checkFullName && errorStyle}
@@ -34,7 +34,7 @@ const Login = () => {
           // style={checkFullName && errorStyle}
           inputType="default"
           placeholder="Mật khẩu"
-        />
+        /> */}
         <View className="buttons flex flex-row w-full gap-2">
 
           <View className="flex-1 loginBtn h-12 ">

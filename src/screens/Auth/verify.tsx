@@ -133,17 +133,17 @@ const Verify = () => {
         <Text style={styles.successText}>THIEN PHUC EXPRESS </Text>
       </View>
 
-      {decodedToken && (
+      {/* {decodedToken && (
         <View>
          
-          {/* <Text className="text-m">{JSON.stringify(decodedToken, null, 2)}</Text>
+          <Text className="text-m">{JSON.stringify(decodedToken, null, 2)}</Text>
           {emailExists !== null && (
             <Text style={styles.statusText}>
               {emailExists ? "Email đã tồn tại trong hệ thống" : "Đang tạo tài khoản mới..."}
             </Text>
-          )} */}
+          )}
         </View>
-      )}
+      )} */}
     </View>
   );
 };

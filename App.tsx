@@ -22,6 +22,7 @@ import KQCP from "./src/components/Order/KQCP";
 import Helpdesk from "./src/screens/Home/Helpdesk";
 import SSO from "./src/screens/Auth/SSO";
 import Verify from "./src/screens/Auth/Verify";
+import WalletStatus from "./src/screens/Order/WalletStatus";
 import Setting from "./src/screens/Account/Setting";
 import WalletVerify from "./src/screens/Order/WalletVerify";
 import WalletDetal from "./src/screens/Order/WalletDetail";
@@ -63,7 +64,7 @@ export default function App() {
         <DarkModeWrapper>
           <NavigationContainer>
             <Stack.Navigator
-              initialRouteName="SSO"
+              initialRouteName="Login"
               screenOptions={{ headerShown: false }}
             >
               <Stack.Screen name="Verify" component={Verify} />
@@ -89,6 +90,7 @@ export default function App() {
               <Stack.Screen name="WalletVerify" component={WalletVerify} />
               <Stack.Screen name="WalletDetal" component={WalletDetal} />
               <Stack.Screen name="OrderRequest" component={OrderRequest} />
+              <Stack.Screen name="WalletStatus" component={WalletStatus} />
             </Stack.Navigator>
           </NavigationContainer>
         </DarkModeWrapper>

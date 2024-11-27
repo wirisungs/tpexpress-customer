@@ -68,13 +68,13 @@ const ServiceStep = () => {
     const orderDate = getCurrentDate();
     const sanitizedCOD = Number(COD) || 0;
     const total = sanitizedCOD + calculatorFee(selectedService.dservicesPrice);
-    if(!selectedPaymentMethod.Pay_ID.trim()){
-        return;
-    }
-    if(!selectedService.dservicesId.trim()){
+    if (!selectedPaymentMethod.Pay_ID.trim()) {
       return;
-  }
-    
+    }
+    if (!selectedService.dservicesId.trim()) {
+      return;
+    }
+  
     try {
       const response = await fetch('http://tpexpress.ddns.net:3000/api/order', {
         method: 'POST',
@@ -84,8 +84,8 @@ const ServiceStep = () => {
         body: JSON.stringify({
           orderId: newOrderID,
           cusId: email.cusId,
-          senderAddress: senderAddress, 
-          receiverPhone: phone,  
+          senderAddress: senderAddress,
+          receiverPhone: phone,
           receiverName: name,
           receiverAddress: receiverAddress,
           orderType: orderType,
@@ -100,31 +100,38 @@ const ServiceStep = () => {
           createdDate: orderDate,
           deliverPrice: calculatorFee(selectedService.dservicesPrice),
           proofSuccess: null,
-          reasonFailed: null
+          reasonFailed: null,
+          statusWallet: null,
+          idWallet: null,
         }),
       });
-
+  
       const result = await response.json();
-
+  
       if (response.ok) {
         const items = orders.map(order => ({
           Item_Name: order.packageName,
           Item_AllValue: order.priceOfItem,
         }));
-
+  
         if (selectedPaymentMethod?.Pay_ID === "P003") {
-          navigation.navigate("WalletVerify", { totalPrice: total, items: items });
+          // Reset navigation history before navigating to WalletVerify
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'WalletVerify', params: { totalPrice: total, items: items, id: newOrderID, email: email } }],
+          });
         } else {
-          navigation.navigate("SuccessStep",{email:email,id:newOrderID});
+          navigation.navigate("SuccessStep", { email: email, id: newOrderID });
         }
       } else {
-        // Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi gửi dữ liệu.');
+        Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi gửi dữ liệu.');
       }
     } catch (error) {
       console.error('Lỗi khi gửi dữ liệu:', error);
       Alert.alert('Lỗi', 'Có lỗi xảy ra khi gửi dữ liệu.');
     }
   };
+  
 
   // const handleCreateVoucher = async () => {
   //   try {
@@ -217,9 +224,11 @@ const ServiceStep = () => {
 
 
 
-  const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const formatPrice = (price) => {
+    const roundedPrice = Math.floor(price); // Lấy phần nguyên
+    return roundedPrice.toLocaleString('vi-VN'); // Định dạng theo chuẩn Việt Nam
   };
+  
   
   const getServiceIcon = (serviceId: any) => {
     switch (serviceId) {
@@ -269,8 +278,6 @@ const ServiceStep = () => {
   return (
     <>
       <ScrollView
-        // className="flex flex-col h-full bg-grayBG-FCFCFC"
-        // showsVerticalScrollIndicator={false}
         style={styles.all}
       >
         {/* Header */}

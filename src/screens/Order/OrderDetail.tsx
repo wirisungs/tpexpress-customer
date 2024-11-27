@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Alert, FlatList } from "react-native";
 import { TransHeader } from "../../components/Layouts/Headers";
-import { useRoute } from "@react-navigation/native";
+import { NavigationProp, useNavigation, useRoute } from "@react-navigation/native";
 import CopyIC from "../../svg/DucTri/Icons/Order/Copy";
 import BoxIC from "../../svg/DucTri/Icons/Order/Box";
 import CarIC from "../../svg/DucTri/Icons/Order/Car";
@@ -11,14 +11,18 @@ import LineGrayIC from "../../svg/DucTri/Icons/Order/LineGray";
 import Bill from "../../components/Order/Bill";
 import Info_Order from "../../components/Order/Info_Order";
 import * as Clipboard from "expo-clipboard";
+import { RootStackParamList } from "../../../App";
 
 const OrderDetail: React.FC = () => {
   const route = useRoute();
-  const { item } = route.params as { item: any };
-
+  const { item,statusW  } = route.params as { item: any; statusW:any };
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  // const [statusWs, setStatusWs] = useState(statusW.status);
+  const hasNavigatedRef = useRef(false);
+  
   const copyOrderID = () => {
     Clipboard.setString(item.Order_ID);
-    Alert.alert("Thông báo", "Mã đơn hàng đã được sao chép!");
+    // Alert.alert("Thông báo", "Mã đơn hàng đã được sao chép!");
   };
 
   const LineIcons = ({ status }: { status: string }) => (
@@ -43,6 +47,66 @@ const OrderDetail: React.FC = () => {
   );
 
 
+  useEffect(() => {
+    // Kiểm tra điều kiện điều hướng
+    if (item.paymentId !== "P003") {
+      return;
+    }
+  
+    if (
+      item.statusWallet === "SUCCESS" || 
+      statusW?.status === "SUCCESS" || 
+      item.statusWallet === "CANCELLED" || 
+      statusW?.status === "CANCELLED"
+    ) {
+      return;
+    }
+    // Kiểm tra nếu đã điều hướng, nếu chưa thì điều hướng lần đầu tiên
+    if (!hasNavigatedRef.current) {
+      // Điều hướng đến WalletStatus
+      navigation.navigate("WalletStatus", { id: item.idWallet, item });
+
+      // Đánh dấu là đã điều hướng
+      hasNavigatedRef.current = true;  
+    }
+  }, [statusW, item.paymentId, navigation]);
+  
+   useEffect(() => {
+    if (statusW?.status) {
+      handleUpdate();
+    }
+  }, [statusW?.status]);
+  
+
+  const handleUpdate = async () => {
+    try {
+      const response = await fetch(
+        `http://tpexpress.ddns.net:3000/api/orderK/${item.orderId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            statusWallet: statusW.status,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Alert.alert('Thành công');
+      } else {
+        Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi cập nhật dữ liệu.');
+      }
+    } catch (error) {
+      console.error('Lỗi khi cập nhật dữ liệu:', error);
+      Alert.alert('Lỗi', 'Có lỗi xảy ra khi cập nhật dữ liệu.');
+    }
+  };
+
+
   const renderOrderInfo = () => (
     <View style={styles.row1}>
       <View style={styles.row11}>
@@ -51,11 +115,16 @@ const OrderDetail: React.FC = () => {
           <CopyIC />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity>
-        <Text style={styles.xemthem}>Xem thêm</Text>
+      <TouchableOpacity >
+        <Text style={styles.xemthem}>
+           Xem thêm
+        </Text>
+
       </TouchableOpacity>
     </View>
   );
+
+ 
   
 
   const renderStatus = () => {

@@ -56,8 +56,9 @@ const MyOrderItem: React.FC<OrderItemProps> = ({ phone, currentPage }) => {
 
 
 
-  const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const formatPrice = (price) => {
+    const roundedPrice = Math.floor(price); // Lấy phần nguyên
+    return roundedPrice.toLocaleString('vi-VN'); // Định dạng theo chuẩn Việt Nam
   };
 
   return (

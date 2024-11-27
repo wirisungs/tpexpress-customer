@@ -123,8 +123,10 @@ const OrderItem: React.FC<{ status?: string; email?: string }> = ({ status, emai
     );
   };
 
-  const formatPrice = (price: number) =>
-    price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const formatPrice = (price: number) => {
+    const roundedPrice = Math.floor(price); // Lấy phần nguyên
+    return roundedPrice.toLocaleString('vi-VN'); // Định dạng theo chuẩn Việt Nam
+  };
 
   const getStatusColor = (status: string) => {
     if (status === "ST004") return "#F44336";

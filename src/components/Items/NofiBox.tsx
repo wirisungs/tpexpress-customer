@@ -13,10 +13,10 @@ export default function Nofibox({ nofi }: { nofi: string }) {
         });
       };
 
-    return (
+      return (
         <View style={styles.container}>
             {nofi && nofi.length > 0 ? (
-                nofi.map((item, index) => (
+                nofi.slice().reverse().map((item, index) => (
                     <TouchableOpacity key={index} style={styles.boxall}>
                         <View style={styles.viewbox}>
                             <BoxIC />
@@ -40,6 +40,7 @@ export default function Nofibox({ nofi }: { nofi: string }) {
             )}
         </View>
     );
+    
 }
 
 const styles = StyleSheet.create({

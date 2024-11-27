@@ -23,9 +23,19 @@ const Bill: React.FC<SenderOrderProps> = () => {
   const handleClosePopup = () => setPopupVisible(false);
 
 
-  const formatCurrency = (amount: { toString: () => string; }) => {
-    return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' đ';
+ 
+  const formatCurrency = (price) => {
+    const roundedPrice = Math.floor(price); // Lấy phần nguyên
+    return roundedPrice.toLocaleString('vi-VN'); // Định dạng theo chuẩn Việt Nam
   };
+
+  useEffect(() => {
+    // Kiểm tra nếu trạng thái ví là CANCELLED thì gọi handleUpdate
+    if (item.statusWallet === "CANCELLED") {
+      handleUpdate();
+    }
+  }, [item.statusWallet]); // Theo dõi thay đổi của statusWallet
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +69,7 @@ const Bill: React.FC<SenderOrderProps> = () => {
       const result = await response.json();
 
       if (response.ok) {
-        Alert.alert('Thành công', 'Dữ liệu đã được cập nhật thành công!');
+        // Alert.alert('Thành công', 'Dữ liệu đã được cập nhật thành công!');
       } else {
         Alert.alert('Lỗi', result.error || 'Có lỗi xảy ra khi cập nhật dữ liệu.');
       }
@@ -89,11 +99,15 @@ const Bill: React.FC<SenderOrderProps> = () => {
     <>
       <View style={bill.all}>
         <View style={bill.row1}>
-          <Text style={bill.title}>Hóa đơn</Text>
+          <Text style={bill.title}>Hóa đơn: {item.idWallet}</Text>
           <View style={bill.viewdate}>
             <Text style={bill.date}>{formatDateString(new Date(item.createdDate))}</Text>
           </View>
         </View>
+        <Text style={bill.status}>
+          Thanh toán: {item.statusWallet || "Tiền mặt"}
+        </Text>
+       
         <View style={bill.row2}>
           <FlatList
             data={itemdetail}
@@ -108,7 +122,7 @@ const Bill: React.FC<SenderOrderProps> = () => {
             <Text style={bill.pricepro}>{formatCurrency(item.orderCOD)}</Text>
           </View>
           <View style={bill.priceview}>
-            <Text style={bill.pricepro}>Phí vận:</Text>
+            <Text style={bill.pricepro}>Phí vận: </Text>
             <Text style={bill.pricepro}>{formatCurrency(item.deliverPrice)}</Text>
           </View>
           <View style={bill.priceview}>
@@ -165,9 +179,21 @@ const bill = StyleSheet.create({
     color: "#ffffff",
     fontSize: 16,
   },
+  status:{
+    backgroundColor: "#2FA087",
+    fontWeight:'bold',
+    padding: 8,
+    color: "#ffffff",
+    fontSize: 16,
+    borderRadius: 12, 
+    overflow: "hidden", 
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+    marginTop:-12
+  },
   viewdate: {
-    borderRadius: 12, // Apply borderRadius to the desired view
-    overflow: "hidden", // This might be necessary for some cases
+    borderRadius: 12,
+    overflow: "hidden", 
   },
   detailpro: {
     flexDirection: 'row',

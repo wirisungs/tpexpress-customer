@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, Switch } from "react-native";
 import { CommonActions, NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../../App";
 import { TransHeader } from "../../components/Layouts/Headers";
 import ButtonFill from "../../components/Buttons/Buttons";
 import { useTheme } from "../../components/Darkmode/ThemeContext";
+// import { OrderResponse, WoWoWallet } from "@htilssu/wowo";
 
 const Setting = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const { isDarkMode, toggleDarkMode } = useTheme();
+    // const [orderData, setOrderData] = useState<OrderResponse | null>(null);
+    // const wowoWallet = new WoWoWallet("ngthuythienphuc2002@gmail.com");
 
     const handleOnClick = () => {
         navigation.dispatch(
@@ -18,6 +21,18 @@ const Setting = () => {
             })
         );
     };
+
+
+    // const handleGetOrder = async () => {
+    //     const orderID = "63";  // Example order ID
+    //     try {
+    //         const response = await wowoWallet.getOrder(orderID);
+    //         console.log("Đơn hàng đã được lấy:", response);
+    //         setOrderData(response);  // Save order data to state
+    //     } catch (err: any) {
+    //         console.error("Lỗi khi hủy đơn hàng:", err.message);  // Log the error message
+    //     }
+    // };
 
     return (
         <View style={[styles.container, isDarkMode && styles.darkContainer]}>
@@ -34,6 +49,13 @@ const Setting = () => {
                         thumbColor={isDarkMode ? "#EB455F" : "#f4f3f4"}
                     />
                 </View>
+
+                {/* {orderData && (
+                    <div style={{ marginTop: '20px' }}>
+                        <h3>Thông tin đơn hàng:</h3>
+                        <pre>{JSON.stringify(orderData.status)}</pre>
+                    </div>
+                )} */}
             </View>
             <View style={styles.buttonContainer}>
                 <ButtonFill onPress={handleOnClick}>

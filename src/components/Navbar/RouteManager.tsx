@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 // Screen
 import Home from "../../screens/Home/Home";
@@ -7,6 +7,7 @@ import Nofication from "../../screens/Home/Nofi/Nofication";
 import Account from "../../screens/Home/Account"
 import CreateOrder from "../../screens/Order/CreateOrderInfo";
 import DistanceCalculator from "../../screens/Home/TestMap";
+import WalletStatus from "../../screens/Order/WalletStatus";
 
 // Icon
 import HomeIC from "../../svg/DucTri/Icons/NavIcon/Home";
@@ -39,11 +40,22 @@ interface Cus {
   cusGender: number;
 }
 
+interface Promotion {
+  orderId: string;
+  orderStatusId: string;
+  receiverName: string;
+  receiverPhone: number;
+  receiverAddress: string;
+  orderNote: string;
+  totalPrice: number;
+}
+
 const RouteManager: React.FC = () => {
   const Route = useRoute<RouteProp<RootStackParamList, "HomePage">>();
   const [email, setEmail] = useState<string | null>(null);
   const [cus, setCus] = useState<Cus | null>(null);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [orderW, setOrderW] = useState<Promotion[]>([]);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -95,7 +107,42 @@ const RouteManager: React.FC = () => {
     }, [email]) 
   );
 
- 
+
+  const fetchOrders = useCallback(async () => {
+    if (!cus) return;
+    try {
+      const response = await fetch(`http://tpexpress.ddns.net:3000/api/order`);
+      const allOrders = await response.json();
+  
+      const filteredOrders = allOrders.filter((order) => order.cusId === cus.cusId);
+      const filteredStatus = allOrders.filter((order) => order.statusWallet === 'PENDING');
+      setOrderW(filteredOrders && filteredStatus);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  }, [cus]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (cus) {
+        // Gọi fetchOrders khi cus đã sẵn sàng
+        fetchOrders();
+      }
+    }, [cus, fetchOrders]) // Chỉ phụ thuộc vào cus và fetchOrders, không phụ thuộc vào orderW
+  );
+  
+  useEffect(() => {
+    if (orderW && orderW.length > 0) {
+      // In ra idWallet của tất cả các đơn hàng trong orderW
+      orderW.forEach((order) => {
+        console.log(order.idWallet); // In ra idWallet cho mỗi đơn hàng
+      });
+    } else {
+      console.log('Không có đơn hàng nào hoặc orderW chưa được thiết lập');
+    }
+  }, [orderW]); 
+  
+  
 
 
   return (
@@ -147,6 +194,7 @@ const RouteManager: React.FC = () => {
         }}
       >
         {() => <Order email={cus} />}
+          {/* {() => <WalletStatus  />} */}
       </Tab.Screen>
 
 
